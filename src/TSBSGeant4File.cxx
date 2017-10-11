@@ -119,6 +119,8 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
   int det_id;//2017/02/09: now corresponds to fManager->Getg4sbsDetectorType()
   
   int PMTID;
+  double XPMT;
+  double YPMT;
   int Npe;
   double t;
   double trms;
@@ -130,7 +132,7 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
   TVector3 Pos_det;
   int origvolflag;
  
-  double hit_data_temp[16];
+  double hit_data_temp[18];
   double gen_data_temp[9];
   
   // NB: See comment lines 128-129 of TSBSGeant4File.h 
@@ -148,6 +150,8 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
       type = fTree->Earm_GRINCH_hit_mTrackNo->at(i)+1;//=1 if primary, >1 if secondary... 
       // GRINCH is supposed to ID electrons only... so a primary will always be with TrackNo = 0
       PMTID = fTree->Earm_GRINCH_hit_PMT->at(i)/5;
+      XPMT = fTree->Earm_GRINCH_hit_ypmt->at(i);
+      YPMT = fTree->Earm_GRINCH_hit_zpmt->at(i);// we want the PMT matrix to be sorted by increasing y_T
       Npe = fTree->Earm_GRINCH_hit_NumPhotoelectrons->at(i)*1.0e3;
       t = fTree->Earm_GRINCH_hit_Time_avg->at(i);
       trms = fTree->Earm_GRINCH_hit_Time_rms->at(i);
@@ -197,16 +201,18 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
       //hit_data_temp[0] = (double)PMTrow;
       //hit_data_temp[1] = (double)PMTcol;
       hit_data_temp[0] = (double)PMTID;
-      hit_data_temp[1] = Npe;
-      hit_data_temp[2] = t;
-      hit_data_temp[3] = trms;
-      hit_data_temp[4] = (double)type;
-      hit_data_temp[8] = (double)PID_MCtrack;
-      hit_data_temp[15] = (double)origvolflag;
+      hit_data_temp[1] = XPMT;
+      hit_data_temp[2] = YPMT;      
+      hit_data_temp[3] = Npe;
+      hit_data_temp[4] = t;
+      hit_data_temp[5] = trms;
+      hit_data_temp[6] = (double)type;
+      hit_data_temp[10] = (double)PID_MCtrack;
+      hit_data_temp[17] = (double)origvolflag;
       for(int k = 0; k<3; k++){
-	hit_data_temp[k+5] = Pos_det[k];
-	hit_data_temp[k+9] = Mom_MCtrack[k];
-	hit_data_temp[k+12] = Vtx_MCtrack[k];
+	hit_data_temp[k+7] = Pos_det[k];
+	hit_data_temp[k+11] = Mom_MCtrack[k];
+	hit_data_temp[k+14] = Vtx_MCtrack[k];
       }
       
       fg4sbsHitData.push_back(new g4sbshitdata(det_id,  data_size(19)));
@@ -343,6 +349,8 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
       type = fTree->Harm_RICH_hit_mTrackNo->at(i)+1;//=1 if primary, >1 if secondary... 
       // TODO: modify the particle type according to the particle PID...
       PMTID = fTree->Harm_RICH_hit_PMT->at(i);
+      XPMT = fTree->Harm_RICH_hit_ypmt->at(i);
+      YPMT = -fTree->Harm_RICH_hit_xpmt->at(i);// we want the PMT matrix to be sorted by increasing y_T
       Npe = fTree->Harm_RICH_hit_NumPhotoelectrons->at(i)*1.0e3;
       t = fTree->Harm_RICH_hit_Time_avg->at(i);
       trms = fTree->Harm_RICH_hit_Time_rms->at(i);
@@ -392,16 +400,18 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
       //hit_data_temp[0] = (double)PMTrow;
       //hit_data_temp[1] = (double)PMTcol;
       hit_data_temp[0] = (double)PMTID;
-      hit_data_temp[1] = Npe;
-      hit_data_temp[2] = t;
-      hit_data_temp[3] = trms;
-      hit_data_temp[4] = (double)type;
-      hit_data_temp[8] = (double)PID_MCtrack;
-      hit_data_temp[15] = (double)origvolflag;
+      hit_data_temp[1] = XPMT;
+      hit_data_temp[2] = YPMT;      
+      hit_data_temp[3] = Npe;
+      hit_data_temp[4] = t;
+      hit_data_temp[5] = trms;
+      hit_data_temp[6] = (double)type;
+      hit_data_temp[10] = (double)PID_MCtrack;
+      hit_data_temp[17] = (double)origvolflag;
       for(int k = 0; k<3; k++){
-	hit_data_temp[k+5] = Pos_det[k];
-	hit_data_temp[k+9] = Mom_MCtrack[k];
-	hit_data_temp[k+12] = Vtx_MCtrack[k];
+	hit_data_temp[k+7] = Pos_det[k];
+	hit_data_temp[k+11] = Mom_MCtrack[k];
+	hit_data_temp[k+14] = Vtx_MCtrack[k];
       }
       
       fg4sbsHitData.push_back(new g4sbshitdata(det_id,  data_size(19)));
@@ -598,22 +608,24 @@ void TSBSGeant4File::GetGEMData(TSBSCherData* gd)
 
     if( h->GetData(1)>0.0 ){
 
-      gd->SetHitPMTID(ngdata, (UInt_t)h->GetData(1));
-      gd->SetHitPEyield(ngdata, h->GetData(1) ); 
-      gd->SetHitTime(ngdata, h->GetData(2) ); 
-      gd->SetHitTimeRMS(ngdata, h->GetData(3) ); 
-      gd->SetParticleType(ngdata, (UInt_t)h->GetData(4) );//  Track type (1 primary, >1 secondary) 
-      gd->SetMCtrackPID(ngdata, (Int_t)h->GetData(8));
+      gd->SetHitPMTID(ngdata,      (UInt_t)h->GetData(0) );
+      gd->SetHitXPMT(ngdata,               h->GetData(1) ); 
+      gd->SetHitYPMT(ngdata,               h->GetData(2) ); 
+      gd->SetHitPEyield(ngdata,            h->GetData(3) ); 
+      gd->SetHitTime(ngdata,               h->GetData(4) ); 
+      gd->SetHitTimeRMS(ngdata,            h->GetData(5) ); 
+      gd->SetParticleType(ngdata,  (UInt_t)h->GetData(6) );//  Track type (1 primary, >1 secondary) 
+      gd->SetMCtrackPID(ngdata,     (Int_t)h->GetData(10));
       gd->SetOriginVolFlag(ngdata, (UInt_t)h->GetData(15));
       
       // Vector information
-      TVector3 X_det(h->GetData(5), h->GetData(6), h->GetData(7));
+      TVector3 X_det(h->GetData(7), h->GetData(8), h->GetData(9));
       gd->SetPositionDet(ngdata, X_det);
       
-      TVector3 p_mctrk(h->GetData(9), h->GetData(10), h->GetData(11));
+      TVector3 p_mctrk(h->GetData(11), h->GetData(12), h->GetData(13));
       gd->SetMCtrackMomentum(ngdata, p_mctrk);
 
-      TVector3 v_mctrk(h->GetData(12), h->GetData(13), h->GetData(14));
+      TVector3 v_mctrk(h->GetData(14), h->GetData(15), h->GetData(16));
       gd->SetMCtrackVertex(ngdata, v_mctrk);
       
       ngdata++;

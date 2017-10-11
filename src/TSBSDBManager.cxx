@@ -37,31 +37,12 @@ void TSBSDBManager::LoadGeneralInfo(const string& fileName)
     }
     const string prefix = "generalinfo.";
     DBRequest request[] = {
-        {"do_map_sector",       &fDoMapSector         , kInt,    0, 1},
-        {"self_define_sector",  &fDoSelfDefinedSector , kInt,    0, 1},
-        {"sector_mapped",       &fMappedSector        , kInt,    0, 1},
-	{"nchamber",            &fNChamber            , kInt,    0, 1},
-        {"nsector",             &fNSector             , kInt,    0, 1},
-	// // see comment TSBSDBManager.h, l. 92-94.
-	// {"nchamber2",            &fNChamber2            , kInt,    0, 1},
-        // {"nsector2",             &fNSector2             , kInt,    0, 1},
-        {"nreadout",            &fNReadOut            , kInt,    0, 1},
-        {"gem_drift_id",        &fGEMDriftID          , kInt,    0, 1},
-        {"gem_copper_front_id", &fGEMCopperFrontID    , kInt,    0, 1},
-        {"gem_copper_back_id",  &fGEMCopperBackID     , kInt,    0, 1},
-        {"gem_strip_id",        &fGEMStripID          , kInt,    0, 1},
-        {"faec_id",             &fFAECID              , kInt,    0, 1},
-        {"laec_id",             &fLAECID              , kInt,    0, 1},
-        {"nsignal",             &fNSigParticle        , kInt,    0, 1},
-        {"chan_per_slot",       &fChanPerSlot         , kInt,    0, 1},
-        {"modules_per_readout", &fModulesPerReadOut   , kInt,    0, 1},
-	{"g4sbs_detectortype",  &fg4sbsDetectorType   , kInt,    0, 1},
-	{"g4sbs_z_specoffset",  &fg4sbsZSpecOffset    , kDouble, 0, 1},
-	{"z0",                  &fgZ0                 , kDouble, 0, 1},
-	{"calo_z",              &fgCaloZ              , kDouble, 0, 1},
-	{"calo_res",            &fgCaloRes            , kDouble, 0, 1},
-	{"docalo",              &fgDoCalo             , kInt,    0, 1},
-        { 0 }
+      {"npmts",               &fNPMTs               , kInt,    0, 1},
+      {"npmtrows",            &fNPMTrows            , kInt,    0, 1},
+      {"nsignal",             &fNSigParticle        , kInt,    0, 1},
+      {"chan_per_slot",       &fChanPerSlot         , kInt,    0, 1},
+      {"g4sbs_detectortype",  &fg4sbsDetectorType   , kInt,    0, 1},
+      { 0 }
     };
     int pid, tid;
     DBRequest signalRequest[] = {
@@ -70,7 +51,7 @@ void TSBSDBManager::LoadGeneralInfo(const string& fileName)
         { 0 }
     };
     int err = LoadDB( input, request,  prefix);
-   
+    
     if( err ) exit(2); 
     
     for (int i=0; i<fNSigParticle; i++){
@@ -85,18 +66,20 @@ void TSBSDBManager::LoadGeneralInfo(const string& fileName)
 	if( err ) exit(2); 
     }
     
-    for (int i=0; i<GetNSector(); i++){
-      vector<GeoInfo> thisInfo;
-      thisInfo.clear();
-      fGeoInfo[i] = thisInfo;
+    if(fNPMTrows%2==0){
+      fNPMTcols = (fNPMTs/fNPMTrows*2.+1.)/2.;
+    }else{
+      fNPMTcols = (fNPMTs/fNPMTrows*2.+1.)/2.;
     }
     
-    fModulesPerChamber = fModulesPerReadOut * fNReadOut;
-    
-    fChambersPerCrate = 
-      (TSBSSimDecoder::GetMAXSLOT()/fModulesPerChamber/fNChamber) * fNChamber;
+    // for (int i=0; i<GetNSector(); i++){
+    //   vector<GeoInfo> thisInfo;
+    //   thisInfo.clear();
+    //   fGeoInfo[i] = thisInfo;
+    // }
 }
 
+/*
 //______________________________________________________________
 void TSBSDBManager::LoadGeoInfo(const string& prefix)
 {
@@ -152,29 +135,29 @@ void TSBSDBManager::LoadGeoInfo(const string& prefix)
       fGeoInfo[i].push_back(thisGeo);
     }
   }
-  /*
-  for (int i=0; i<fNSector2; i++){
-    map<int, vector<GeoInfo> >::iterator it = fGeoInfo.find(i);
-    if (it == fGeoInfo.end()) { cout<<"unexpected chamber id "<<i<<endl; }
+  
+  // for (int i=0; i<fNSector2; i++){
+  //   map<int, vector<GeoInfo> >::iterator it = fGeoInfo.find(i);
+  //   if (it == fGeoInfo.end()) { cout<<"unexpected chamber id "<<i<<endl; }
     
-    for (int j=0; j<fNChamber2; j++){
-      ostringstream sector_prefix(prefix, ios_base::ate);
-      int idx = i*fNChamber2 + j;
-      sector_prefix<<".gem"<<idx<<".";
+  //   for (int j=0; j<fNChamber2; j++){
+  //     ostringstream sector_prefix(prefix, ios_base::ate);
+  //     int idx = i*fNChamber2 + j;
+  //     sector_prefix<<".gem"<<idx<<".";
       
-      int err = LoadDB(input, request, sector_prefix.str());
-      if( err ) exit(2);
+  //     int err = LoadDB(input, request, sector_prefix.str());
+  //     if( err ) exit(2);
       
-      sector_prefix<<"gem"<<idx;
-      err = LoadDB(input, plane_request, sector_prefix.str());
-      if (err) exit(2);
+  //     sector_prefix<<"gem"<<idx;
+  //     err = LoadDB(input, plane_request, sector_prefix.str());
+  //     if (err) exit(2);
       
-      fGeoInfo[i].push_back(thisGeo);
-    }
-  }
-  */
+  //     fGeoInfo[i].push_back(thisGeo);
+  //   }
+  // }
+  
 }
-
+*/
 //______________________________________________________________
 string TSBSDBManager::FindKey( ifstream& inp, const string& key )
 {
@@ -195,22 +178,6 @@ string TSBSDBManager::FindKey( ifstream& inp, const string& key )
     }
   }
   return empty;
-}
-//_________________________________________________________________________
-bool TSBSDBManager::CheckIndex(int i, int j, int k)
-{
-    if (i >= fNChamber || i < 0){
-        cout<<"invalid chamber ID requested: "<<i<<endl;
-        return false;
-    }
-    else if(j>=fNSector){
-      cout<<"invalid sector id requested: "<<j<<endl;
-      return false;
-    }
-    else if (k >= fNReadOut || k < 0){
-        cout<<"invalid readout id requested: "<<k<<endl;
-    }
-    return true;
 }
 //_________________________________________________________________
 int TSBSDBManager::LoadDB( ifstream& inp, DBRequest* request, const string& prefix )
@@ -265,73 +232,7 @@ const int & TSBSDBManager::GetSigTID(unsigned int i)
     return fSigTID[i];
 }
 
-//______________________________________________________________________
-const double & TSBSDBManager::GetDMag(int i, int j)
-{
-  // cout << "D0: i, j " << i << " " << j << " Geo size, Geo[i] size " << fGeoInfo.size() << " ";
-  if (!CheckIndex(i, j)) return fErrVal;
-  // cout << fGeoInfo[j].size() << endl;
-  return fGeoInfo[j].at(i).dmag;
-}
-//______________________________________________________________________
-const double & TSBSDBManager::GetD0(int i, int j)
-{
-  //cout << "D0: i, j " << i << " " << j << " Geo size, Geo[i] size " << fGeoInfo.size() << " ";
-  if (!CheckIndex(i, j)) return fErrVal;
-  //cout << fGeoInfo[j].size() << endl;
-  return fGeoInfo[j].at(i).d0;
-}
-//______________________________________________________________________
-const double & TSBSDBManager::GetXOffset(int i, int j)
-{
-  //cout << "XOff: i, j " << i << " " << j << " Geo size, Geo[i] size "  << fGeoInfo.size() << " ";
-  if (!CheckIndex(i, j)) return fErrVal;
-  // cout << fGeoInfo[j].size() << endl;
-  return fGeoInfo[j].at(i).xoffset;
-}
-//______________________________________________________________________
-const double & TSBSDBManager::GetDX(int i, int j)
-{
-  //cout << "DX: i, j " << i << " " << j << " Geo size, Geo[i] size " << fGeoInfo.size();
-  if (!CheckIndex(i, j)) return fErrVal;
-  // cout << " " << fGeoInfo[j].size() << endl;
-  return fGeoInfo[j].at(i).dx;
-}
-//______________________________________________________________________
-const double & TSBSDBManager::GetDY(int i, int j)
-{
-  // cout << "DY: i, j " << i << " " << j << " Geo size, Geo[i] size " << fGeoInfo.size();
-  if (!CheckIndex(i, j)) return fErrVal;
-  // cout << " " << fGeoInfo[j].size() << endl;
-  return fGeoInfo[j].at(i).dy;
-}
-//______________________________________________________________________
-// const double & TSBSDBManager::GetThetaH(int i, int j)
-// {
-//     if (!CheckIndex(i, j)) return fErrVal;
-//     return fGeoInfo[j].at(i).thetaH;
-// }
-//______________________________________________________________________
-const double & TSBSDBManager::GetThetaV(int i, int j)
-{
-    if (!CheckIndex(i, j)) return fErrVal;
-    return fGeoInfo[j].at(i).thetaV;
-}
-//_________________________________________________________________________
-const double & TSBSDBManager::GetStripAngle(int i, int j, int k)
-{
-    if (!CheckIndex(i, j, k)) return fErrVal;
-    if (k == 0) return fGeoInfo[j].at(i).stripangle_u;
-    else return fGeoInfo[j].at(i).stripangle_u;
-}
-//_________________________________________________________________________
-const double & TSBSDBManager::GetPitch(int i, int j, int k)
-{
-    if (!CheckIndex(i, j, k)) return fErrVal;
-    if (k == 0) return fGeoInfo[j].at(i).pitch_u;
-    else return fGeoInfo[j].at(i).pitch_u;
-}
-
+/*
 //__________________________________________________________________________
 int TSBSDBManager::GetSectorIDFromPos(int ichamber, double x, double y)
 {
@@ -411,9 +312,4 @@ double TSBSDBManager::GetPosFromSectorStrip(int iproj, int ichamber, int isector
   //cout << " " << pos << endl;
   return( pos );
 }
-
-
-
-
-
-
+*/

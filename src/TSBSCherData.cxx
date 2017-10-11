@@ -42,6 +42,8 @@ TSBSCherData::PrintHit (UInt_t k) const
        <<  GetHitTimeRMS(k) << " ns " << endl;
   cout << "    Hit PE yield: " << GetHitPEyield(k) << endl;
   cout << "    Hit PMT: " << GetHitPMTID(k) << endl;
+  cout << "    PMT X_transport: " << GetHitXPMT(k) << endl;
+  cout << "    PMT Y_transport: " << GetHitYPMT(k) << endl;
   cout << "    Particle type: " << GetParticleType(k) << endl;
   cout << "    Photon detection position: " << GetPositionDet(k).X()
        << " " << GetPositionDet(k).Y() 

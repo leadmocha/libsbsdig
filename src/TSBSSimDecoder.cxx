@@ -232,12 +232,12 @@ void PMTtoROC( Int_t s_plane, Int_t s_sector, Int_t s_proj,
   div_t d = div( s_chan, fManager->GetChanPerSlot() );
   Int_t module = d.quot;
   chan = d.rem;
-  Int_t ix = module +
-    fManager->GetModulesPerReadOut()*( s_proj + fManager->GetNReadOut()*( s_plane + fManager->GetNChamber()*s_sector ));
+  Int_t ix = module;// stupid... // +
+  //   fManager->GetModulesPerReadOut()*( s_proj + fManager->GetNReadOut()*( s_plane + fManager->GetNChamber()*s_sector ));
   
   //cout << "StripToROC: module " << module << ", ix " << ix << endl;
   
-  d = div( ix, fManager->GetChambersPerCrate()*fManager->GetModulesPerChamber() );
+  d = div( ix, 1.);// stupid... //fManager->GetChambersPerCrate()*fManager->GetModulesPerChamber() );
   crate = d.quot;
   slot  = d.rem;
 }
@@ -247,7 +247,7 @@ static inline
 Int_t MakeROCKey( Int_t crate, Int_t slot, Int_t chan )
 {
   return chan +
-    fManager->GetChanPerSlot()*( slot + fManager->GetChambersPerCrate()*fManager->GetModulesPerChamber()*crate );
+    fManager->GetChanPerSlot()*( slot );// stupid... //+ fManager->GetChambersPerCrate()*fManager->GetModulesPerChamber()*crate );
 }
 
 //-----------------------------------------------------------------------------

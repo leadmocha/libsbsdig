@@ -1,6 +1,5 @@
 #include "TSBSSpec.h"
-//#include "TSolGEMCluster.h"
-#include "TSBSGEMChamber.h"
+//#include "TSBSGEMChamber.h"
 #include <iostream>
 
 using namespace std;
@@ -17,22 +16,22 @@ TSBSSpec::~TSBSSpec()
 {
   // Destructor: delete all plane objects
 
-  for( vector<TSBSGEMChamber*>::iterator it = fChambers.begin();
-       it != fChambers.end(); ++it ) {
-    delete *it;
-  }
+  // for( vector<TSBSGEMChamber*>::iterator it = fChambers.begin();
+  //      it != fChambers.end(); ++it ) {
+  //   delete *it;
+  // }
 }
 
-Int_t 
-TSBSSpec::AddGEM (TSBSGEMChamber* pdet)
-{
-  // Add a detector to the internal lists of spectrometer detectors.
-  // The detector object must be allocated and deleted by the caller.
-  // Duplicate detector names are not allowed.
+// Int_t 
+// TSBSSpec::AddGEM (TSBSGEMChamber* pdet)
+// {
+//   // Add a detector to the internal lists of spectrometer detectors.
+//   // The detector object must be allocated and deleted by the caller.
+//   // Duplicate detector names are not allowed.
 
-  fChambers.push_back(pdet);
-  return 0;
-}
+//   fChambers.push_back(pdet);
+//   return 0;
+// }
 
 Int_t TSBSSpec::CoarseTrack(){
     // Needs work
@@ -81,8 +80,8 @@ TSBSSpec::Print() const
 {
   cout << "Hello, I'm a spectrometer named " << GetName() << endl;
 	
-  for( vector<TSBSGEMChamber*>::const_iterator it = fChambers.begin();
-       it != fChambers.end(); ++it ) {
-    (*it)->Print();
-  }
+  // for( vector<TSBSGEMChamber*>::const_iterator it = fChambers.begin();
+  //      it != fChambers.end(); ++it ) {
+  //   (*it)->Print();
+  // }
 }
