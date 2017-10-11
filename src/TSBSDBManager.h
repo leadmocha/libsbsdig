@@ -27,7 +27,7 @@ public:
 
   const int    &   GetNPMTs()             { return fNPMTs;              }
   const int    &   GetNPMTrows()          { return fNPMTrows;           }
-  const int    &   GetNPMTcols()          { return fNPMTcols;           }
+  const int    &   GetNPMTcolsMax()       { return fNPMTcolsMax;        }
   
   const int    &   GetChanPerSlot()       { return fChanPerSlot;        }
   
@@ -47,7 +47,8 @@ public:
   //variable for data base information
   int fNPMTs;        // number of PMTs
   int fNPMTrows;     // number of PMT rows
-  int fNPMTcols;     // number of PMT columns: infered from two previous parameters
+  int fNPMTcolsMax;  // max number of PMT columns 
+  //(PMTs staggered with fNPMTcolsmax rows and fNPMTcolsmax-1 rows)
   int fChanPerSlot;  // number of PMTs per slot
   
   // Parameters for TSBSGeant4File

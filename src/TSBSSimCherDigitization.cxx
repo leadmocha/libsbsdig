@@ -10,8 +10,8 @@
 #include "TSBSCherData.h"
 //#include "TSolGEMVStrip.h"
 #include "TSBSSpec.h"
-#include "TSBSGEMChamber.h"
-#include "TSBSGEMPlane.h"
+//#include "TSBSGEMChamber.h"
+//#include "TSBSGEMPlane.h"
 //#include "TSolSimAux.h"
 #include "TSBSSimEvent.h"
 
@@ -1201,10 +1201,10 @@ TSBSSimCherDigitization::SetTreeEvent (const TSBSCherData& tsgd,
 
 Short_t
 TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
-				    const TSBSSpec& spect,
-				    //TSolGEMVStrip* const *dh,
-				    const TSBSCherData& tsgd,
-				    Double_t t0 )
+				     const TSBSSpec& spect,
+				     //TSolGEMVStrip* const *dh,
+				     const TSBSCherData& tsgd,
+				     Double_t t0 )
 {
   // Sets the variables in fEvent->fGEMClust describing a hit
   // This is later used to fill the tree.

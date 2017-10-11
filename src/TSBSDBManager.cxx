@@ -39,6 +39,7 @@ void TSBSDBManager::LoadGeneralInfo(const string& fileName)
     DBRequest request[] = {
       {"npmts",               &fNPMTs               , kInt,    0, 1},
       {"npmtrows",            &fNPMTrows            , kInt,    0, 1},
+      {"npmtcolsmax",         &fNPMTcolsMax         , kInt,    0, 1},
       {"nsignal",             &fNSigParticle        , kInt,    0, 1},
       {"chan_per_slot",       &fChanPerSlot         , kInt,    0, 1},
       {"g4sbs_detectortype",  &fg4sbsDetectorType   , kInt,    0, 1},
@@ -64,12 +65,6 @@ void TSBSDBManager::LoadGeneralInfo(const string& fileName)
         fSigTID.push_back(tid);
 	
 	if( err ) exit(2); 
-    }
-    
-    if(fNPMTrows%2==0){
-      fNPMTcols = (fNPMTs/fNPMTrows*2.+1.)/2.;
-    }else{
-      fNPMTcols = (fNPMTs/fNPMTrows*2.+1.)/2.;
     }
     
     // for (int i=0; i<GetNSector(); i++){

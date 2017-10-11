@@ -73,8 +73,12 @@ Useful class to unfold the databases and manage the parameters stored in them:
 General parameters for DB:
   //variable for data base information
   int fNPMTs;        // number of PMTs
-  int fNPMTrows;     // number of PMT rows ??
-  int fNPMTcols;     // number of PMT columns: infered from two previous parameters ??
+  int fNPMTrows;     // number of PMT rows
+  int fNPMTcolsmax;  // max number of PMT columns 
+  // (PMTs staggered with fNPMTcolsmax rows and fNPMTcolsmax-1 rows)
+  //  o o o o 
+  // o o o o o -> would be fNPMTcolsmax
+  //  o o o o
   int fChanPerSlot;  // number of PMTs per slot
   
   // Parameters for TSBSGeant4File

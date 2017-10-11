@@ -71,8 +71,10 @@ void TSBSSimEvent::Print( const Option_t* opt ) const
 	   << ", type = "    << h.fType
 	   << ", src = "    << h.fSource
 	   << endl;
-      cout << "PMT row = "   << h.fPMTrow
+      cout << "PMT row = "   << h.fPMTrow 
 	   << ", PMT col = "   << h.fPMTcol 
+	   << ", X_PMT = "   << h.fXPMT
+	   << ", Y_PMT = "   << h.fYPMT 
 	   << ", number of photoelectrons = " << h.fNpe
 	   << ", time = " << h.fTime << " ns " 
 	   << endl;
