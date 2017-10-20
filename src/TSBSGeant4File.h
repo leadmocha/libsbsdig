@@ -74,8 +74,8 @@ class g4sbsgendata : public g4sbshitdata {
 	int	GetTRID() const { return IsFilled()? (int) fData[0] : -1e9; }//G4 particle ID
 	int	GetPID() const { return IsFilled()? (int) fData[1] : -1e9; }//G4 particle ID
 	double  GetWeight() const { return fData[8]; }//cross section
-	TVector3 GetPprod() const { return IsFilled()? TVector3(fData[2], fData[3], fData[4]) : TVector3(-1e9, -1e9, -1e9 ); }//Track momentum 3-vector
-	TVector3 GetXprod() const { return IsFilled()? TVector3(fData[5], fData[6], fData[7]) : TVector3(-1e9, -1e9, -1e9 ); }//Track vtx 3-vector
+	TVector3 GetP() const { return IsFilled()? TVector3(fData[2], fData[3], fData[4]) : TVector3(-1e9, -1e9, -1e9 ); }//Track momentum 3-vector
+	TVector3 GetV() const { return IsFilled()? TVector3(fData[5], fData[6], fData[7]) : TVector3(-1e9, -1e9, -1e9 ); }//Track vtx 3-vector
 };
 
 

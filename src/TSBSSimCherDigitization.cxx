@@ -322,7 +322,7 @@ TSBSSimCherDigitization::ReadDatabase (const TDatime& date)
   Int_t err = LoadDB (file, date, request, fPrefix);
   fclose(file);
   if (err)
-    return kInitError;
+    return kInitError; 
   
   /*
   if( fEleSamplingPoints < 0 || fEleSamplingPoints > 10 )
@@ -358,125 +358,66 @@ TSBSSimCherDigitization::Digitize (const TSBSCherData& gdata, const TSBSSpec& sp
 }
 
 Int_t
-TSBSSimCherDigitization::AdditiveDigitize (const TSBSCherData& gdata, const TSBSSpec& spect)
+TSBSSimCherDigitization::AdditiveDigitize (const TSBSCherData& chdata, const TSBSSpec& spect)
 {
   // Digitize event. Add results to any existing digitized data.
   
-  UInt_t nh = gdata.GetNHit();
+  UInt_t nh = chdata.GetNHit();
   
   // For signal data, determine the sector of the primary track
-  bool is_background = gdata.GetSource() != 0;
-  /*
-  if( fDoMapSector && !is_background ) {
-    //originally the fSignalSector is determine from the phi angle of the track
-    //at vertex, this is good if there is no field. When there is, we cannot do it
-    //that way. So I changed it to the following. But still it doesn't work in there
-    //are more than 1 primary signal particle, hopefully we don't need to consider this
-    //-- Weizhi
-
-    Int_t ntrk = fEvent->GetNtracks();
-    if( ntrk == 0 && nh > 0 ) {
-      Warning("Digitize", "Signal data without a primary track?");
-    } else if( ntrk > 0 ) {
-      if( ntrk > 1 )
-	Warning("Digitize", "Multiple primary tracks in signal run?");
-
-      TSBSSimTrack* trk = static_cast<TSBSSimTrack*>( fEvent->fMCTracks->At(0) );
-      if( trk ) {
-        //fSignalSector = gdata.GetSigSector();// CHECK ?
-	Double_t ph = trk->PPhi();
-	// Assumes phi doesn't change between vertex and GEMs (no field) and the
-	// nominal angle (i.e. without offset) of sector 0 is 0 degrees
-	fSignalSector = TMath::FloorNint(ph*manager->GetNSector()/TMath::TwoPi() + 0.5);
-	if( fSignalSector < 0 ) fSignalSector += manager->GetNSector();
-      } else
-	Error("Digitize", "Null track pointer? Should never happen. Call expert.");
-    }
-  }
-  */
+  bool is_background = chdata.GetSource() != 0;
   if( nh == 0 ) {
     //cout << "no hit, doing nothing " << endl;
     return 0;
   }
-  
-  /*
-  // Map sectors of any background data to the signal sector, if so requested
-  bool map_backgr = fDoMapSector && is_background;
 
-  // Randomize the event time for background events
-  UInt_t vsize = ( map_backgr ) ? manager->GetNSector() : 1;
+  UInt_t vsize = manager->GetNDetectors();
   vector<Float_t> event_time(vsize);
   vector<bool> time_set(vsize,false);
   UInt_t itime = 0;
-
-  // for (UInt_t ic = 0; ic < fNChambers; ++ic) {
-  //   for (UInt_t ip = 0; ip < fNPlanes[ic]; ++ip)
-  //     for(int i = 0; i<spect.GetChamber(ic).GetPlane(ip).GetNStrips(); i++){
-  // 	for(int j = 0; j< fEleSamplingPoints; j++){
-  // 	  if(fDP[ic][ip]->GetADC(i,j)!=0)cout << fDP[ic][ip]->GetADC(i,j) << " ";
-  // 	}
-  //     }
-  // }
   
   for (UInt_t ih = 0; ih < nh; ++ih) {  
-    UInt_t igem = gdata.GetHitPMTID (ih);
-    if (igem >= fNChambers)
+    UInt_t idet = chdata.GetHitDetID (ih);
+    UInt_t ipmt = chdata.GetHitPMTID (ih);
+    if (ipmt >= fNPMTs[idet])
       continue;
     
-    Short_t itype = (gdata.GetParticleType(ih)==1) ? 1 : 2; // primary = 1, secondaries = 2
+    Short_t itype = (chdata.GetParticleType(ih)==1) ? 1 : 2; // primary = 1, secondaries = 2
     Short_t isect, iplane;
-    ChamberToSector( igem, isect, iplane );
-        
-    if( fDoMapSector && !is_background && isect != fSignalSector )
-      // If mapping sectors, skip signal hits that won't end up in sector 0
-      continue;
     
-    // These vectors are in the spec frame, we need them in the chamber frame
-    TVector3 vv1 = gdata.GetHitEntrance (ih);
-    TVector3 vv2 = gdata.GetHitExit (ih);
-    
-    IonModel (vv1, vv2, gdata.GetHitEnergy(ih) );
-    // Generate randomized event time (for background) and trigger time jitter
-    if( map_backgr ) {
-      // If mapping sectors, treat the hits from each sector like coming from
-      // a separate event. As a result, each sector gets its own random event_time.
-      // If not mapping sectors, itime = 0, and all hits get the same time offset.
-      itime = isect;
+    // Trigger time jitter, including an arbitrary offset to align signal timing
+    Double_t trigger_jitter = fTrnd.Gaus(0, fTriggerJitter);
+    //cout << "Offset, Jitter: " << fTriggerOffset << " " << fTriggerJitter << " => trig jitter = " << trigger_jitter << endl;
+    if( is_background ) {
+      // For background data, uniformly randomize event time between
+      // -fGateWidth to +75 ns (assuming 3 useful 25 ns samples).
+      event_time[itime] = fTrnd.Uniform(fGateWidth) - fGateWidth/2.0 + trigger_jitter - fTriggerOffset;
+      //cout << "GateWidth " << fGateWidth << ", sampling period " << fEleSamplingPeriod << endl;
+    } else {
+      // Signal events occur at t = 0, smeared only by the trigger jitter
+      event_time[itime] = trigger_jitter-fTriggerOffset;
     }
-    if( !time_set[itime] ) {
-      // Trigger time jitter, including an arbitrary offset to align signal timing
-      Double_t trigger_jitter = fTrnd.Gaus(fTriggerOffset, fTriggerJitter);
-      //cout << "Offset, Jitter: " << fTriggerOffset << " " << fTriggerJitter << " => trig jitter = " << trigger_jitter << endl;
-      if( is_background ) {
-	
-	// For background data, uniformly randomize event time between
-	// -fGateWidth to +75 ns (assuming 3 useful 25 ns samples).
-	event_time[itime] = fTrnd.Uniform(fGateWidth + 3*fEleSamplingPeriod)
-	  - fGateWidth - trigger_jitter;
-	//cout << "GateWidth " << fGateWidth << ", sampling period " << fEleSamplingPeriod << endl;
-      } else {
-	// Signal events occur at t = 0, smeared only by the trigger jitter
-	event_time[itime] = -trigger_jitter;
-      }
-#if DBG_AVA > 0
-      if(event_time[itime]>-50.0 && is_background ){
-	cout << "Evt time " << event_time[itime] 
-	     << " ( -trigger_jitter = " << -trigger_jitter;
-	if(is_background) cout << ", -Gate Width =  " << -fGateWidth;
-	cout << ")" << endl;
-      }
+    /*
+      #if DBG_AVA > 0
+    if(event_time[itime]>-50.0 && is_background ){
+      cout << "Evt time " << event_time[itime] 
+	   << " ( -trigger_jitter = " << -trigger_jitter;
+      if(is_background) cout << ", -Gate Width =  " << -fGateWidth;
+      cout << ")" << endl;
+    }
 #endif
-      
-      time_set[itime] = true;
-    }
+    
+    //time_set[itime] = true;
+    //}
+    
     // Time of the leading edge of this hit's avalance relative to the trigger
-    Double_t time_zero = event_time[itime] + gdata.GetHitTime(ih) + fRTime0*1e9;
+    Double_t time_zero = event_time[itime] + chdata.GetHitTime(ih);// + fRTime0*1e9;
     
 #if DBG_AVA > 0
     if(time_zero>200.0)
       cout << "time_zero " << time_zero 
 	   << "; evt time " << event_time[itime] 
-	   << "; hit time " << gdata.GetHitTime(ih)
+	   << "; hit time " << chdata.GetHitTime(ih)
 	   << "; drift time " << fRTime0*1e9
 	   << endl;
 #endif
@@ -493,8 +434,8 @@ TSBSSimCherDigitization::AdditiveDigitize (const TSBSCherData& gdata, const TSBS
     // vv2.Print();
     
     // Record MC hits in output event
-    //Short_t id = SetTreeHit (ih, spect, fdh, gdata, time_zero);
-    Short_t id = SetTreeHit (ih, spect, gdata, time_zero);
+    //Short_t id = SetTreeHit (ih, spect, fdh, chdata, time_zero);
+    Short_t id = SetTreeHit (ih, spect, chdata, time_zero);
     
     // Record digitized strip signals in output event
     if (fdh) {
@@ -518,31 +459,29 @@ TSBSSimCherDigitization::AdditiveDigitize (const TSBSCherData& gdata, const TSBS
       }
       fdh = NULL;
     }
-    
+    */  
   }
-  fFilledStrips = false;
-  */
   return 0;
 }
 
 void
-TSBSSimCherDigitization::NoDigitize (const TSBSCherData& gdata, const TSBSSpec& spect) // do not digitize event, just fill the tree
+TSBSSimCherDigitization::NoDigitize (const TSBSCherData& chdata, const TSBSSpec& spect) // do not digitize event, just fill the tree
 {
   //  if (!fEvCleared)  //?
   fEvent->Clear();
-  UInt_t nh = gdata.GetNHit();
+  UInt_t nh = chdata.GetNHit();
   
   for (UInt_t ih = 0; ih < nh; ++ih)
     {
-      UInt_t idet = gdata.GetHitDetID(ih);
-      UInt_t ipmt = gdata.GetHitPMTID(ih);
+      UInt_t idet = chdata.GetHitDetID(ih);
+      UInt_t ipmt = chdata.GetHitPMTID(ih);
       
       if (ipmt >= fNPMTs[idet])
 	continue;
       
       // Short_t id =
-      //SetTreeHit (ih, spect, fdh, gdata, 0.0);
-      SetTreeHit (ih, spect, gdata, 0.0);
+      //SetTreeHit (ih, spect, fdh, chdata, 0.0);
+      SetTreeHit (ih, spect, chdata, 0.0);
     }
 }
 
@@ -1155,7 +1094,7 @@ TSBSSimCherDigitization::InitTree (const TSBSSpec& spect, const TString& ofile)
 
 void
 TSBSSimCherDigitization::SetTreeEvent (const TSBSCherData& tscd,
-				      const TSBSGeant4File& f, Int_t evnum )
+				       const TSBSGeant4File& f, Int_t evnum )
 {
   // Set overall event info.
   fEvent->Clear("all");
@@ -1166,10 +1105,10 @@ TSBSSimCherDigitization::SetTreeEvent (const TSBSCherData& tscd,
   }
   for( UInt_t i=0; i<f.GetNGen(); ++i ) {
     const g4sbsgendata* gd = f.GetGenData(i);
-    // fEvent->AddTrack( gd->GetTRID(), gd->GetPID(),
-    // 		      gd->GetV(), // Vertex coordinates in [m]
-    // 		      gd->GetP()  // Momentum in [GeV]
-    // 		      );
+    fEvent->AddTrack( gd->GetTRID(), gd->GetPID(),
+     		      gd->GetV(), // Vertex coordinates in [m]
+     		      gd->GetP()  // Momentum in [GeV]
+     		      );
   }
   // FIXED: one GenData per event: signal, primary particle
   if( f.GetNGen() > 0 )

@@ -141,8 +141,8 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
       }
     }
     */
-    //ddd->Digitize(*chd, *dds);
-    ddd->NoDigitize(*chd, *dds);
+    ddd->Digitize(*chd, *dds);
+    //ddd->NoDigitize(*chd, *dds);
       
     // Access to generated vertex and momentum
     // gen->GetV();

@@ -101,7 +101,7 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   /* void PrintCharges() const; */
   /* void PrintSamples() const; */
   
-  //Double_t GetGateWidth(){ return fGateWidth; }
+  Double_t GetGateWidth(){ return fGateWidth; }
 
   // Tree methods
   // To write a tree with digitization results:
