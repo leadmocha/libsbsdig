@@ -249,11 +249,11 @@ void TSBSSimCherDigitization::DeleteObjects()
   delete[] fDP;       fDP = 0;
   delete[] fdh;       fdh = 0;
   delete[] fNPlanes;  fNPlanes = 0;
+  */
 
   delete fOFile;      fOFile = 0;
   delete fOTree;      fOTree = 0;
   delete fEvent;      fEvent = 0;
-  */
 }
 
 void
@@ -301,43 +301,22 @@ TSBSSimCherDigitization::ReadDatabase (const TDatime& date)
   if (!file) return kFileError;
 
   const DBRequest request[] =
-    {/*
-      { "gasionwidth",               &fGasWion,                   kDouble },
-      { "gasdiffusion",              &fGasDiffusion,              kDouble },
-      { "gasdriftvelocity",          &fGasDriftVelocity,          kDouble },
-      { "avalanchefiducialband",     &fAvalancheFiducialBand,     kDouble },
-      { "avalanchechargestatistics", &fAvalancheChargeStatistics, kInt    },
-      { "gainmean",                  &fGainMean,                  kDouble },
-      { "gain0",                     &fGain0,                     kDouble },
+    {
+      { "adcgain",                   &fADCgain,                   kDouble },
+      { "adcoffset",                 &fADCoffset,                 kDouble },
+      { "gatewidth",                 &fGateWidth,                 kDouble },
+      { "adcbits",                   &fADCbits,                   kInt    },
+      { "pmtgain",                   &fPMTGain,                   kDouble },
       { "triggeroffset",             &fTriggerOffset,             kDouble },
       { "triggerjitter",             &fTriggerJitter,             kDouble },
-      { "elesamplingpoints",         &fEleSamplingPoints,         kInt    },
-      { "elesamplingperiod",         &fEleSamplingPeriod,         kDouble },
+      { "pulsenoiseconst",           &fPulseNoiseConst,           kDouble },
       { "pulsenoisesigma",           &fPulseNoiseSigma,           kDouble },
-      { "pulsenoiseperiod",          &fPulseNoisePeriod,          kDouble },
-      { "pulsenoiseampconst",        &fPulseNoiseAmpConst,        kDouble },
-      { "pulsenoiseampsigma",        &fPulseNoiseAmpSigma,        kDouble },
-      { "adcoffset",                 &fADCoffset,                 kDouble },
-      { "adcgain",                   &fADCgain,                   kDouble },
-      { "adcbits",                   &fADCbits,                   kInt    },
-      { "gatewidth",                 &fGateWidth,                 kDouble },
-      { "pulseshapetau0",            &fPulseShapeTau0,            kDouble },
-      { "pulseshapetau1",            &fPulseShapeTau1,            kDouble },
-      { "zrout",                     &fRoutZ,                     kDouble },
-      { "use_tracker_frame",         &fUseTrackerFrame,           kInt    },
-      { "entrance_ref",              &fEntranceRef,               kDouble },
-      { "avalateraluncertainty",     &fLateralUncertainty,        kDouble },
-      { "max_ion",                   &fMaxNIon,                   kUInt   },
-      { "y_integral_step_per_pitch", &fYIntegralStepsPerPitch,    kUInt   },
-      { "x_integral_step_per_pitch", &fXIntegralStepsPerPitch,    kUInt   },
-      { "avalanche_range",           &fSNormNsigma,               kDouble },
-      { "ava_model",                 &fAvaModel,                  kInt    },
-      { "ava_gain",                  &fAvaGain,                   kDouble },
+      { "pulseshapetau",             &fPulseShapeTau,             kDouble },
       { "do_crosstalk",              &fDoCrossTalk,               kInt    },
-      { "crosstalk_mean",            &fCrossFactor,               kDouble },
-      { "crosstalk_sigma",           &fCrossSigma,                kDouble },
-      { "crosstalk_strip_apart",     &fNCStripApart,              kInt    },
-     */{ 0 }
+      { "crosstalk_mean",            &fCrossTalkMean,             kDouble },
+      { "crosstalk_sigma",           &fCrossTalkSigma,            kDouble },
+      { "crosstalk_chan_apart",      &fCrossTalkChanApart,        kInt    },
+      { 0 }
     };
 
   Int_t err = LoadDB (file, date, request, fPrefix);
@@ -1219,8 +1198,8 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
   hit.fOrigVolFlag = tscd.GetOriginVolFlag(ih);
   hit.fXPMT = 0;//tscd.(ih);
   hit.fYPMT = 0;//tscd.(ih);
-  hit.fNpe = tscd.GetHitPEyield(ih);
-  hit.fTime = tscd.GetHitTime(ih);
+  hit.fNpe = 0;//tscd.GetHitPEyield(ih);
+  hit.fTime = 0;//tscd.GetHitTime(ih);
   // Digitization results for this hit
   hit.fDetID = tscd.GetHitDetID(ih);
   hit.fChannel = tscd.GetHitPMTID(ih);

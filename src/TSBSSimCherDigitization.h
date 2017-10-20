@@ -124,22 +124,23 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   void WriteTree () const;
   void CloseTree () const;
 
-
+  // Access to results
+  /* Float_t GetTime (UInt_t ich, UInt_t ip, UInt_t n) const {return fDP[ich][ip]->GetTime (n);} */
+  /* Int_t   GetADC (UInt_t ich, UInt_t ip, Int_t n, Int_t ks) const {return fDP[ich][ip]->GetADC (n, ks);} */
+  /* Int_t   GetTDC (UInt_t ich, UInt_t ip, Int_t n, Int_t ks) const {return fDP[ich][ip]->GetADC (n, ks);} */
+  /* UShort_t Threshold (UInt_t ich, UInt_t ip, Int_t thr) {return fDP[ich][ip]->Threshold (thr);} */
+  /* UShort_t GetNPMTOverThr (UInt_t ich, UInt_t ip) const {return fDP[ich][ip]->GetNOverThr();} */
+  
   TSBSSimEvent* GetEvent() const { return fEvent; }
   
   /*
-  // Access to results
   Short_t GetType (UInt_t ich, UInt_t ip, Int_t n) const {return fDP[ich][ip]->GetType (n);}
   Int_t   GetTotADC (UInt_t ich, UInt_t ip, Int_t n) const {return fDP[ich][ip]->GetTotADC (n);}
-  Float_t GetTime (UInt_t ich, UInt_t ip, UInt_t n) const {return fDP[ich][ip]->GetTime (n);}
   Float_t GetCharge (UInt_t ich, UInt_t ip, UInt_t n) const {return fDP[ich][ip]->GetCharge (n);}
-  Int_t   GetADC (UInt_t ich, UInt_t ip, Int_t n, Int_t ks) const {return fDP[ich][ip]->GetADC (n, ks);}
   UInt_t   GetNChambers() const {return fNChambers;};
   UInt_t   GetNPlanes (const UInt_t i) const {return fNPlanes[i];}
   UShort_t GetNSamples (UInt_t ich, UInt_t ip) const {return fDP[ich][ip]->GetNSamples();}
   UShort_t GetNStrips (UInt_t ich, UInt_t ip) const {return fDP[ich][ip]->GetNStrips();}
-  UShort_t Threshold (UInt_t ich, UInt_t ip, Int_t thr) {return fDP[ich][ip]->Threshold (thr);}
-  UShort_t GetNOverThr (UInt_t ich, UInt_t ip) const {return fDP[ich][ip]->GetNOverThr();}
   Short_t  GetIdxOverThr (UInt_t ich, UInt_t ip, Int_t n) const
   { return fDP[ich][ip]->GetIdxOverThr(n); }
 
@@ -167,83 +168,23 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   */
   
   private:
-  /*
-  void IonModel (const TVector3& xi,
-		 const TVector3& xo,
-		 const Double_t elost );
-  
-  TSolGEMVStrip ** AvaModel (const Int_t ic,
-  			     const TSBSSpec& spect,
-  			     const TVector3& xi,
-  			     const TVector3& xo,
-  			     const Double_t time_off);
-			     
-  Double_t GetPedNoise(Double_t& phase, Double_t& amp, Int_t& isample);
-  
-  // Gas parameters
-  Double_t fGasWion;               // eV
-  Double_t fGasDiffusion;          // mm2/s
-  Double_t fGasDriftVelocity;      // mm/s
-  Double_t fAvalancheFiducialBand; // number of sigma defining the band around the avalanche in readout plane
-  Int_t    fAvalancheChargeStatistics;  // 0 Furry, 1 Gaussian
-  Double_t fGainMean;
-  Double_t fGain0;
-  UInt_t   fMaxNIon;               //maximum amount of ion pairs allowed in the digitization
-  
-  Double_t fSNormNsigma;           //fSNormNsigma is an arbitrary multiplicative factor for the avalance radius.
-  Int_t    fAvaModel;              //0 for Heavyside, 1 for Gaussian, 2 for Cauchy-Lorentz
-  Double_t fAvaGain;
-  // Electronics parameters
-  Double_t fTriggerOffset;       // trigger offset (ns), incl latency & readout offset
-  Double_t fTriggerJitter;       // trigger sigma jitter (ns)
-  Int_t    fEleSamplingPoints;
-  Double_t fEleSamplingPeriod;   // ns
-  Double_t fADCoffset;       // ADC offset
-  Double_t fADCgain;         // ADC gain
-  Int_t    fADCbits;         // ADC resolutions in bits
-  Double_t fGateWidth;       // to be changed , ns - pulse shape width at ~1/10 max
-  Int_t    fUseTrackerFrame;       // tracker frame is used in the original version, but not so in my version
-                                   // Weizhi Xiong
-  Double_t fEntranceRef;           // z position of the copper layer right before the first GEM gas layer,
-                             // relative to the center of the GEM chamber
-  Double_t fLateralUncertainty; // avalanche electrons can only pass through the holes of GEM foil
-                                // which introduce additional uncertainty in the lateral direction
 
-  //parameter for GEM pedestal noise
-  Double_t fPulseNoiseSigma;  // additional sigma term of the pedestal noise
-  Double_t fPulseNoisePeriod; // period of the pedestal noise, assuming sinusoidal function
-  Double_t fPulseNoiseAmpConst;  // constant term of the pedestal noise amplitude
-  Double_t fPulseNoiseAmpSigma;  // sigma term of the pedestal noise amplitude
-
-  // Pulse shaping parameters
-  Double_t fPulseShapeTau0;   // [ns] GEM model; = 50. in SiD model
-  Double_t fPulseShapeTau1;   // [ns] GEM model only; if negative assume SiD model
-
-  // Geometry
-  Double_t fRoutZ;            // z-distance hit entrance to readout plane [mm]
+  // Database parameters:
+  Double_t fADCgain;
+  Double_t fADCoffset;
+  Double_t fGateWidth;
+  Short_t  fADCbits;
+  Double_t fPMTGain;
+  Double_t fPulseShapeTau;
+  Double_t fTriggerOffset;
+  Double_t fTriggerJitter;
+  Double_t fPulseNoiseConst;
+  Double_t fPulseNoiseSigma;
+  Bool_t   fDoCrossTalk;
+  Double_t fCrossTalkMean;
+  Double_t fCrossTalkSigma;
+  Double_t fCrossTalkChanApart;
   
-  // Sector mapping // (???) are these relevant ? probably not (EFuchey 2016/12/05)
-  Bool_t   fDoMapSector;
-  Int_t    fSignalSector;
-
-  //parameter for numerical integration
-  UInt_t   fYIntegralStepsPerPitch;
-  UInt_t   fXIntegralStepsPerPitch;
-  
-  TSBSDigitizedPlane*** fDP; // 2D array of plane pointers indexed by chamber, plane #
-  TSolGEMVStrip** fdh;// array of U & V GEM strips
-  
-  UInt_t* fNPlanes;   // # planes in each chamber
-  UInt_t   fRNIon;    // number of ions
-  std::vector<IonPar_t> fRIon;
-  Double_t fRSMax;
-  Double_t fRTotalCharge;
-  Double_t fRTime0;
-
-  std::vector<Double_t> fSumA;
-  std::vector<Short_t>  fDADC;
-  */
-
   UInt_t fNDetectors;  // # N detectors
   std::vector<UInt_t> fNPMTs;  // # N PMTs for each detector
   TRandom3 fTrnd;     // time randomizer
