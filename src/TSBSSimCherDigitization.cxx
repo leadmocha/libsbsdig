@@ -555,9 +555,10 @@ TSBSSimCherDigitization::NoDigitize (const TSBSCherData& gdata, const TSBSSpec& 
 
   for (UInt_t ih = 0; ih < nh; ++ih)
     {
-      UInt_t ipmt = gdata.GetHitPMTID (ih);
+      UInt_t idet = gdata.GetHitDetID(ih);
+      UInt_t ipmt = gdata.GetHitPMTID(ih);
       
-      if (ipmt >= fNPMTs)
+      if (ipmt >= fNPMTs[idet])
 	continue;
       
       // Short_t id =

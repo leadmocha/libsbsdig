@@ -16,7 +16,7 @@ class TFile;
 class TTree;
 
 class TSBSCherData;
-class TSolGEMVStrip;
+//class TSolGEMVStrip;
 class TSBSSpec;
 class TSBSSimEvent;
 class TSBSGeant4File;
@@ -244,7 +244,8 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   std::vector<Short_t>  fDADC;
   */
 
-  UInt_t fNPMTs;  // # chambers
+  UInt_t fNDetectors;  // # N detectors
+  std::vector<UInt_t> fNPMTs;  // # N PMTs for each detector
   TRandom3 fTrnd;     // time randomizer
   
   // Tree

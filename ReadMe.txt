@@ -17,6 +17,7 @@ and will be used by class TSBSSimCherDigitization.cxx.
 TSBSCherData: 
 Constitutes the internal data container for the library;
 The structure of the data stored is the following:
+  UInt_t    fDetID;          // Hit Detector (if many)
   UInt_t    fPMTID;          // Hit PMT
   Double_t  fXPMT;           // X coordinate of the PMT in transport coordinates
   Double_t  fYPMT;           // Y coordinate of the PMT in transport coordinates

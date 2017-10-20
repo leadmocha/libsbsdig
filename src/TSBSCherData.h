@@ -22,10 +22,11 @@ class TSBSCherData
   void SetEvent (UInt_t id) { fEvtID = id; }
   void SetRun (UInt_t r)    { fRunID = r; }
   void SetSource (Int_t s)  { fSource = s; }
-
+  
   // Positions are in mm
   // Time is in ns
   // Momenta are in MeV
+  void SetHitDetID (UInt_t k, UInt_t detid)             { fHitData[k].fDetID  = detid; }
   void SetHitPMTID (UInt_t k, UInt_t pmtid)             { fHitData[k].fPMTID  = pmtid; }
   void SetHitXPMT (UInt_t k, Double_t xpmt)             { fHitData[k].fXPMT  = xpmt; }
   void SetHitYPMT (UInt_t k, Double_t ypmt)             { fHitData[k].fYPMT  = ypmt; }
@@ -43,7 +44,8 @@ class TSBSCherData
   UInt_t GetEvent()  const { return fEvtID; }
   UInt_t GetRun()    const { return fRunID; }
   Int_t  GetSource() const { return fSource; }
-
+  
+  UInt_t          GetHitDetID (UInt_t k)        const { return fHitData[k].fDetID; }
   UInt_t          GetHitPMTID (UInt_t k)        const { return fHitData[k].fPMTID; }
   Double_t        GetHitXPMT (UInt_t k)         const { return fHitData[k].fXPMT; }
   Double_t        GetHitYPMT (UInt_t k)         const { return fHitData[k].fYPMT; }
@@ -64,6 +66,7 @@ class TSBSCherData
   // Hit data
   // moved in "public" to allow it to compile with Root6/CentOS7
   struct CherHitData_t {
+    UInt_t    fDetID;          // Hit detector ID
     UInt_t    fPMTID;          // Hit PMT
     Double_t  fXPMT;           // X coordinate of the PMT in transport coordinates
     Double_t  fYPMT;           // Y coordinate of the PMT in transport coordinates

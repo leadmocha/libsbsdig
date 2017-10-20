@@ -144,7 +144,7 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
       cout << "Number of Hits: " << fTree->Earm_GRINCH_hit_nhits << endl;
     } // DEBUG
     for(int i = 0; i<fTree->Earm_GRINCH_hit_nhits; i++){
-      det_id = 1;
+      det_id = 0;
       
       type = fTree->Earm_GRINCH_hit_mTrackNo->at(i)+1;//=1 if primary, >1 if secondary... 
       // GRINCH is supposed to ID electrons only... so a primary will always be with TrackNo = 0
@@ -343,7 +343,7 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
       cout << "Number of Hits: " << fTree->Harm_RICH_hit_nhits << endl;
     } // DEBUG
     for(int i = 0; i<fTree->Harm_RICH_hit_nhits; i++){
-      det_id = 2;
+      det_id = 0;
       
       type = fTree->Harm_RICH_hit_mTrackNo->at(i)+1;//=1 if primary, >1 if secondary... 
       // TODO: modify the particle type according to the particle PID...
@@ -572,18 +572,18 @@ void TSBSGeant4File::Clear(){
   return;
 }
 
-TSBSCherData* TSBSGeant4File::GetGEMData()
+TSBSCherData* TSBSGeant4File::GetCherData()
 {
   // Return TSBSCherData object filled with GEM data of present event.
   // The returned object pointer must be deleted by the caller!
 
   TSBSCherData* gd = new TSBSCherData();
 
-  GetGEMData(gd);
+  GetCherData(gd);
   return gd;
 }
 
-void TSBSGeant4File::GetGEMData(TSBSCherData* gd)
+void TSBSGeant4File::GetCherData(TSBSCherData* gd)
 {
   // Pack data into TSBSCherData
    
@@ -607,6 +607,7 @@ void TSBSGeant4File::GetGEMData(TSBSCherData* gd)
 
     if( h->GetData(1)>0.0 ){
 
+      gd->SetHitDetID(ngdata,      (UInt_t)h->GetData(19));
       gd->SetHitPMTID(ngdata,      (UInt_t)h->GetData(0) );
       gd->SetHitXPMT(ngdata,               h->GetData(1) ); 
       gd->SetHitYPMT(ngdata,               h->GetData(2) ); 
