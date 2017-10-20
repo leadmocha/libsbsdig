@@ -47,21 +47,22 @@ public:
   
   struct PMTHit {
     // MC hit data
-    Short_t   fID;        // Hit number
-    Int_t     fSource;    // MC data set source (0 = signal, >0 background)
-    Int_t     fType;      // GEANT particle type (1 = primary)
-    Int_t     fMCtrackPID; // GEANT particle ID (if any)
+    Short_t   fID;          // Hit number
+    Int_t     fSource;      // MC data set source (0 = signal, >0 background)
+    Int_t     fType;        // GEANT particle type (1 = primary)
+    Int_t     fMCtrackPID;  // GEANT particle ID (if any)
     Short_t   fOrigVolFlag; // 
     Double_t  fXPMT;        // X coordinate of the PMT in transport coordinates
     Double_t  fYPMT;        // Y coordinate of the PMT in transport coordinates
-    Float_t   fNpe;       // Number of photoelectrons
-    Float_t   fTime;      // Arrival time at electronics
+    Float_t   fNpe;         // Number of photoelectrons
+    Float_t   fTime;        // Arrival time at electronics
     // Digitization results for this hit
-    Short_t   fChannel;   // Channel number
-    Short_t   fPMTrow;    // Row number: cross reference to Channel number
-    Short_t   fPMTcol;    // Column number: cross reference to Channel number
-    Int_t     fADC;       // ADC value
-    Int_t     fTDC;       // TDC value
+    Short_t   fDetID;       // Detector ID
+    Short_t   fChannel;     // Channel number
+    Short_t   fPMTrow;      // Row number: cross reference to Channel number
+    Short_t   fPMTcol;      // Column number: cross reference to Channel number
+    Int_t     fADC;         // ADC value
+    Int_t     fTDC;         // TDC value
   };
   std::vector<PMTHit> fPMTHits;  // All MC-generated clusters in the GEMs
 

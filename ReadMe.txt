@@ -59,6 +59,7 @@ The data structure is the following:
     Float_t   fNpe;         // Number of photoelectrons
     Float_t   fTime;        // Arrival time at electronics
     // Digitization results for this hit
+    Short_t   fDetID;       // Detector ID
     Short_t   fChannel;     // Channel number
     Short_t   fPMTrow;      // Row number: cross reference to Channel number
     Short_t   fPMTcol;      // Column number: cross reference to Channel number
