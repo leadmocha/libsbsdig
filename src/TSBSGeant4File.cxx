@@ -1,6 +1,5 @@
 #include "TSBSGeant4File.h"
-//#include "g4sbs_types.h"
-#include "gemc_types.h"
+#include "g4sbs_types.h"
 #include "fstream"
 
 #ifndef __CINT__
@@ -215,7 +214,7 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
 	hit_data_temp[k+14] = Vtx_MCtrack[k];
       }
       
-      fg4sbsHitData.push_back(new g4sbshitdata(det_id,  data_size(19)));
+      fg4sbsHitData.push_back(new g4sbshitdata(det_id, 19));
 
       // ... to copy it in the actual g4sbsHitData structure.
       for(int j = 0; j<18; j++){
@@ -414,7 +413,7 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
 	hit_data_temp[k+14] = Vtx_MCtrack[k];
       }
       
-      fg4sbsHitData.push_back(new g4sbshitdata(det_id,  data_size(19)));
+      fg4sbsHitData.push_back(new g4sbshitdata(det_id, 19));
 
       // ... to copy it in the actual g4sbsHitData structure.
       for(int j = 0; j<18; j++){

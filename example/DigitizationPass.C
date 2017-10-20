@@ -33,7 +33,7 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
   switch(fspec){
   case(1):
     manager->LoadGeneralInfo("db_generalinfo_gc.dat");
-    manager->LoadGeoInfo("g4sbs_gc");
+    //manager->LoadGeoInfo("g4sbs_gc");
     dds = new TSBSSpec ("g4sbs_gc", "BB spectrometer");
     outname = Form("digitized_bbgem_%s.root", bg.c_str());
     infile_sig = "/volatile/halla/sbs/efuchey/misc/test_gc_20170727_15/gc_signal_0.root";
