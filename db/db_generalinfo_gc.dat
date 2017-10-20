@@ -1,10 +1,7 @@
-generalinfo.npmts = 510
-generalinfo.npmtrows = 60
-generalinfo.npmtcolsmax = 9
+generalinfo.ndetectors = 1
+generalinfo.g4sbs_detectortype = 1
 generalinfo.chan_per_slot = 2048
 
 generalinfo.nsignal = 1
 generalinfo.signal1.pid = 11
 generalinfo.signal1.tid = 1
-
-generalinfo.g4sbs_detectortype = 1

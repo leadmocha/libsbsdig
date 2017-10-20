@@ -23,18 +23,14 @@ public:
   }
   
   void LoadGeneralInfo(const string& fileName);
-  //void LoadGeoInfo(const string& prefix);
-
-  const int    &   GetNPMTs()             { return fNPMTs;              }
-  const int    &   GetNPMTrows()          { return fNPMTrows;           }
-  const int    &   GetNPMTcolsMax()       { return fNPMTcolsMax;        }
+  void LoadGeoInfo(const string& prefix);
   
-  const int    &   GetChanPerSlot()       { return fChanPerSlot;        }
+  const int    &   GetNDetectors()        { return fNDetectors;        }
+  const int    &   Getg4sbsDetectorType() { return fg4sbsDetectorType; }
+  const int    &   GetChanPerSlot()       { return fChanPerSlot;       }
   
   const int    &   GetSigPID(unsigned int i);
   const int    &   GetSigTID(unsigned int i);
-  
-  const int    &   Getg4sbsDetectorType() { return fg4sbsDetectorType;  }
   
  protected:
   TSBSDBManager();
@@ -45,10 +41,7 @@ public:
   static TSBSDBManager* fManager;
   
   //variable for data base information
-  int fNPMTs;        // number of PMTs
-  int fNPMTrows;     // number of PMT rows
-  int fNPMTcolsMax;  // max number of PMT columns 
-  //(PMTs staggered with fNPMTcolsmax rows and fNPMTcolsmax-1 rows)
+  int fNDetectors;  // number of Cherenkov detectors in arm (usually 1...)
   int fChanPerSlot;  // number of PMTs per slot
   
   // Parameters for TSBSGeant4File
@@ -60,7 +53,8 @@ public:
   int fNSigParticle; // number of signal particles
   vector<int>    fSigPID;
   vector<int>    fSigTID;
-  //map< int, vector<GeoInfo> > fGeoInfo;
+  
+  map< int, vector<GeoInfo> > fGeoInfo;
   
   int    fErrID;
   double fErrVal;

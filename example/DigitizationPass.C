@@ -33,9 +33,9 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
   switch(fspec){
   case(1):
     manager->LoadGeneralInfo("db_generalinfo_gc.dat");
-    //manager->LoadGeoInfo("g4sbs_gc");
+    manager->LoadGeoInfo("g4sbs_gc");
     dds = new TSBSSpec ("g4sbs_gc", "BB spectrometer");
-    outname = Form("digitized_bbgem_%s.root", bg.c_str());
+    outname = Form("digitized_grinch_%s.root", bg.c_str());
     infile_sig = "/volatile/halla/sbs/efuchey/misc/test_gc_20170727_15/gc_signal_0.root";
     infile_bkgd_prefix = "/volatile/halla/sbs/efuchey/gmn13.5_beam_bkgd_20170630_14";
     dds->Init(run_time);
@@ -51,11 +51,13 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
   
   cout << "1  " << outname << " " << &outname << endl;
   
-  ddy = new TSBSCher ("cher", "Chernekov detector");
-  ddy->SetApparatus(dds);
-  if( ddy->Init() )
-    return;
-  dds->AddCher(ddy);
+  for(int i = 0; i<manager->GetNDetectors(); i++){
+    ddy = new TSBSCher (Form("cher%d", i), Form("Cherenkov detector %d", i));
+    ddy->SetApparatus(dds);
+    if( ddy->Init() )
+      return;
+    dds->AddCher(ddy);
+  }
   
   printf("\n");
   
@@ -82,7 +84,7 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
 
   ////////////////////////////////////////////////////////////////
     
-  int nevent = 0;
+  int nevent = 1;
   
   int  ndata, i;
   TSBSCherData *chd, *chb;
@@ -145,7 +147,8 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
     // gen->GetV();
     // gen->GetP();
     // gen->GetWeight();
-      
+    
+    /*
     // Add some number of background files...
     int N_bg_file_g_post = N_bg_file_g+nbacktoadd;
  
@@ -212,7 +215,7 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
     }//end if nbacktoadd
     
     if(N_bg_file_g>=2000)N_bg_file_g = 0;
-    
+    */
     ddd->FillTree();
       
     //if(nevent==7)ddd->GetEvent()->Print("all");

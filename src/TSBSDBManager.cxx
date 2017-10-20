@@ -19,62 +19,50 @@ TSBSDBManager::~TSBSDBManager()
 //______________________________________________________________
 void TSBSDBManager::LoadGeneralInfo(const string& fileName)
 {  
-  // EFuchey: 2017/02/09: Since this date, the reading, digitization, etc. of the data 
-  // has been splitted for Forward Tracker and Focal Plane Polarimeter.
-  // This simplifies the number of parameters for General info.
-  // On the other hand I also changed the ordering of the GEMs reading: 
-  // It used to be: chamber 0: loop on sectors, chmaber 1: loop on sectors...
-  // now it is: sector 0: loop on chambers, sector 1: loop on chambers, etc...
-  // That implied some modifications of the functions retrieving 
-  // a plane parameter as a function of the plane and sector number, 
-  // as well as the function which retrives the sector number from the position
-  
-    ifstream input(fileName.c_str());
-    if (!input.is_open()){
-        cout<<"cannot find general information file "<<fileName
-            <<". Exiting the program"<<endl;
+  ifstream input(fileName.c_str());
+  if (!input.is_open()){
+    cout<<"cannot find general information file "<<fileName
+	<<". Exiting the program"<<endl;
         exit(0);
-    }
-    const string prefix = "generalinfo.";
-    DBRequest request[] = {
-      {"npmts",               &fNPMTs               , kInt,    0, 1},
-      {"npmtrows",            &fNPMTrows            , kInt,    0, 1},
-      {"npmtcolsmax",         &fNPMTcolsMax         , kInt,    0, 1},
-      {"nsignal",             &fNSigParticle        , kInt,    0, 1},
-      {"chan_per_slot",       &fChanPerSlot         , kInt,    0, 1},
-      {"g4sbs_detectortype",  &fg4sbsDetectorType   , kInt,    0, 1},
-      { 0 }
-    };
-    int pid, tid;
-    DBRequest signalRequest[] = {
-        {"pid",                 &pid,                   kInt, 0, 1},
-        {"tid",                 &tid,                   kInt, 0, 1},
-        { 0 }
-    };
-    int err = LoadDB( input, request,  prefix);
+  }
+  const string prefix = "generalinfo.";
+  DBRequest request[] = {
+    {"g4sbs_detectortype",  &fg4sbsDetectorType , kInt,    0, 1},
+    {"ndetectors",          &fNDetectors        , kInt,    0, 1},
+    {"chan_per_slot",       &fChanPerSlot       , kInt,    0, 1},
+    {"nsignal",             &fNSigParticle      , kInt,    0, 1},
+    { 0 }
+  };
+  int pid, tid;
+  DBRequest signalRequest[] = {
+    {"pid",                 &pid,                   kInt, 0, 1},
+    {"tid",                 &tid,                   kInt, 0, 1},
+    { 0 }
+  };
+  int err = LoadDB( input, request,  prefix);
+  
+  if( err ) exit(2); 
+  
+  for (int i=0; i<fNSigParticle; i++){
+    ostringstream signal_prefix(prefix, ios_base::ate);
+    signal_prefix<<"signal"<<i+1<<".";
+    
+    err = LoadDB(input, signalRequest, signal_prefix.str());
+    
+    fSigPID.push_back(pid);
+    fSigTID.push_back(tid);
     
     if( err ) exit(2); 
-    
-    for (int i=0; i<fNSigParticle; i++){
-        ostringstream signal_prefix(prefix, ios_base::ate);
-        signal_prefix<<"signal"<<i+1<<".";
-        
-        err = LoadDB(input, signalRequest, signal_prefix.str());
-        
-        fSigPID.push_back(pid);
-        fSigTID.push_back(tid);
-	
-	if( err ) exit(2); 
-    }
-    
-    // for (int i=0; i<GetNSector(); i++){
-    //   vector<GeoInfo> thisInfo;
-    //   thisInfo.clear();
-    //   fGeoInfo[i] = thisInfo;
-    // }
+  }
+  
+  for (int i=0; i<fNDetectors; i++){
+    vector<GeoInfo> thisInfo;
+    thisInfo.clear();
+    fGeoInfo[i] = thisInfo;
+  }
 }
 
-/*
+
 //______________________________________________________________
 void TSBSDBManager::LoadGeoInfo(const string& prefix)
 {
@@ -87,72 +75,36 @@ void TSBSDBManager::LoadGeoInfo(const string& prefix)
     exit(0);
   }
   
-  //const string prefix = "gemc.";
-  
   GeoInfo thisGeo;
   
   DBRequest request[] = {
-    {"dmag",        &thisGeo.dmag,         kDouble, 0, 1},
-    {"d0",          &thisGeo.d0,           kDouble, 0, 1},
-    {"xoffset",     &thisGeo.xoffset,      kDouble, 0, 1},
-    {"dx",          &thisGeo.dx,           kDouble, 0, 1},
-    {"dy",          &thisGeo.dy,           kDouble, 0, 1},
-    //{"thetaH",      &thisGeo.thetaH,       kDouble, 0, 1},
-    {"thetaV",      &thisGeo.thetaV,       kDouble, 0, 1},
-    {"depth",       &thisGeo.depth,        kDouble, 0, 1},
+    {"npmts",        &thisGeo.fNPMTs,        kInt,    0, 1},
+    {"npmtrows",     &thisGeo.fNPMTrows,     kInt,    0, 1},
+    {"npmtcolsmax",  &thisGeo.fNPMTcolsMax,  kInt,    0, 1},
+    {"interpmtdist", &thisGeo.fInterPMTDist, kDouble, 0, 1},
+    {"x_tcpmt",      &thisGeo.fX_TCPMT,      kDouble, 0, 1},
+    {"x_tcpmt",      &thisGeo.fY_TCPMT,      kDouble, 0, 1},
     { 0 }
   };
-  
-  DBRequest plane_request[] = {
-    { "x.stripangle",     &thisGeo.stripangle_u,   kDouble, 0, 1},
-    { "x.pitch",          &thisGeo.pitch_u,        kDouble, 0, 1},
-    { "y.stripangle",     &thisGeo.stripangle_v,   kDouble, 0, 1},
-    { "y.pitch",          &thisGeo.pitch_v,        kDouble, 0, 1},
-    { 0 }
-  };
-  
-  for (int i=0; i<fNSector; i++){
-    map<int, vector<GeoInfo> >::iterator it = fGeoInfo.find(i);
-    if (it == fGeoInfo.end()) { cout<<"unexpected chamber id "<<i<<endl; }
     
-    for (int j=0; j<fNChamber; j++){
-      ostringstream sector_prefix(prefix, ios_base::ate);
-      int idx = i*fNChamber + j;
-      sector_prefix<<".gem"<<idx<<".";
-      
-      int err = LoadDB(input, request, sector_prefix.str());
-      if( err ) exit(2);
-      
-      sector_prefix<<"gem"<<idx;
-      err = LoadDB(input, plane_request, sector_prefix.str());
-      if (err) exit(2);
-      
-      fGeoInfo[i].push_back(thisGeo);
-    }
+  thisGeo.fPMTmatrixHext = (thisGeo.fNPMTcolsMax-1)*thisGeo.fInterPMTDist;
+  thisGeo.fPMTmatrixVext = (thisGeo.fNPMTrows-1)*thisGeo.fInterPMTDist;
+  
+  for (int i=0; i<fNDetectors; i++){
+    map<int, vector<GeoInfo> >::iterator it = fGeoInfo.find(i);
+    if (it == fGeoInfo.end()) { cout<<"unexpected detector id "<<i<<endl; }
+    ostringstream detector_prefix(prefix, ios_base::ate);
+    detector_prefix<<".cher"<<i<<".";
+    
+    int err = LoadDB(input, request,detector_prefix.str());
+    if( err ) exit(2);
+    
+    fGeoInfo[i].push_back(thisGeo);
   }
   
-  // for (int i=0; i<fNSector2; i++){
-  //   map<int, vector<GeoInfo> >::iterator it = fGeoInfo.find(i);
-  //   if (it == fGeoInfo.end()) { cout<<"unexpected chamber id "<<i<<endl; }
-    
-  //   for (int j=0; j<fNChamber2; j++){
-  //     ostringstream sector_prefix(prefix, ios_base::ate);
-  //     int idx = i*fNChamber2 + j;
-  //     sector_prefix<<".gem"<<idx<<".";
-      
-  //     int err = LoadDB(input, request, sector_prefix.str());
-  //     if( err ) exit(2);
-      
-  //     sector_prefix<<"gem"<<idx;
-  //     err = LoadDB(input, plane_request, sector_prefix.str());
-  //     if (err) exit(2);
-      
-  //     fGeoInfo[i].push_back(thisGeo);
-  //   }
-  // }
   
 }
-*/
+
 //______________________________________________________________
 string TSBSDBManager::FindKey( ifstream& inp, const string& key )
 {

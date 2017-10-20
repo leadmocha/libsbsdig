@@ -1,10 +1,9 @@
 950101
-
-g4sbs_gc.cher.npmts = 510
-g4sbs_gc.cher.npmtrows = 60
-g4sbs_gc.cher.npmtcolsmax = 9
-g4sbs_gc.cher.interpmtdist = 0.03100
-g4sbs_gc.cher.x_tcpmt = -0.914500
-g4sbs_gc.cher.y_tcpmt = -0.124000
+g4sbs_gc.cher0.npmts = 510
+g4sbs_gc.cher0.npmtrows = 60
+g4sbs_gc.cher0.npmtcolsmax = 9
+g4sbs_gc.cher0.interpmtdist = 0.03100
+g4sbs_gc.cher0.x_tcpmt = -0.914500
+g4sbs_gc.cher0.y_tcpmt = -0.124000
 
 

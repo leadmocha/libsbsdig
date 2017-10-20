@@ -1,5 +1,5 @@
 #include "TSBSSpec.h"
-//#include "TSBSGEMChamber.h"
+#include "TSBSCher.h"
 #include <iostream>
 
 using namespace std;
@@ -79,9 +79,9 @@ void
 TSBSSpec::Print() const
 {
   cout << "Hello, I'm a spectrometer named " << GetName() << endl;
-	
-  // for( vector<TSBSGEMChamber*>::const_iterator it = fChambers.begin();
-  //      it != fChambers.end(); ++it ) {
-  //   (*it)->Print();
-  // }
+  
+  for( vector<TSBSCher*>::const_iterator it = fCherDets.begin();
+       it != fCherDets.end(); ++it ) {
+    (*it)->Print();
+  }
 }
