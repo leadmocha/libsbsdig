@@ -120,11 +120,13 @@ class TSBSSimCherDigitization: public THaAnalysisObject
 		      //TSolGEMVStrip* const *dh,
 		      const TSBSCherData& tsgd,
 		      Double_t t0 ); // called from Digitization
-  void SetTreeStrips(); // called from Digitization
   void FillTree ();
   void WriteTree () const;
   void CloseTree () const;
 
+
+  TSBSSimEvent* GetEvent() const { return fEvent; }
+  
   /*
   // Access to results
   Short_t GetType (UInt_t ich, UInt_t ip, Int_t n) const {return fDP[ich][ip]->GetType (n);}
@@ -144,8 +146,6 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   const std::vector<Short_t>& GetStripClusters(UInt_t ich, UInt_t ip, UInt_t n) const
   { return fDP[ich][ip]->GetStripClusters(n); }
 
-  TSBSSimEvent* GetEvent() const { return fEvent; }
-  
   Bool_t IsMapSector() const { return fDoMapSector; }
   void SetMapSector( Bool_t b = true ) { fDoMapSector = b; }
 

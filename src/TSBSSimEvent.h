@@ -17,6 +17,34 @@
 #include "TArrayS.h"
 #include <vector>
 
+class TClonesArray;
+
+//-----------------------------------------------------------------------------
+class TSBSSimTrack : public Podd::MCTrack {
+public:
+  TSBSSimTrack( Int_t number, Int_t pid,
+		const TVector3& vertex, const TVector3& momentum );
+  TSBSSimTrack();
+  
+  //Special function for debugging
+  Double_t MCFitX_print()     const;
+
+  // Accessors for SBS-specific parameters
+  // EFuchey: 2017/01/24:
+  // Those below are not useful for SBS, which needs X, Y, Xdir, Ydir (unless otherwise demonstrated)
+  // Now I'm wondering if TSBSSimTrack is useful at all, but in case, we will stick to that
+  /* Double_t MCFitR()     const; */
+  /* Double_t MCFitPhi()     const; */
+  /* Double_t MCFitThetaDir()  const; */
+  /* Double_t MCFitPhiDir()  const; */
+  /* Double_t RcFitR()     const; */
+  /* Double_t RcFitPhi()     const; */
+  /* Double_t RcFitThetaDir()  const; */
+  /* Double_t RcFitPhiDir()  const; */
+  
+  ClassDef(TSBSSimTrack,3)  // A MC physics track in SBS
+};
+
 //-----------------------------------------------------------------------------
 // Kludgy hardcoded parameters necessary because I can't get ROOT to allocate
 // arrays dynamically via TTree::GetEntry
@@ -32,9 +60,12 @@ public:
   
   virtual void Clear( const Option_t* opt="" );
   virtual void Print( const Option_t* opt="" ) const;
+  TSBSSimTrack* AddTrack( Int_t number, Int_t pid,
+			  const TVector3& vertex, const TVector3& momentum );
   
   Int_t GetNPMTHits()  const { return fPMTHits.size(); }
-
+  Int_t GetNtracks() const;
+  
   // Event identification
   Int_t     fRunID;               // Run number
   Int_t     fEvtID;               // Event number

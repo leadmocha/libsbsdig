@@ -17,9 +17,76 @@
 
 using namespace std;
 
+
+//-----------------------------------------------------------------------------
+TSBSSimTrack::TSBSSimTrack( Int_t number, Int_t pid,
+			    const TVector3& vertex, const TVector3& momentum )
+  : Podd::MCTrack( number, pid, vertex, momentum )
+{
+}
+
+//-----------------------------------------------------------------------------
+TSBSSimTrack::TSBSSimTrack() : Podd::MCTrack()
+{
+}
+
+//Special function for debugging
+Double_t TSBSSimTrack::MCFitX_print() const
+{
+  printf("MCFit[0-3]: %f %f %f %f \n", fMCFitPar[0], fMCFitPar[1], fMCFitPar[2], fMCFitPar[3]);
+  printf("MCFit[4-8]: %f %f %f %f %f \n", fMCFitPar[4], fMCFitPar[5], fMCFitPar[6], fMCFitPar[7], fMCFitPar[8]);
+  // printf("RcFit[0-3]: %f %f %f %f \n", fRcFitPar[0], fRcFitPar[1], fRcFitPar[2], fRcFitPar[3]);
+  // printf("RcFit[4-8]: %f %f %f %f %f \n", fRcFitPar[4], fRcFitPar[5], fRcFitPar[6], fRcFitPar[7], fRcFitPar[8]);
+  return fMCFitPar[0];
+}
+// Those below are not useful for SBS, which needs X, Y, Xdir, Ydir (unless otherwise demonstrated)
+// refer to comment in TSBSSimEvent.h l. 30-32
+/*
+//-----------------------------------------------------------------------------
+Double_t TSBSSimTrack::MCFitR() const
+{
+  return TMath::Sqrt(fMCFitPar[0]*fMCFitPar[0] + fMCFitPar[2]*fMCFitPar[2] );
+}
+//-----------------------------------------------------------------------------
+Double_t TSBSSimTrack::MCFitPhi() const
+{
+  return TVector3( fMCFitPar[0], fMCFitPar[2], 0 ).Phi();
+}
+//-----------------------------------------------------------------------------
+Double_t TSBSSimTrack::MCFitThetaDir() const
+{
+  return TVector3( fMCFitPar[1], fMCFitPar[3], 1.0 ).Theta();
+}
+//-----------------------------------------------------------------------------
+Double_t TSBSSimTrack::MCFitPhiDir() const
+{
+  return TVector3( fMCFitPar[1], fMCFitPar[3], 1.0 ).Phi();
+}
+//-----------------------------------------------------------------------------
+Double_t TSBSSimTrack::RcFitR() const
+{
+  return TMath::Sqrt(fRcFitPar[0]*fRcFitPar[0] + fRcFitPar[2]*fRcFitPar[2] );
+}
+//-----------------------------------------------------------------------------
+Double_t TSBSSimTrack::RcFitPhi() const
+{
+  return TVector3( fRcFitPar[0], fRcFitPar[2], 0 ).Phi();
+}
+//-----------------------------------------------------------------------------
+Double_t TSBSSimTrack::RcFitThetaDir() const
+{
+  return TVector3( fRcFitPar[1], fRcFitPar[3], 1.0 ).Theta();
+}
+//-----------------------------------------------------------------------------
+Double_t TSBSSimTrack::RcFitPhiDir() const
+{
+  return TVector3( fRcFitPar[1], fRcFitPar[3], 1.0 ).Phi();
+}
+*/
+
 //-----------------------------------------------------------------------------
 TSBSSimEvent::TSBSSimEvent()
-  : fRunID(0), fEvtID(0), fNSignal(0)
+  : fRunID(0), fEvtID(0), fNSignal(0), fMCTracks(0)
 {
 }
 
@@ -38,6 +105,18 @@ TSBSSimEvent::~TSBSSimEvent()
 }
 
 //-----------------------------------------------------------------------------
+TSBSSimTrack* TSBSSimEvent::AddTrack( Int_t number, Int_t pid,
+				      const TVector3& vertex,
+				      const TVector3& momentum )
+{
+  // Add a physics track with the given parameters
+
+  return
+    new( (*fMCTracks)[GetNtracks()] ) TSBSSimTrack( number, pid,
+						    vertex, momentum );
+}
+
+//-----------------------------------------------------------------------------
 void TSBSSimEvent::Clear( const Option_t* opt )
 {
   // Clear the event in preparation for reading next tree entry
@@ -46,6 +125,14 @@ void TSBSSimEvent::Clear( const Option_t* opt )
 
   fNSignal = 0;
   fPMTHits.clear();
+}
+
+//-----------------------------------------------------------------------------
+Int_t TSBSSimEvent::GetNtracks() const
+{
+  // Get number of physics tracks
+
+  return fMCTracks->GetLast()+1;
 }
 
 //-----------------------------------------------------------------------------

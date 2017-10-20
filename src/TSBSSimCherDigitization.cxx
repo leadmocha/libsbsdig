@@ -550,9 +550,9 @@ void
 TSBSSimCherDigitization::NoDigitize (const TSBSCherData& gdata, const TSBSSpec& spect) // do not digitize event, just fill the tree
 {
   //  if (!fEvCleared)  //?
-    fEvent->Clear();
+  fEvent->Clear();
   UInt_t nh = gdata.GetNHit();
-
+  
   for (UInt_t ih = 0; ih < nh; ++ih)
     {
       UInt_t idet = gdata.GetHitDetID(ih);
@@ -565,7 +565,6 @@ TSBSSimCherDigitization::NoDigitize (const TSBSCherData& gdata, const TSBSSpec& 
       //SetTreeHit (ih, spect, fdh, gdata, 0.0);
       SetTreeHit (ih, spect, gdata, 0.0);
     }
-  //SetTreeStrips ();
 }
 
 
@@ -1197,9 +1196,6 @@ TSBSSimCherDigitization::SetTreeEvent (const TSBSCherData& tscd,
   if( f.GetNGen() > 0 )
     fEvent->fWeight = f.GetGenData(0)->GetWeight();
   
-  // fEvent->fSectorsMapped = fDoMapSector;
-  //fEvent->fSignalSector = tscd.GetSigSector();//CHECK ?
-  // fEvent->fSignalSector = fSignalSector;
 }
 
 Short_t
@@ -1215,15 +1211,25 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
   TSBSSimEvent::PMTHit hit;
   
   UInt_t ipmt = tscd.GetHitPMTID(ih);
+  
+  hit.fID = ipmt;
+  hit.fSource = tscd.GetSource();
+  hit.fType = tscd.GetParticleType(ih);
+  hit.fMCtrackPID = tscd.GetMCtrackPID(ih);
+  hit.fOrigVolFlag = tscd.GetOriginVolFlag(ih);
+  hit.fXPMT = 0;//tscd.(ih);
+  hit.fYPMT = 0;//tscd.(ih);
+  hit.fNpe = tscd.GetHitPEyield(ih);
+  hit.fTime = tscd.GetHitTime(ih);
+  // Digitization results for this hit
+  hit.fDetID = tscd.GetHitDetID(ih);
+  hit.fChannel = tscd.GetHitPMTID(ih);
+  hit.fPMTrow = 0;//tscd.(ih);
+  hit.fPMTcol = 0;//tscd.(ih);
+  hit.fADC = 0;//tscd.(ih);
+  hit.fTDC = 0;//tscd.(ih);
+  
   /*
-  ChamberToSector( igem, hit.fRealSector, hit.fPlane );
-  hit.fSource   = tscd.GetSource();  // Source of this hit (0=signal, >0 background)
-  hit.fType     = tscd.GetParticleType(ih);   // GEANT particle counter
-  hit.fTRID     = tscd.GetTrackID(ih);   // GEANT particle counter
-  hit.fPID      = tscd.GetParticleID(ih); // PDG PID
-  hit.fP        = tscd.GetMomentum(ih); // [MeV] // Momentum vector in spec frame, transformed at (1); 
-  hit.fPspec    = tscd.GetMomentum(ih)    * 1e-3; // [GeV]
-  hit.fXEntry   = tscd.GetHitEntrance(ih) * 1e-3; // [m] // in plane frame
   // The best estimate of the "true" hit position is the center of the
   // ionization region
 
@@ -1338,9 +1344,6 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
 void
 TSBSSimCherDigitization::FillTree ()
 {
-  // if( !fFilledStrips )
-  //   SetTreeStrips();
-
   //cout << "Fill tree " << fOFile << " " << fOTree << endl;
   //fOFile = fOTree->GetCurrentFile();//CHECK ?
   if (fOFile && fOTree

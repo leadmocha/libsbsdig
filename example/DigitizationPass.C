@@ -115,7 +115,7 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
       continue;
     }
     
-    gd = f->GetGEMData();
+    chd = f->GetCherData();
     if(f->GetNGen()>0){
       gen = f->GetGenData(0);
       Ngood++;
@@ -126,22 +126,23 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
       continue;
     }
       
-    ddd->SetTreeEvent((*gd), (*f), nevent);
+    ddd->SetTreeEvent((*chd), (*f), nevent);
     
     /*
     if(print){// || nevent==40
-      cout << "number of hits in GEM data " << gd->GetNHit() << endl;
-      while(ndata<gd->GetNHit()){
+      cout << "number of hits in GEM data " << chd->GetNHit() << endl;
+      while(ndata<chd->GetNHit()){
 	  
-	//if(gd->GetParticleID(ndata)>1)continue;
-	gd->Print();
+	//if(chd->GetParticleID(ndata)>1)continue;
+	chd->Print();
 	cout << "hit number " << ndata << endl;
-	gd->PrintHit(ndata);
+	chd->PrintHit(ndata);
 	ndata++;
       }
     }
     */
-    ddd->Digitize(*gd, *dds);
+    //ddd->Digitize(*chd, *dds);
+    ddd->NoDigitize(*chd, *dds);
       
     // Access to generated vertex and momentum
     // gen->GetV();
@@ -155,7 +156,7 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
     if(nbacktoadd){
       for(int Nfile = N_bg_file_g; Nfile < N_bg_file_g_post; Nfile++){
 	//if(print)cout << N_bg_file_g << " <= " << Nfile << " < " << N_bg_file_g+nbacktoadd << endl;
-	TSBSGeant4File *fback = new TSBSGeant4File(Form("%s/beam_bkgd_%d.root",infile_bkgd_prefix.c_str(), Nfile));
+	TSBSGeant4File *fback = new TSBSGeant4File(Form("%s/beam_bkchd_%d.root",infile_bkchd_prefix.c_str(), Nfile));
 	int open = fback->Open();
 	if(!open){
 	  N_bg_file_g_post++;
@@ -167,7 +168,7 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
 	    N_bg_file_g_post = nbacktoadd;
 	    N_bg_file_g = 0;
 	  }
-	  //if(print)cout << Form("/group/exjpsi/eric/31722/beam_bkgd_%d.root does not exist", Nfile) << endl;
+	  //if(print)cout << Form("/group/exjpsi/eric/31722/beam_bkchd_%d.root does not exist", Nfile) << endl;
 	  continue;
 	}
 	  
@@ -177,30 +178,30 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
 	//while( hadback = fback->ReadNextEvent() && backidx < nbacktoadd ){
 	while( backidx < fback->GetEntries() ){
 	  hadback = fback->ReadNextEvent();
-	  gb = fback->GetGEMData();
+	  chb = fback->GetCherData();
 	    
-	  if(print && gb->GetNHit()>0){
-	    cout << "Bkgd evt: " << gb->GetEvent() << ", number of hits " 
-		 << gb->GetNHit() << endl;
+	  if(print && chb->GetNHit()>0){
+	    cout << "Bkchd evt: " << chb->GetEvent() << ", number of hits " 
+		 << chb->GetNHit() << endl;
 	    int nback = 0;
-	    while(nback<gb->GetNHit()){
-	      //if(gd->GetParticleID(ndata)>1)continue;
-	      gb->Print();
+	    while(nback<chb->GetNHit()){
+	      //if(chd->GetParticleID(ndata)>1)continue;
+	      chb->Print();
 	      cout << "hit number " << nback << endl;
-	      gb->PrintHit(nback);
+	      chb->PrintHit(nback);
 	      nback++;
 	    }
 	    
 	  }
 	  
-	  ddd->AdditiveDigitize(*gb, *dds);
+	  ddd->AdditiveDigitize(*chb, *dds);
 	    
 	  // //Randomize times based on gate width
-	  // for( int bidx = 0; bidx < gb->GetNHit(); bidx++ ){
+	  // for( int bidx = 0; bidx < chb->GetNHit(); bidx++ ){
 	  //   double timeshift = gRandom->Uniform(-ddd->GetGateWidth(), 75.0 );//ns
-	  //   gb->SetHitTime(bidx, gb->GetHitTime(bidx) + timeshift );
+	  //   chb->SetHitTime(bidx, chb->GetHitTime(bidx) + timeshift );
 	  // }	
-	  // //gd->AddGEMData(gb);
+	  // //chd->AddGEMData(chb);
 	  backidx++;
 	}
 	  
@@ -210,7 +211,7 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
 	  
 	fback->Close();
       }
-      //if(print)cout << "new number of hits in GEM data " << gd->GetNHit() << endl;
+      //if(print)cout << "new number of hits in GEM data " << chd->GetNHit() << endl;
       N_bg_file_g = N_bg_file_g_post;
     }//end if nbacktoadd
     
@@ -222,7 +223,7 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
     if(print)ddd->GetEvent()->Print("all");
     //ddd->GetEvent()->Print("clust");
         
-    delete gd;
+    delete chd;
     nevent++;
   }
   printf("Completed %d events total: %d good events \n", nevent, Ngood);
