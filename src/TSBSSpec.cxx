@@ -22,16 +22,16 @@ TSBSSpec::~TSBSSpec()
   // }
 }
 
-// Int_t 
-// TSBSSpec::AddGEM (TSBSGEMChamber* pdet)
-// {
-//   // Add a detector to the internal lists of spectrometer detectors.
-//   // The detector object must be allocated and deleted by the caller.
-//   // Duplicate detector names are not allowed.
+Int_t 
+TSBSSpec::AddCher (TSBSCher* pcdet)
+{
+  // Add a detector to the internal lists of spectrometer detectors.
+  // The detector object must be allocated and deleted by the caller.
+  // Duplicate detector names are not allowed.
 
-//   fChambers.push_back(pdet);
-//   return 0;
-// }
+  fCherDets.push_back(pcdet);
+  return 0;
+}
 
 Int_t TSBSSpec::CoarseTrack(){
     // Needs work

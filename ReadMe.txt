@@ -98,8 +98,20 @@ Interprets event buffer from input as TSBSSimEvent objects
 (containing digitized simulation data) and unpacks them into
 crateslot arrays for low-level decoding by detectors.
 
+TSBSCher:
+Detector class; contains the detector geometry (in this case the PMT matrix gemoetry):
+  int    fNPMTs;         // number of PMTs
+  int    fNPMTrows;      // number of PMT rows
+  int    fNPMTcolsMax;   // max number of PMT columns 
+  double fPMTmatrixHext; // horizontal extension, in m, of the PMT matrix (from lower PMT center to higher PMT center)
+  double fPMTmatrixVext; // vertical extension, in m, of the PMT matrix (from left PMT center to right PMT center)
+  double fInterPMTDist;  // center to center PMT distance, in m
+  double fX_TCPMT;       // X position of the top close PMT center in the PMT matrix (transport coord)
+  double fY_TCPMT;       // Y position of the top close PMT center in the PMT matrix (transport coord)
+it uses its own database.
+
 TSBSSpec:
-Will serve as standard class to "carry" the detector. 
+Spectrometer class to "carry" the detector. 
 Likely, it will be pretty similar to the class with the same name in liblibsolgem/libsbsgem.
 
 

@@ -12,6 +12,7 @@
 #pragma link C++ defined_in "src/TSBSSimEvent.h";
 #pragma link C++ defined_in "src/TSBSSimCherDigitization.h";
 #pragma link C++ defined_in "src/TSBSSpec.h";
+#pragma link C++ defined_in "src/TSBSCher.h";
 
 // Limited stuff in EVIO file.  We don't want to be
 // able to call the evio functions in the interpreter

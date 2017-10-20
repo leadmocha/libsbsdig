@@ -2,9 +2,8 @@
 //#define DEBUG 1
 
 void DigitizationPass(int fspec = 1, // Spectrometer flag: 
-		      // 1 for BB GEMs(GMn, GEn, SIDIS); 
-		      // 3 for Front Tracker spectrometer (GEp);
-		      // 4 for Focal Plane Polarimter (GEp).
+		      // 1 for GRINCH
+		      // 2 for RICH
 		      int Nmax = 1000, //number of events to digitize
 		      int nbacktoadd = 2, // number of background *files* to add to each event
 		      bool print = false){
@@ -13,17 +12,16 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
   
   TDatime run_time = 991231;
   
-  gSystem->Load("../libsolgem.so");
+  gSystem->Load("../libsbscer.so");
   
   ////////////////////////////////////////////////////////////////
   
   int Ngood = 0;
       
-  TSBSGEMChamber *ddy;
+  TSBSCher *ddy;
   TSBSSpec *dds;
-  TSBSSimGEMDigitization *ddd;
-  TSBSSimDecoder *dde;
-
+  TSBSSimCherDigitization *ddd;
+  
   char* outname;
   string bg = "bkgd";
   if(nbacktoadd==0)bg = "nobkgd";
@@ -31,61 +29,42 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
   string infile_sig;
   string infile_bkgd_prefix;
   
-  TSolDBManager* manager = TSolDBManager::GetInstance();
+  TSBSDBManager* manager = TSBSDBManager::GetInstance();
   switch(fspec){
   case(1):
-    manager->LoadGeneralInfo("db_generalinfo_bbgem.dat");
-    manager->LoadGeoInfo("g4sbs_bbgem");
-    dds = new TSBSSpec ("g4sbs_bbgem", "BB spectrometer");
+    manager->LoadGeneralInfo("db_generalinfo_gc.dat");
+    manager->LoadGeoInfo("g4sbs_gc");
+    dds = new TSBSSpec ("g4sbs_gc", "BB spectrometer");
     outname = Form("digitized_bbgem_%s.root", bg.c_str());
-    infile_sig = "/work/halla/sbs/efuchey/gmn_elastic/gmn13.5_elastic_sig_20170504_10/elastic_0.root";
+    infile_sig = "/volatile/halla/sbs/efuchey/misc/test_gc_20170727_15/gc_signal_0.root";
     infile_bkgd_prefix = "/volatile/halla/sbs/efuchey/gmn13.5_beam_bkgd_20170630_14";
     dds->Init(run_time);
     break;
-  case(3):
-    manager->LoadGeneralInfo("db_generalinfo_ft.dat");
-    manager->LoadGeoInfo("g4sbs_ft");
-    dds = new TSBSSpec ("g4sbs_ft", "SBS spectrometer FT");
-    outname = Form("digitized_ft_%s.root", bg.c_str());
-    infile_sig = "/volatile/halla/sbs/efuchey/gep12_elastic_sig_20170727_14/elastic_0.root";
-    infile_bkgd_prefix = "/work/halla/sbs/efuchey/gep_beam_bkgd/gep12_beam_bkgd_20170114_11";
-    dds->Init(run_time);
-    break;
-  case(4):
-    manager->LoadGeneralInfo("db_generalinfo_fpp.dat");
-    manager->LoadGeoInfo("g4sbs_fpp");
-    dds = new TSBSSpec ("g4sbs_fpp", "SBS spectrometer FPP");
-    outname = Form("digitized_fpp_%s.root", bg.c_str());
-    infile_sig = "/volatile/halla/sbs/efuchey/gep12_elastic_sig_20170727_14/elastic_0.root";
-    infile_bkgd_prefix = "/work/halla/sbs/efuchey/gep_beam_bkgd/gep12_beam_bkgd_20170114_11";
-    dds->Init(run_time);
-    break;
+    //case(2):
+    //break;
   default:
     cout << "No corresponding geometry; choose: " << endl 
-	 << "1 (BBGEM)" << endl << "3 (FT)" << endl << "4 (FPP)" << endl;
+	 << "1 (GRINCH)" << endl << "2 (RICH - not implemented -> quit too) " << endl;
     return;
     break;
   }
   
   cout << "1  " << outname << " " << &outname << endl;
   
-  for(int i_ch = 0; i_ch<manager->GetNChamber()*manager->GetNSector(); i_ch++){
-    ddy = new TSBSGEMChamber (Form("gem%d",i_ch),Form("Test chamber %d", i_ch));
-    ddy->SetApparatus(dds);
-    if( ddy->Init() )
-      return;
-    dds->AddGEM (ddy);
-  }
+  ddy = new TSBSCher ("cher", "Chernekov detector");
+  ddy->SetApparatus(dds);
+  if( ddy->Init() )
+    return;
+  dds->AddCher(ddy);
+  
   printf("\n");
-
+  
   //cout << outname << " " << &outname << endl;
   
   if(print)dds->Print();
     
-  ddd = new TSBSSimGEMDigitization (*dds,"ratedig");
+  ddd = new TSBSSimCherDigitization (*dds,"ratedig");
   //ddd = new TSBSSimGEMDigitization (*dds,"testdigitization");
-  ddd->SetMapSector(false);
-    
   ////////////////////////////////////////////////////////////////
   
   TSBSGeant4File *f = new TSBSGeant4File(infile_sig.c_str());
@@ -104,14 +83,14 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
   ////////////////////////////////////////////////////////////////
     
   int nevent = 0;
-    
+  
   int  ndata, i;
-  TSolGEMData *gd, *gb;
+  TSBSCherData *chd, *chb;
   g4sbsgendata *gen;
   
   cout << "creating file " << outname << endl;
   ddd->InitTree (*dds, outname);
-    
+  
   printf("Digitizing events\n");
   ndata = 0;
     
