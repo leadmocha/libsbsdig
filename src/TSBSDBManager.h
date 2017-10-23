@@ -32,11 +32,20 @@ public:
   const int    &   GetSigPID(unsigned int i);
   const int    &   GetSigTID(unsigned int i);
   
+  const int    &   GetNPMTs(int i);
+  const int    &   GetNPMTrows(int i);
+  const int    &   GetNPMTcolsMax(int i);
+  const double &   GetPMTmatrixHext(int i);
+  const double &   GetPMTmatrixVext(int i);
+  const double &   GetInterPMTDist(int i);
+  const double &   GetX_TCPMTs(int i);
+  const double &   GetY_TCPMTs(int i);
+    
  protected:
   TSBSDBManager();
   int    LoadDB(ifstream& inp, DBRequest* request, const string& prefix);
   string FindKey( ifstream& inp, const string& key );
-  bool   CheckIndex(int i, int j=0, int k=0);
+  bool   CheckIndex(int i);
   
   static TSBSDBManager* fManager;
   
@@ -54,7 +63,8 @@ public:
   vector<int>    fSigPID;
   vector<int>    fSigTID;
   
-  map< int, vector<GeoInfo> > fGeoInfo;
+  //map< int, vector<GeoInfo> > fGeoInfo;
+  vector<GeoInfo> fGeoInfo;
   
   int    fErrID;
   double fErrVal;

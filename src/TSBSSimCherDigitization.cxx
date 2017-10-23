@@ -265,6 +265,11 @@ TSBSSimCherDigitization::Initialize(const TSBSSpec& spect)
   // Avoid memory leaks in case of reinitialization
   DeleteObjects();
   
+  fNDetectors = manager->GetNDetectors();
+  fNPMTs.resize(fNDetectors);
+  for(int i = 0; i<fNDetectors; i++){
+    fNPMTs[i] = manager->GetNPMTs(i);
+  }
   /*
   fNChambers = spect.GetNChambers();
   fDP = new TSBSDigitizedPlane**[fNChambers];

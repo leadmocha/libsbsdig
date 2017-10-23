@@ -131,7 +131,7 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
   TVector3 Pos_det;
   int origvolflag;
  
-  double hit_data_temp[18];
+  double hit_data_temp[19];
   double gen_data_temp[9];
   
   // NB: See comment lines 128-129 of TSBSGeant4File.h 
@@ -146,7 +146,7 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
     for(int i = 0; i<fTree->Earm_GRINCH_hit_nhits; i++){
       det_id = 0;
       
-      type = fTree->Earm_GRINCH_hit_mTrackNo->at(i)+1;//=1 if primary, >1 if secondary... 
+      type = fTree->Earm_GRINCH_hit_mTrackNo->at(i);//=1 if primary, >1 if secondary... 
       // GRINCH is supposed to ID electrons only... so a primary will always be with TrackNo = 0
       PMTID = fTree->Earm_GRINCH_hit_PMT->at(i)/5;
       XPMT = fTree->Earm_GRINCH_hit_ypmt->at(i);
@@ -178,7 +178,7 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
 			     0, // in MeV
 			     1.0e9);// in MeV
       
-      if(origvolflag==2){// it will likely not be found if the hit is produced in the PMT glass...
+      if(origvolflag<4){// it will likely not be found if the hit is produced in the PMT glass...
 	for(int j = 0; j<fTree->Earm_BBGEM_hit_nhits; j++){
 	  if(fTree->Earm_BBGEM_hit_trid->at(j)==fTree->Earm_GRINCH_hit_mTrackNo->at(i)){
 	    PID_MCtrack = fTree->Earm_BBGEM_hit_pid->at(j);
@@ -214,7 +214,7 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
 	hit_data_temp[k+14] = Vtx_MCtrack[k];
       }
       
-      fg4sbsHitData.push_back(new g4sbshitdata(det_id, 19));
+      fg4sbsHitData.push_back(new g4sbshitdata(det_id, data_size(__CER_TAG)));
 
       // ... to copy it in the actual g4sbsHitData structure.
       for(int j = 0; j<18; j++){
@@ -246,6 +246,7 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
       if(fSource==0 && n_gen==0 && type==1){
       	fg4sbsGenData.push_back(new g4sbsgendata());
       	for(int j = 0; j<9; j++){
+	  //cout << j << " " << gen_data_temp[j] << endl;
       	  fg4sbsGenData[n_gen]->SetData(j, gen_data_temp[j]);
       	}
       	n_gen++;
@@ -345,7 +346,7 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
     for(int i = 0; i<fTree->Harm_RICH_hit_nhits; i++){
       det_id = 0;
       
-      type = fTree->Harm_RICH_hit_mTrackNo->at(i)+1;//=1 if primary, >1 if secondary... 
+      type = fTree->Harm_RICH_hit_mTrackNo->at(i);//=1 if primary, >1 if secondary... 
       // TODO: modify the particle type according to the particle PID...
       PMTID = fTree->Harm_RICH_hit_PMT->at(i);
       XPMT = fTree->Harm_RICH_hit_ypmt->at(i);
@@ -413,7 +414,7 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
 	hit_data_temp[k+14] = Vtx_MCtrack[k];
       }
       
-      fg4sbsHitData.push_back(new g4sbshitdata(det_id, 19));
+      fg4sbsHitData.push_back(new g4sbshitdata(det_id, data_size(__CER_TAG)));
 
       // ... to copy it in the actual g4sbsHitData structure.
       for(int j = 0; j<18; j++){
@@ -607,7 +608,7 @@ void TSBSGeant4File::GetCherData(TSBSCherData* gd)
 
     if( h->GetData(1)>0.0 ){
 
-      gd->SetHitDetID(ngdata,      (UInt_t)h->GetData(19));
+      gd->SetHitDetID(ngdata,      (UInt_t)h->GetDetID() );
       gd->SetHitPMTID(ngdata,      (UInt_t)h->GetData(0) );
       gd->SetHitXPMT(ngdata,               h->GetData(1) ); 
       gd->SetHitYPMT(ngdata,               h->GetData(2) ); 

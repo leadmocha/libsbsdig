@@ -110,7 +110,8 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
     }
     
     if(f->GetNData()==0){
-      if(print)cout << "No hits, skip evt " << nevent << endl;
+      //if(print)
+      cout << "No hits, skip evt " << nevent << endl;
       nevent++;
       continue;
     }
@@ -125,7 +126,7 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
       nevent++;
       continue;
     }
-      
+    
     ddd->SetTreeEvent((*chd), (*f), nevent);
     
     /*
@@ -141,9 +142,9 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
       }
     }
     */
-    ddd->Digitize(*chd, *dds);
-    //ddd->NoDigitize(*chd, *dds);
-      
+    //ddd->Digitize(*chd, *dds);
+    ddd->NoDigitize(*chd, *dds);
+    
     // Access to generated vertex and momentum
     // gen->GetV();
     // gen->GetP();

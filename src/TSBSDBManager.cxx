@@ -58,7 +58,7 @@ void TSBSDBManager::LoadGeneralInfo(const string& fileName)
   for (int i=0; i<fNDetectors; i++){
     vector<GeoInfo> thisInfo;
     thisInfo.clear();
-    fGeoInfo[i] = thisInfo;
+    fGeoInfo = thisInfo;
   }
 }
 
@@ -91,15 +91,15 @@ void TSBSDBManager::LoadGeoInfo(const string& prefix)
   thisGeo.fPMTmatrixVext = (thisGeo.fNPMTrows-1)*thisGeo.fInterPMTDist;
   
   for (int i=0; i<fNDetectors; i++){
-    map<int, vector<GeoInfo> >::iterator it = fGeoInfo.find(i);
-    if (it == fGeoInfo.end()) { cout<<"unexpected detector id "<<i<<endl; }
+    //map<int, vector<GeoInfo> >::iterator it = fGeoInfo.find(i);
+    //if (it == fGeoInfo.end()) { cout<<"unexpected detector id "<<i<<endl; }
     ostringstream detector_prefix(prefix, ios_base::ate);
     detector_prefix<<".cher"<<i<<".";
     
     int err = LoadDB(input, request,detector_prefix.str());
     if( err ) exit(2);
     
-    fGeoInfo[i].push_back(thisGeo);
+    fGeoInfo.push_back(thisGeo);
   }
   
   
@@ -179,84 +179,69 @@ const int & TSBSDBManager::GetSigTID(unsigned int i)
     return fSigTID[i];
 }
 
-/*
-//__________________________________________________________________________
-int TSBSDBManager::GetSectorIDFromPos(int ichamber, double x, double y)
+//_________________________________________________________________________
+bool TSBSDBManager::CheckIndex(int i)
 {
-  if (!CheckIndex(ichamber)) return fErrVal;
-  
-  //int sector = -1;
-  std::vector<int> sector;//yet something else...
-  //printf("chamber %d, x = %1.6f\n", ichamber, x);
-  for(int k = 0; k<fGeoInfo.size(); k++){
-    //printf("%d: %1.2f, %1.2f \n", k, 
-    //fGeoInfo[k].at(ichamber).xoffset-fGeoInfo[k].at(ichamber).dx/2.0,
-    //fGeoInfo[k].at(ichamber).xoffset+fGeoInfo[k].at(ichamber).dx/2.0);
-    if(fGeoInfo[k].at(ichamber).xoffset-fGeoInfo[k].at(ichamber).dx/2.0<=x && 
-       x<=fGeoInfo[k].at(ichamber).xoffset+fGeoInfo[k].at(ichamber).dx/2.0){
-      //if(abs(sector)==1)
-      //sector = k;// EFuchey, 2017/05/16: if the sector value is -1 then it is not being over ridden
-      // if the sector value is 1, then it is being over ridden, 
-      // but it should happen only in the case of BB GEMs, plane 5.
-      // I want that to happen because I divided plane 5 in 3 "sectors, each 1m long in x, 
-      // and centered on -0.5, 0, 0.5, i.e. sector 1 overlaps completely with the 2 others.
-      // I didn't figure any simpler way to integrate plane 5(UVA GEM) along with with the other 4 (INFN GEMs).
-      sector.push_back(k);
+    if (i >= fNDetectors || i < 0){
+        cout<<"invalid Detector ID requested: "<<i<<endl;
+        return false;
     }
-  }
 
-  TRandom3 R(0);
-  double P;
-  //return sector;
-  switch(sector.size()){
-  case(0):
-    return -1;
-    break;
-  case(1):
-    return sector.at(0);
-    break;
-  case(2):// should actually happen **only** in the case of BB GEMs, plane 5.
-    //return -1;cos(2*TMath::Pi()*x)/2+0.5
-    P = R.Uniform(0, 1);
-    if(P<= cos(2*TMath::Pi()*x)/2+0.5 ){
-      return 1;
-    }else{
-      for(int i = 0; i<sector.size(); i++){
-	if(sector.at(i)!=1)return sector.at(i);
-      }
-    }
-    break;
-  default:// >2 (should never happen)
-    cout << "Sector size = " << sector.size() << "; something wrong, needs to be fixed !" << endl;
-    return -1;
-    break;
-  }
-  
-  //if no conditions were ever satisfied, return error value
-  return fErrVal;
+    return true;
 }
 
-//__________________________________________________________________________
-double TSBSDBManager::GetPosFromSectorStrip(int iproj, int ichamber, int isector, int istrip)
+//_________________________________________________________________________
+const int & TSBSDBManager::GetNPMTs(int i)
 {
-  if (!CheckIndex(ichamber, isector, iproj)) return fErrVal;
-  
-  //cout << isector << " " << ichamber << " " << istrip;// << endl;
-  // cout << fGeoInfo.size() << " " << fGeoInfo[isector].size() << endl;
-
-  double pos = fErrVal;
-  if(iproj==0){
-    pos = fGeoInfo[isector].at(ichamber).pitch_u*istrip
-      -fGeoInfo[isector].at(ichamber).dx/2.0
-      -fGeoInfo[isector].at(ichamber).xoffset;
-  }
-  
-  if(iproj==1){
-    pos = fGeoInfo[isector].at(ichamber).pitch_v*istrip
-      -fGeoInfo[isector].at(ichamber).dy/2.0;
-  }
-  
-  //cout << " " << pos << endl;
-  return( pos );
+  if (!CheckIndex(i)) return fErrID;
+  return fGeoInfo.at(i).fNPMTs;
 }
-*/
+
+//_________________________________________________________________________
+const int & TSBSDBManager::GetNPMTrows(int i)
+{
+  if (!CheckIndex(i)) return fErrID;
+  return fGeoInfo.at(i).fNPMTrows;
+}
+
+//_________________________________________________________________________
+const int & TSBSDBManager::GetNPMTcolsMax(int i)
+{
+  if (!CheckIndex(i)) return fErrID;
+  return fGeoInfo.at(i).fNPMTcolsMax;
+}
+
+//_________________________________________________________________________
+const double & TSBSDBManager::GetPMTmatrixHext(int i)
+{
+  if (!CheckIndex(i)) return fErrVal;
+  return fGeoInfo.at(i).fPMTmatrixVext;
+}
+
+//_________________________________________________________________________
+const double & TSBSDBManager::GetPMTmatrixVext(int i)
+{
+  if (!CheckIndex(i)) return fErrVal;
+  return fGeoInfo.at(i).fPMTmatrixVext;
+}
+
+//_________________________________________________________________________
+const double & TSBSDBManager::GetInterPMTDist(int i)
+{
+  if (!CheckIndex(i)) return fErrVal;
+  return fGeoInfo.at(i).fInterPMTDist;
+}
+
+//_________________________________________________________________________
+const double & TSBSDBManager::GetX_TCPMTs(int i)
+{
+  if (!CheckIndex(i)) return fErrVal;
+  return fGeoInfo.at(i).fX_TCPMT;
+}
+
+//_________________________________________________________________________
+const double & TSBSDBManager::GetY_TCPMTs(int i)
+{
+  if (!CheckIndex(i)) return fErrVal;
+  return fGeoInfo.at(i).fY_TCPMT;
+}
