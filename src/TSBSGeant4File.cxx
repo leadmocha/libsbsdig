@@ -151,7 +151,7 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
       PMTID = fTree->Earm_GRINCH_hit_PMT->at(i)/5;
       XPMT = fTree->Earm_GRINCH_hit_ypmt->at(i);
       YPMT = fTree->Earm_GRINCH_hit_zpmt->at(i);// we want the PMT matrix to be sorted by increasing y_T
-      Npe = fTree->Earm_GRINCH_hit_NumPhotoelectrons->at(i)*1.0e3;
+      Npe = fTree->Earm_GRINCH_hit_NumPhotoelectrons->at(i);
       t = fTree->Earm_GRINCH_hit_Time_avg->at(i);
       trms = fTree->Earm_GRINCH_hit_Time_rms->at(i);
       //Print a warning if the hit RMS is above a few ns. This may be set in DB ?
@@ -351,7 +351,7 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
       PMTID = fTree->Harm_RICH_hit_PMT->at(i);
       XPMT = fTree->Harm_RICH_hit_ypmt->at(i);
       YPMT = -fTree->Harm_RICH_hit_xpmt->at(i);// we want the PMT matrix to be sorted by increasing y_T
-      Npe = fTree->Harm_RICH_hit_NumPhotoelectrons->at(i)*1.0e3;
+      Npe = fTree->Harm_RICH_hit_NumPhotoelectrons->at(i);
       t = fTree->Harm_RICH_hit_Time_avg->at(i);
       trms = fTree->Harm_RICH_hit_Time_rms->at(i);
       //Print a warning if the hit RMS is above a few ns. This may be set in DB ?
@@ -578,61 +578,60 @@ TSBSCherData* TSBSGeant4File::GetCherData()
   // Return TSBSCherData object filled with GEM data of present event.
   // The returned object pointer must be deleted by the caller!
 
-  TSBSCherData* gd = new TSBSCherData();
+  TSBSCherData* chd = new TSBSCherData();
 
-  GetCherData(gd);
-  return gd;
+  GetCherData(chd);
+  return chd;
 }
 
-void TSBSGeant4File::GetCherData(TSBSCherData* gd)
+void TSBSGeant4File::GetCherData(TSBSCherData* chd)
 {
   // Pack data into TSBSCherData
    
   //    printf("NEXT EVENT ---------------------------\n");
 
-  if( !gd ) return;
-  gd->ClearEvent();
-  gd->SetSource(fSource);
-  gd->SetEvent(fEvNum);
+  if( !chd ) return;
+  chd->ClearEvent();
+  chd->SetSource(fSource);
+  chd->SetEvent(fEvNum);
   
   if (GetNData() == 0) {
     return;
   }
-  gd->InitEvent(GetNData());
+  chd->InitEvent(GetNData());
 
-  g4sbshitdata *h;//, *hs;
-  //bool matchedstrip;
-  unsigned int i, ngdata = 0;// j,
+  g4sbshitdata *h;
+  unsigned int i, nchdata = 0;
   for(i=0; i<GetNData(); i++){
     h = GetHitData(i);
 
-    if( h->GetData(1)>0.0 ){
+    if( h->GetData(3)>0.0 ){//we want to save hits with a non zero photoelectron yield
 
-      gd->SetHitDetID(ngdata,      (UInt_t)h->GetDetID() );
-      gd->SetHitPMTID(ngdata,      (UInt_t)h->GetData(0) );
-      gd->SetHitXPMT(ngdata,               h->GetData(1) ); 
-      gd->SetHitYPMT(ngdata,               h->GetData(2) ); 
-      gd->SetHitPEyield(ngdata,            h->GetData(3) ); 
-      gd->SetHitTime(ngdata,               h->GetData(4) ); 
-      gd->SetHitTimeRMS(ngdata,            h->GetData(5) ); 
-      gd->SetParticleType(ngdata,  (UInt_t)h->GetData(6) );//  Track type (1 primary, >1 secondary) 
-      gd->SetMCtrackPID(ngdata,     (Int_t)h->GetData(10));
-      gd->SetOriginVolFlag(ngdata, (UInt_t)h->GetData(15));
+      chd->SetHitDetID(nchdata,      (UInt_t)h->GetDetID() );
+      chd->SetHitPMTID(nchdata,      (UInt_t)h->GetData(0) );
+      chd->SetHitXPMT(nchdata,               h->GetData(1) ); 
+      chd->SetHitYPMT(nchdata,               h->GetData(2) ); 
+      chd->SetHitPEyield(nchdata,            h->GetData(3) ); 
+      chd->SetHitTime(nchdata,               h->GetData(4) ); 
+      chd->SetHitTimeRMS(nchdata,            h->GetData(5) ); 
+      chd->SetParticleType(nchdata,  (UInt_t)h->GetData(6) );//  Track type (1 primary, >1 secondary) 
+      chd->SetMCtrackPID(nchdata,     (Int_t)h->GetData(10));
+      chd->SetOriginVolFlag(nchdata, (UInt_t)h->GetData(15));
       
       // Vector information
       TVector3 X_det(h->GetData(7), h->GetData(8), h->GetData(9));
-      gd->SetPositionDet(ngdata, X_det);
+      chd->SetPositionDet(nchdata, X_det);
       
       TVector3 p_mctrk(h->GetData(11), h->GetData(12), h->GetData(13));
-      gd->SetMCtrackMomentum(ngdata, p_mctrk);
+      chd->SetMCtrackMomentum(nchdata, p_mctrk);
 
       TVector3 v_mctrk(h->GetData(14), h->GetData(15), h->GetData(16));
-      gd->SetMCtrackVertex(ngdata, v_mctrk);
+      chd->SetMCtrackVertex(nchdata, v_mctrk);
       
-      ngdata++;
+      nchdata++;
     }
   }
-  gd->SetNHit(ngdata);
+  chd->SetNHit(nchdata);
 }
 
 

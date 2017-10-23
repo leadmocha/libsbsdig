@@ -1133,17 +1133,17 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
   
   TSBSSimEvent::PMTHit hit;
   
-  UInt_t ipmt = tscd.GetHitPMTID(ih);
+  //UInt_t ipmt = tscd.GetHitPMTID(ih);
   
-  hit.fID = ipmt;
+  hit.fID = ih;
   hit.fSource = tscd.GetSource();
   hit.fType = tscd.GetParticleType(ih);
   hit.fMCtrackPID = tscd.GetMCtrackPID(ih);
   hit.fOrigVolFlag = tscd.GetOriginVolFlag(ih);
   hit.fXPMT = 0;//tscd.(ih);
   hit.fYPMT = 0;//tscd.(ih);
-  hit.fNpe = 0;//tscd.GetHitPEyield(ih);
-  hit.fTime = 0;//tscd.GetHitTime(ih);
+  hit.fNpe = tscd.GetHitPEyield(ih);
+  hit.fTime = t0;
   // Digitization results for this hit
   hit.fDetID = tscd.GetHitDetID(ih);
   hit.fChannel = tscd.GetHitPMTID(ih);
@@ -1253,16 +1253,15 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
   //      << ", starts (1, 2): " << hit.fStart[0] << " " << hit.fStart[1]
   //      << ", Xproj (1, 2): " << hit.fXProj[0] << " " << hit.fXProj[1] << endl << endl;
     
-  fEvent->fGEMHit.push_back( hit );
-  
   //cout << "hiter plane " << hit.fPlane << ", hiter type " << hit.fType << ", hiter source " << hit.fSource << endl;
+  */
+
+  fEvent->fPMTHits.push_back( hit );
   
   if( hit.fType == 1 && hit.fSource == 0 )
     fEvent->fNSignal++;
   
-  //cout << "Event hiter size " <<  fEvent->fGEMHit.size() << ", Event signal size " << fEvent->fNSignal << endl;
-  */
-  return 0;//Hit.fID;
+  return hit.fID;
 }
 void
 TSBSSimCherDigitization::FillTree ()

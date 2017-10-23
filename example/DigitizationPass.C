@@ -94,7 +94,6 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
   ddd->InitTree (*dds, outname);
   
   printf("Digitizing events\n");
-  ndata = 0;
     
   Nmax = TMath::Min((Long64_t)Nmax, f->GetEntries());
     
@@ -105,6 +104,7 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
   int d_flag_readevent = 0;
   while( f->ReadNextEvent(d_flag_readevent) && hadback && nevent<Nmax ){
 
+    ndata = 0;
     if(nevent%100==0){
       cout << "Evt " << nevent << endl;
     }
@@ -129,11 +129,10 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
     
     ddd->SetTreeEvent((*chd), (*f), nevent);
     
-    /*
-    if(print){// || nevent==40
-      cout << "number of hits in GEM data " << chd->GetNHit() << endl;
+    if(print){
+      cout << "number of hits in GRINCH data " << chd->GetNHit() << endl;
       while(ndata<chd->GetNHit()){
-	  
+	
 	//if(chd->GetParticleID(ndata)>1)continue;
 	chd->Print();
 	cout << "hit number " << ndata << endl;
@@ -141,7 +140,6 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
 	ndata++;
       }
     }
-    */
     //ddd->Digitize(*chd, *dds);
     ddd->NoDigitize(*chd, *dds);
     
