@@ -1140,17 +1140,23 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
   hit.fType = tscd.GetParticleType(ih);
   hit.fMCtrackPID = tscd.GetMCtrackPID(ih);
   hit.fOrigVolFlag = tscd.GetOriginVolFlag(ih);
-  hit.fXPMT = 0;//tscd.(ih);
-  hit.fYPMT = 0;//tscd.(ih);
+  hit.fXPMT = tscd.GetHitXPMT(ih);
+  hit.fYPMT = tscd.GetHitYPMT(ih);
   hit.fNpe = tscd.GetHitPEyield(ih);
   hit.fTime = t0;
   // Digitization results for this hit
   hit.fDetID = tscd.GetHitDetID(ih);
   hit.fChannel = tscd.GetHitPMTID(ih);
-  hit.fPMTrow = 0;//tscd.(ih);
-  hit.fPMTcol = 0;//tscd.(ih);
-  hit.fADC = 0;//tscd.(ih);
-  hit.fTDC = 0;//tscd.(ih);
+  hit.fPMTrow = round((hit.fXPMT+manager->GetPMTmatrixVext(hit.fDetID)/2.0)/manager->GetInterPMTDist(hit.fDetID));
+  double PMTcol_ = (hit.fYPMT+manager->GetPMTmatrixHext(hit.fDetID)/2.0)/manager->GetInterPMTDist(hit.fDetID); 
+  if( fabs(PMTcol_ - int(PMTcol_))<1.e-3 ){
+    hit.fPMTcol = int(PMTcol_);
+  }else{
+    hit.fPMTcol = round(PMTcol_);
+  }
+  hit.fPMTcol = int((hit.fYPMT+manager->GetPMTmatrixHext(hit.fDetID)/2.0)/manager->GetInterPMTDist(hit.fDetID));
+  hit.fADC = 0;
+  hit.fTDC = 0;
   
   /*
   // The best estimate of the "true" hit position is the center of the

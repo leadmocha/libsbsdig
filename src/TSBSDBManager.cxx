@@ -86,9 +86,6 @@ void TSBSDBManager::LoadGeoInfo(const string& prefix)
     {"x_tcpmt",      &thisGeo.fY_TCPMT,      kDouble, 0, 1},
     { 0 }
   };
-    
-  thisGeo.fPMTmatrixHext = (thisGeo.fNPMTcolsMax-1)*thisGeo.fInterPMTDist;
-  thisGeo.fPMTmatrixVext = (thisGeo.fNPMTrows-1)*thisGeo.fInterPMTDist;
   
   for (int i=0; i<fNDetectors; i++){
     //map<int, vector<GeoInfo> >::iterator it = fGeoInfo.find(i);
@@ -98,6 +95,9 @@ void TSBSDBManager::LoadGeoInfo(const string& prefix)
     
     int err = LoadDB(input, request,detector_prefix.str());
     if( err ) exit(2);
+    
+    thisGeo.fPMTmatrixHext = (thisGeo.fNPMTcolsMax-1)*thisGeo.fInterPMTDist;
+    thisGeo.fPMTmatrixVext = (thisGeo.fNPMTrows-1)*thisGeo.fInterPMTDist;
     
     fGeoInfo.push_back(thisGeo);
   }
@@ -215,7 +215,7 @@ const int & TSBSDBManager::GetNPMTcolsMax(int i)
 const double & TSBSDBManager::GetPMTmatrixHext(int i)
 {
   if (!CheckIndex(i)) return fErrVal;
-  return fGeoInfo.at(i).fPMTmatrixVext;
+  return fGeoInfo.at(i).fPMTmatrixHext;
 }
 
 //_________________________________________________________________________
