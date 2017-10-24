@@ -269,6 +269,9 @@ TSBSSimCherDigitization::Initialize(const TSBSSpec& spect)
   fNPMTs.resize(fNDetectors);
   for(int i = 0; i<fNDetectors; i++){
     fNPMTs[i] = manager->GetNPMTs(i);
+    TArrayI DCarray(fNPMTs[i]);// = new TArrayI(fNPMTs[i]);
+    fADCArrays.push_back(DCarray);
+    fTDCArrays.push_back(DCarray);
   }
   /*
   fNChambers = spect.GetNChambers();
@@ -401,20 +404,20 @@ TSBSSimCherDigitization::AdditiveDigitize (const TSBSCherData& chdata, const TSB
       event_time[itime] = trigger_jitter-fTriggerOffset;
     }
     
-      #if DBG_AVA > 0
-    if(event_time[itime]>-50.0 && is_background ){
-      cout << "Evt time " << event_time[itime] 
-	   << " ( -trigger_jitter = " << -trigger_jitter;
-      if(is_background) cout << ", -Gate Width =  " << -fGateWidth;
-      cout << ")" << endl;
-    }
-#endif
-    
     time_set[itime] = true;
     
     // Time at which the photoelectron gets out of the photocathode.
     // the time 
     Double_t time_zero = event_time[itime] + chdata.GetHitTime(ih);
+    
+    
+    //Things will happen in here...
+    // something stupid...
+    double ADCval_dum = fTrnd.Uniform(0, pow(2, fADCbits)-1);
+    double TDCval_dum = fTrnd.Uniform(0, pow(2, fADCbits)-1);
+    
+    fADCArrays[idet][ipmt] = int(fabs(ADCval_dum));
+    fTDCArrays[idet][ipmt] = int(fabs(TDCval_dum));
     
     //Short_t id = 
     SetTreeHit (ih, spect, chdata, time_zero);
@@ -1156,8 +1159,8 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
     hit.fPMTcol = round(PMTcol_);
   }
   hit.fPMTcol = int((hit.fYPMT+manager->GetPMTmatrixHext(hit.fDetID)/2.0)/manager->GetInterPMTDist(hit.fDetID));
-  hit.fADC = 0;
-  hit.fTDC = 0;
+  hit.fADC = fADCArrays[hit.fDetID][hit.fChannel];
+  hit.fTDC = fTDCArrays[hit.fDetID][hit.fChannel];
   
   /*
   // The best estimate of the "true" hit position is the center of the

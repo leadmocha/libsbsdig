@@ -16,7 +16,6 @@ class TFile;
 class TTree;
 
 class TSBSCherData;
-//class TSolGEMVStrip;
 class TSBSSpec;
 class TSBSSimEvent;
 class TSBSGeant4File;
@@ -26,7 +25,7 @@ class TSBSGeant4File;
 // The whole strip plane; used to cumulate virtual strips charges
 // and generate real strips
 /*
-class TSBSDigitizedPlane {
+class TSBSDigitizedCherenkov {
 private:
   // ADC sampled value of strip array of each axis
 
@@ -78,7 +77,6 @@ public:
   const std::vector<Short_t>& GetStripClusters(UInt_t n) const { return fStripClusters[n]; }
 };
 */
-
 
 class TSBSSimCherDigitization: public THaAnalysisObject
 {
@@ -175,6 +173,8 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   
   UInt_t fNDetectors;  // # N detectors
   std::vector<UInt_t> fNPMTs;  // # N PMTs for each detector
+  std::vector<TArrayI> fADCArrays;
+  std::vector<TArrayI> fTDCArrays;
   TRandom3 fTrnd;     // time randomizer
   
   // Tree
