@@ -1,21 +1,24 @@
 950101
 
+# PMT parameters:
 ratedig.pmtgain = 1.e6 # ns 
+ratedig.pulseshapetau = 38.3  # ns
 
 # Electronics parameters:
 ratedig.triggeroffset = 15.  # ns 
 ratedig.triggerjitter = 3.0  # ns
+ratedig.gatewidth = 10. #ns
 ratedig.adcoffset = 0.
 ratedig.adcgain = 1.
 ratedig.adcbits = 12
-ratedig.gatewidth = 10. #ns
+ratedig.tdcoffset = 0.
+ratedig.tdcgain = 1.
+ratedig.tdcbits = 12
+ratedig.readoutimpedance = 50 # ohm
 
 # pedestal noise
 ratedig.pulsenoiseconst = 30.   #ADC values
 ratedig.pulsenoisesigma = 7.    #ADC values
-
-# Pulse shaping parameters:
-ratedig.pulseshapetau = 38.3  # ns
 
 #NINO cross talk parameter
 ratedig.do_crosstalk = 0

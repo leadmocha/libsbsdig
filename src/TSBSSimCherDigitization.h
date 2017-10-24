@@ -150,26 +150,31 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   static Int_t    fNCStripApart; // # of strips the induced signal is away from the mean signal
   static Double_t fCrossFactor;  //reduction factor for the induced signal
   static Double_t fCrossSigma;   //uncertainty of the reduction factor
-
   */
   
-  private:
-
+  
+  
+ private:
+  
   // Database parameters:
-  Double_t fADCgain;
-  Double_t fADCoffset;
-  Double_t fGateWidth;
-  Short_t  fADCbits;
-  Double_t fPMTGain;
-  Double_t fPulseShapeTau;
   Double_t fTriggerOffset;
   Double_t fTriggerJitter;
+  Double_t fGateWidth;
+  Double_t fADCgain;
+  Double_t fADCoffset;
+  Short_t  fADCbits;
+  Double_t fTDCgain;
+  Double_t fTDCoffset;
+  Short_t  fTDCbits;
+  Double_t fPMTGain;
+  Double_t fPulseShapeTau;
   Double_t fPulseNoiseConst;
   Double_t fPulseNoiseSigma;
   Bool_t   fDoCrossTalk;
   Double_t fCrossTalkMean;
   Double_t fCrossTalkSigma;
   Double_t fCrossTalkChanApart;
+  Double_t fReadOutImpedance;
   
   UInt_t fNDetectors;  // # N detectors
   std::vector<UInt_t> fNPMTs;  // # N PMTs for each detector

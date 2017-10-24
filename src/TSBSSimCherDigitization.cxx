@@ -25,6 +25,8 @@
 #include <algorithm>
 #include <utility>
 
+#define q_e 1.602176487e-19
+
 using namespace std;
 
 static TSBSDBManager* manager = TSBSDBManager::GetInstance();
@@ -310,13 +312,16 @@ TSBSSimCherDigitization::ReadDatabase (const TDatime& date)
 
   const DBRequest request[] =
     {
+      { "pmtgain",                   &fPMTGain,                   kDouble },
       { "adcgain",                   &fADCgain,                   kDouble },
       { "adcoffset",                 &fADCoffset,                 kDouble },
-      { "gatewidth",                 &fGateWidth,                 kDouble },
       { "adcbits",                   &fADCbits,                   kInt    },
-      { "pmtgain",                   &fPMTGain,                   kDouble },
+      { "tdcgain",                   &fTDCgain,                   kDouble },
+      { "tdcoffset",                 &fTDCoffset,                 kDouble },
+      { "tdcbits",                   &fTDCbits,                   kInt    },
       { "triggeroffset",             &fTriggerOffset,             kDouble },
       { "triggerjitter",             &fTriggerJitter,             kDouble },
+      { "gatewidth",                 &fGateWidth,                 kDouble },
       { "pulsenoiseconst",           &fPulseNoiseConst,           kDouble },
       { "pulsenoisesigma",           &fPulseNoiseSigma,           kDouble },
       { "pulseshapetau",             &fPulseShapeTau,             kDouble },
@@ -324,6 +329,7 @@ TSBSSimCherDigitization::ReadDatabase (const TDatime& date)
       { "crosstalk_mean",            &fCrossTalkMean,             kDouble },
       { "crosstalk_sigma",           &fCrossTalkSigma,            kDouble },
       { "crosstalk_chan_apart",      &fCrossTalkChanApart,        kInt    },
+      { "readoutimpedance",          &fReadOutImpedance,          kDouble },
       { 0 }
     };
 
@@ -407,17 +413,15 @@ TSBSSimCherDigitization::AdditiveDigitize (const TSBSCherData& chdata, const TSB
     time_set[itime] = true;
     
     // Time at which the photoelectron gets out of the photocathode.
-    // the time 
     Double_t time_zero = event_time[itime] + chdata.GetHitTime(ih);
     
-    
     //Things will happen in here...
-    // something stupid...
-    double ADCval_dum = fTrnd.Uniform(0, pow(2, fADCbits)-1);
-    double TDCval_dum = fTrnd.Uniform(0, pow(2, fADCbits)-1);
+    double ADCval = chdata.GetHitPEyield(ih)*fPMTGain*q_e*fReadOutImpedance;
+    // and ??? 
+    double TDCval = fTrnd.Uniform(0, pow(2, fADCbits)-1);
     
-    fADCArrays[idet][ipmt] = int(fabs(ADCval_dum));
-    fTDCArrays[idet][ipmt] = int(fabs(TDCval_dum));
+    fADCArrays[idet][ipmt] = int(fabs(ADCval));
+    fTDCArrays[idet][ipmt] = int(fabs(TDCval));
     
     //Short_t id = 
     SetTreeHit (ih, spect, chdata, time_zero);
