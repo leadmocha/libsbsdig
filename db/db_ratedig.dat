@@ -3,8 +3,8 @@
 ratedig.pmtgain = 1.e6 # ns 
 
 # Electronics parameters:
-ratedig.triggeroffset = 125. # ns 
-ratedig.triggerjitter = 3.  # ns
+ratedig.triggeroffset = 15.  # ns 
+ratedig.triggerjitter = 3.0  # ns
 ratedig.adcoffset = 0.
 ratedig.adcgain = 1.
 ratedig.adcbits = 12

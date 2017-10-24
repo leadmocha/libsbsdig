@@ -39,50 +39,6 @@ Double_t TSBSSimTrack::MCFitX_print() const
   // printf("RcFit[4-8]: %f %f %f %f %f \n", fRcFitPar[4], fRcFitPar[5], fRcFitPar[6], fRcFitPar[7], fRcFitPar[8]);
   return fMCFitPar[0];
 }
-// Those below are not useful for SBS, which needs X, Y, Xdir, Ydir (unless otherwise demonstrated)
-// refer to comment in TSBSSimEvent.h l. 30-32
-/*
-//-----------------------------------------------------------------------------
-Double_t TSBSSimTrack::MCFitR() const
-{
-  return TMath::Sqrt(fMCFitPar[0]*fMCFitPar[0] + fMCFitPar[2]*fMCFitPar[2] );
-}
-//-----------------------------------------------------------------------------
-Double_t TSBSSimTrack::MCFitPhi() const
-{
-  return TVector3( fMCFitPar[0], fMCFitPar[2], 0 ).Phi();
-}
-//-----------------------------------------------------------------------------
-Double_t TSBSSimTrack::MCFitThetaDir() const
-{
-  return TVector3( fMCFitPar[1], fMCFitPar[3], 1.0 ).Theta();
-}
-//-----------------------------------------------------------------------------
-Double_t TSBSSimTrack::MCFitPhiDir() const
-{
-  return TVector3( fMCFitPar[1], fMCFitPar[3], 1.0 ).Phi();
-}
-//-----------------------------------------------------------------------------
-Double_t TSBSSimTrack::RcFitR() const
-{
-  return TMath::Sqrt(fRcFitPar[0]*fRcFitPar[0] + fRcFitPar[2]*fRcFitPar[2] );
-}
-//-----------------------------------------------------------------------------
-Double_t TSBSSimTrack::RcFitPhi() const
-{
-  return TVector3( fRcFitPar[0], fRcFitPar[2], 0 ).Phi();
-}
-//-----------------------------------------------------------------------------
-Double_t TSBSSimTrack::RcFitThetaDir() const
-{
-  return TVector3( fRcFitPar[1], fRcFitPar[3], 1.0 ).Theta();
-}
-//-----------------------------------------------------------------------------
-Double_t TSBSSimTrack::RcFitPhiDir() const
-{
-  return TVector3( fRcFitPar[1], fRcFitPar[3], 1.0 ).Phi();
-}
-*/
 
 //-----------------------------------------------------------------------------
 TSBSSimEvent::TSBSSimEvent()
@@ -149,7 +105,13 @@ void TSBSSimEvent::Print( const Option_t* opt ) const
   TString sopt(opt);
   bool do_all    = sopt.Contains("all",   TString::kIgnoreCase);
   bool do_hit    = sopt.Contains("hit",   TString::kIgnoreCase) || do_all;
+  bool do_track  = sopt.Contains("track", TString::kIgnoreCase) || do_all;
   
+  if( do_track && fMCTracks ) {
+    for( Int_t i=0; i<GetNtracks(); ++i ) {
+      fMCTracks->UncheckedAt(i)->Print(opt);
+    }
+  }
   if( do_hit ) {
     for( vector<PMTHit>::const_iterator ih = fPMTHits.begin();
 	 ih != fPMTHits.end(); ++ih ) {

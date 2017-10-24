@@ -124,14 +124,14 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   void WriteTree () const;
   void CloseTree () const;
 
+  TSBSSimEvent* GetEvent() const { return fEvent; }
+  
   // Access to results
   /* Float_t GetTime (UInt_t ich, UInt_t ip, UInt_t n) const {return fDP[ich][ip]->GetTime (n);} */
   /* Int_t   GetADC (UInt_t ich, UInt_t ip, Int_t n, Int_t ks) const {return fDP[ich][ip]->GetADC (n, ks);} */
   /* Int_t   GetTDC (UInt_t ich, UInt_t ip, Int_t n, Int_t ks) const {return fDP[ich][ip]->GetADC (n, ks);} */
   /* UShort_t Threshold (UInt_t ich, UInt_t ip, Int_t thr) {return fDP[ich][ip]->Threshold (thr);} */
   /* UShort_t GetNPMTOverThr (UInt_t ich, UInt_t ip) const {return fDP[ich][ip]->GetNOverThr();} */
-  
-  TSBSSimEvent* GetEvent() const { return fEvent; }
   
   /*
   Short_t GetType (UInt_t ich, UInt_t ip, Int_t n) const {return fDP[ich][ip]->GetType (n);}
@@ -147,24 +147,12 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   const std::vector<Short_t>& GetStripClusters(UInt_t ich, UInt_t ip, UInt_t n) const
   { return fDP[ich][ip]->GetStripClusters(n); }
 
-  Bool_t IsMapSector() const { return fDoMapSector; }
-  void SetMapSector( Bool_t b = true ) { fDoMapSector = b; }
-
   // APV cross talk parameters
   static Int_t    fDoCrossTalk;  //whether we want to do cross talk simulation
   static Int_t    fNCStripApart; // # of strips the induced signal is away from the mean signal
   static Double_t fCrossFactor;  //reduction factor for the induced signal
   static Double_t fCrossSigma;   //uncertainty of the reduction factor
 
-  //moved in "public" to allow it to compile with Root6/CentOS7
-  struct IonPar_t {
-    Double_t X;       // position of the point on the projection
-    Double_t Y;
-    Double_t Charge;  // Charge deposited by this ion
-    Double_t SNorm;   // 3 x radius of ion diffusion area at readout
-    Double_t R2;      // = SNorm^2 : radius of numerical integration area
-    Double_t ggnorm;  // = Charge/R2/pi : charge per unit area
-  };
   */
   
   private:
@@ -194,9 +182,7 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   TFile* fOFile;          // Output ROOT file
   TTree* fOTree;          // Output tree
   TSBSSimEvent* fEvent;   // Output event structure, written to tree
-
-  //Bool_t fFilledStrips;   // True if no data changed since last SetTreeStrips
-
+  
   void MakePrefix() { THaAnalysisObject::MakePrefix(0); }
   void DeleteObjects();
 

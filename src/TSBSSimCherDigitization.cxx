@@ -388,21 +388,19 @@ TSBSSimCherDigitization::AdditiveDigitize (const TSBSCherData& chdata, const TSB
       continue;
     
     Short_t itype = (chdata.GetParticleType(ih)==1) ? 1 : 2; // primary = 1, secondaries = 2
-    Short_t isect, iplane;
     
     // Trigger time jitter, including an arbitrary offset to align signal timing
     Double_t trigger_jitter = fTrnd.Gaus(0, fTriggerJitter);
     //cout << "Offset, Jitter: " << fTriggerOffset << " " << fTriggerJitter << " => trig jitter = " << trigger_jitter << endl;
     if( is_background ) {
       // For background data, uniformly randomize event time between
-      // -fGateWidth to +75 ns (assuming 3 useful 25 ns samples).
       event_time[itime] = fTrnd.Uniform(fGateWidth) - fGateWidth/2.0 + trigger_jitter - fTriggerOffset;
       //cout << "GateWidth " << fGateWidth << ", sampling period " << fEleSamplingPeriod << endl;
     } else {
       // Signal events occur at t = 0, smeared only by the trigger jitter
       event_time[itime] = trigger_jitter-fTriggerOffset;
     }
-    /*
+    
       #if DBG_AVA > 0
     if(event_time[itime]>-50.0 && is_background ){
       cout << "Evt time " << event_time[itime] 
@@ -412,12 +410,16 @@ TSBSSimCherDigitization::AdditiveDigitize (const TSBSCherData& chdata, const TSB
     }
 #endif
     
-    //time_set[itime] = true;
-    //}
+    time_set[itime] = true;
     
-    // Time of the leading edge of this hit's avalance relative to the trigger
-    Double_t time_zero = event_time[itime] + chdata.GetHitTime(ih);// + fRTime0*1e9;
+    // Time at which the photoelectron gets out of the photocathode.
+    // the time 
+    Double_t time_zero = event_time[itime] + chdata.GetHitTime(ih);
     
+    //Short_t id = 
+    SetTreeHit (ih, spect, chdata, time_zero);
+    
+    /*
 #if DBG_AVA > 0
     if(time_zero>200.0)
       cout << "time_zero " << time_zero 
@@ -440,7 +442,6 @@ TSBSSimCherDigitization::AdditiveDigitize (const TSBSCherData& chdata, const TSB
     
     // Record MC hits in output event
     //Short_t id = SetTreeHit (ih, spect, fdh, chdata, time_zero);
-    Short_t id = SetTreeHit (ih, spect, chdata, time_zero);
     
     // Record digitized strip signals in output event
     if (fdh) {
