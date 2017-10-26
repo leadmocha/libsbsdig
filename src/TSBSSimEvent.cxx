@@ -116,20 +116,22 @@ void TSBSSimEvent::Print( const Option_t* opt ) const
     for( vector<PMTHit>::const_iterator ih = fPMTHits.begin();
 	 ih != fPMTHits.end(); ++ih ) {
       const PMTHit& h = *ih;
-      cout << "hit = " << h.fID
-	   << ", type = "    << h.fType
-	   << ", src = "    << h.fSource
+      cout << "hit = " << h.fID 
+	   << ", type = "    << h.fType 
+	   << ", src = "    << h.fSource 
 	   << endl;
       cout << "PMT row = "   << h.fPMTrow 
 	   << ", PMT col = "   << h.fPMTcol 
-	   << ", X_PMT = "   << h.fXPMT
+	   << ", X_PMT = "   << h.fXPMT 
 	   << ", Y_PMT = "   << h.fYPMT 
-	   << ", number of photoelectrons = " << h.fNpe
-	   << ", time = " << h.fTime << " ns " 
+	   << ", number of photoelectrons = " << h.fNpe 
+	   << ", time = " << h.fTime 
+	   << " ns; TDC rising time = " << h.fTDCtime[0] 
+	   << " ns, TDC falling time = " << h.fTDCtime[1] 
 	   << endl;
-      cout << " Channel = " << h.fChannel
-	   << ", ADC value  " << h.fADC 
-	   << ", TDC value  " << h.fTDC 
+      cout << " Channel = " << h.fChannel 
+	   << ", TDC values for rising time: " << h.fTDC[0] 
+	   << "; for falling time: " << h.fTDC[1] 
 	   << endl;
     }
   }

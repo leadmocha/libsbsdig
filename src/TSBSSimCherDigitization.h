@@ -7,6 +7,7 @@
 #include "TRandom3.h"
 #include "TVector3.h"
 #include "TArrayI.h"
+#include "TArrayD.h"
 
 #include "THaAnalysisObject.h"
 
@@ -20,63 +21,6 @@ class TSBSSpec;
 class TSBSSimEvent;
 class TSBSGeant4File;
 
-// First an auxiliary class
-
-// The whole strip plane; used to cumulate virtual strips charges
-// and generate real strips
-/*
-class TSBSDigitizedCherenkov {
-private:
-  // ADC sampled value of strip array of each axis
-
-  //TODO: make this a struct inside an STL vector or similar
-  TArrayI fStripADC;  
-  Short_t *fType;  // Type of track (primary, secondary) which left the hit for each strip
-  Int_t   *fTotADC;  // number of ADC counts for each strip
-
-  Float_t *fCharge;  // charge for each strip
-  Float_t *fTime;   // time for each strip
-
-  UShort_t fNSamples;   // number of ADC samples
-  UShort_t fNStrips;   // number of strips in the plane
-  Int_t    fThreshold;  // ADC threshold 
-
-  UShort_t  fNOT;   // # strips over threshold
-  Short_t*  fOverThr;  // # list of strips over threshold
-
-  std::vector< std::vector<Short_t> > fStripClusters; // Clusters associated with each strip
-
-  //used to simulate cross talk of APV25
-  TRandom3 fRan;
-
-public:
-  // init and reset physics strips arrays
-  TSBSDigitizedPlane (UShort_t nstrip,
-		      UShort_t nsample = 10,
-		      Int_t    threshold = 0 );
-  ~TSBSDigitizedPlane();
-  void Clear();
-
-  // cumulate hits (strips signals)
-  void Cumulate (const TSolGEMVStrip *vv, Short_t type, Short_t clusterID );
-  
-  //standard getters
-  Short_t  GetType (Int_t n) const {return fType[n];}
-  Int_t    GetTotADC (Int_t n) const {return fTotADC[n];}
-  Float_t  GetTime (Int_t n) const {return fTime[n];}
-  Float_t  GetCharge (Int_t n) const {return fCharge[n];}
-  Int_t    GetADC (Int_t n, Int_t ks) const {return fStripADC[n*fNSamples+ks];}
-  UShort_t GetNSamples() const {return fNSamples;}
-  UShort_t GetNStrips() const {return fNStrips;}
-
-  UShort_t Threshold (Int_t thr);
-
-  UShort_t GetNOverThr() const {return fNOT;}
-  Short_t  GetIdxOverThr (Int_t n) const {return fOverThr[n];}
-
-  const std::vector<Short_t>& GetStripClusters(UInt_t n) const { return fStripClusters[n]; }
-};
-*/
 
 class TSBSSimCherDigitization: public THaAnalysisObject
 {
@@ -125,34 +69,13 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   TSBSSimEvent* GetEvent() const { return fEvent; }
   
   // Access to results
-  /* Float_t GetTime (UInt_t ich, UInt_t ip, UInt_t n) const {return fDP[ich][ip]->GetTime (n);} */
-  /* Int_t   GetADC (UInt_t ich, UInt_t ip, Int_t n, Int_t ks) const {return fDP[ich][ip]->GetADC (n, ks);} */
-  /* Int_t   GetTDC (UInt_t ich, UInt_t ip, Int_t n, Int_t ks) const {return fDP[ich][ip]->GetADC (n, ks);} */
-  /* UShort_t Threshold (UInt_t ich, UInt_t ip, Int_t thr) {return fDP[ich][ip]->Threshold (thr);} */
-  /* UShort_t GetNPMTOverThr (UInt_t ich, UInt_t ip) const {return fDP[ich][ip]->GetNOverThr();} */
-  
   /*
-  Short_t GetType (UInt_t ich, UInt_t ip, Int_t n) const {return fDP[ich][ip]->GetType (n);}
-  Int_t   GetTotADC (UInt_t ich, UInt_t ip, Int_t n) const {return fDP[ich][ip]->GetTotADC (n);}
-  Float_t GetCharge (UInt_t ich, UInt_t ip, UInt_t n) const {return fDP[ich][ip]->GetCharge (n);}
-  UInt_t   GetNChambers() const {return fNChambers;};
-  UInt_t   GetNPlanes (const UInt_t i) const {return fNPlanes[i];}
-  UShort_t GetNSamples (UInt_t ich, UInt_t ip) const {return fDP[ich][ip]->GetNSamples();}
-  UShort_t GetNStrips (UInt_t ich, UInt_t ip) const {return fDP[ich][ip]->GetNStrips();}
-  Short_t  GetIdxOverThr (UInt_t ich, UInt_t ip, Int_t n) const
-  { return fDP[ich][ip]->GetIdxOverThr(n); }
-
-  const std::vector<Short_t>& GetStripClusters(UInt_t ich, UInt_t ip, UInt_t n) const
-  { return fDP[ich][ip]->GetStripClusters(n); }
-
-  // APV cross talk parameters
+  // NINO cross talk parameters
   static Int_t    fDoCrossTalk;  //whether we want to do cross talk simulation
   static Int_t    fNCStripApart; // # of strips the induced signal is away from the mean signal
   static Double_t fCrossFactor;  //reduction factor for the induced signal
   static Double_t fCrossSigma;   //uncertainty of the reduction factor
   */
-  
-  
   
  private:
   
@@ -160,12 +83,13 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   Double_t fTriggerOffset;
   Double_t fTriggerJitter;
   Double_t fGateWidth;
-  Double_t fADCgain;
-  Double_t fADCoffset;
-  Short_t  fADCbits;
+  /* Double_t fADCgain; */
+  /* Double_t fADCoffset; */
+  /* Short_t  fADCbits; */
   Double_t fTDCgain;
-  Double_t fTDCoffset;
+  Double_t fTDCoffset; 
   Short_t  fTDCbits;
+  Double_t fTDCthreshold;
   Double_t fPMTGain;
   Double_t fPulseShapeTau;
   Double_t fPulseNoiseConst;
@@ -178,8 +102,8 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   
   UInt_t fNDetectors;  // # N detectors
   std::vector<UInt_t> fNPMTs;  // # N PMTs for each detector
-  std::vector<TArrayI> fADCArrays;
-  std::vector<TArrayI> fTDCArrays;
+  std::vector< std::pair<TArrayI, TArrayI> > fTDCArrays;
+  std::vector< std::pair<TArrayD, TArrayD> > fTDCtimeArrays;
   TRandom3 fTrnd;     // time randomizer
   
   // Tree

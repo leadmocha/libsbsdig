@@ -708,10 +708,14 @@ Int_t TSBSSimDecoder::DoLoadEvent(const Int_t* evbuffer )
 //-----------------------------------------------------------------------------
 TSBSSimPMTHit::TSBSSimPMTHit( const TSBSSimEvent::PMTHit& h )
   : fID(h.fID), 
-    fSource(h.fSource), fType(h.fType),
-    fPMTrow(h.fPMTrow), fPMTcol(h.fPMTcol),
-    fNpe(h.fNpe), fTime(h.fTime),
-    fChannel(h.fChannel), fADC(h.fADC), fTDC(h.fTDC)
+    fSource(h.fSource), fType(h.fType), 
+    fMCtrackPID(h.fMCtrackPID), fOrigVolFlag(h.fOrigVolFlag), 
+    fXPMT(h.fXPMT), fYPMT(h.fYPMT), 
+    fNpe(h.fNpe), fTime(h.fTime), 
+    fTDCtime1(h.fTDCtime[0]), fTDCtime2(h.fTDCtime[1]),
+    fDetID(h.fDetID), fChannel(h.fChannel), 
+    fPMTrow(h.fPMTrow), fPMTcol(h.fPMTcol), 
+    fTDC1(h.fTDC[0]), fTDC2(h.fTDC[1])
 {
   // Construct hit from cluster
 }

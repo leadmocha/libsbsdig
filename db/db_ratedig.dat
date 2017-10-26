@@ -8,12 +8,13 @@ ratedig.pulseshapetau = 38.3  # ns
 ratedig.triggeroffset = 15.  # ns 
 ratedig.triggerjitter = 3.0  # ns
 ratedig.gatewidth = 10. #ns
-ratedig.adcoffset = 0.
-ratedig.adcgain = 1.
-ratedig.adcbits = 12
+#ratedig.adcoffset = 0.
+#ratedig.adcgain = 1.
+#ratedig.adcbits = 12
 ratedig.tdcoffset = 0.
 ratedig.tdcgain = 1.
 ratedig.tdcbits = 12
+ratedig.tdcthreshold = 6.0 # mV
 ratedig.readoutimpedance = 50 # ohm
 
 # pedestal noise

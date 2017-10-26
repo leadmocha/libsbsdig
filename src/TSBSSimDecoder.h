@@ -26,18 +26,24 @@ public:
 
   virtual void Print( const Option_t* opt="" ) const;
 
-  Short_t   fID;        // Hit number
-  // MC hit data
-  Int_t     fSource;    // MC data set source (0 = signal, >0 background)
-  Int_t     fType;      // GEANT particle type (1 = primary)
-  Short_t   fPMTrow;    // Sector number
-  Short_t   fPMTcol;    // Plane number
-  Float_t   fNpe;       // Number of photoelectrons
-  Float_t   fTime;      // Arrival time at electronics
+  Short_t  fID;          // Hit number
+  Int_t    fSource;      // MC data set source (0 = signal, >0 background)
+  Int_t    fType;        // GEANT particle type (1 = primary)
+  Int_t    fMCtrackPID;  // GEANT particle ID (if any)
+  Short_t  fOrigVolFlag; // 
+  Float_t  fXPMT;        // X coordinate of the PMT in transport coordinates
+  Float_t  fYPMT;        // Y coordinate of the PMT in transport coordinates
+  Float_t  fNpe;         // Number of photoelectrons
+  Double_t fTime;        // Arrival time at electronics
+  Double_t fTDCtime1;    // TDC rising time
+  Double_t fTDCtime2;    // TDC falling time
   // Digitization results for this hit
-  Int_t     fChannel;   // Channel number
-  Int_t     fADC;       // ADC value
-  Int_t     fTDC;       // TDC value
+  Short_t  fDetID;       // Detector ID
+  Short_t  fChannel;     // Channel number
+  Short_t  fPMTrow;      // Row number: cross reference to Channel number
+  Short_t  fPMTcol;      // Column number: cross reference to Channel number
+  Int_t    fTDC1;      // TDC value for rising time
+  Int_t    fTDC2;      // TDC value for falling time
   
   ClassDef(TSBSSimPMTHit,1) // A Monte Carlo hit at a GEM tracking chamber
 };
