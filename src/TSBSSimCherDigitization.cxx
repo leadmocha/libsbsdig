@@ -277,9 +277,11 @@ TSBSSimCherDigitization::ReadDatabase (const TDatime& date)
   const DBRequest request[] =
     {
       { "pmtgain",                   &fPMTGain,                   kDouble },
-      // { "adcgain",                   &fADCgain,                   kDouble },
-      // { "adcoffset",                 &fADCoffset,                 kDouble },
-      // { "adcbits",                   &fADCbits,                   kInt    },
+      { "pmtpulseshapetau",          &fPMTPulseShapeTau,          kDouble },
+      { "pmttransittime",            &fPMTTransitTime,            kDouble },
+      { "pmtrisetime",               &fPMTRiseTime,               kDouble },
+      { "pmtjitter",                 &fPMTJitter,                 kDouble },
+      { "pmtfwhm",                   &fPMTFWHM,                   kDouble },
       { "tdcgain",                   &fTDCgain,                   kDouble },
       { "tdcoffset",                 &fTDCoffset,                 kDouble },
       { "tdcbits",                   &fTDCbits,                   kInt    },
@@ -289,7 +291,6 @@ TSBSSimCherDigitization::ReadDatabase (const TDatime& date)
       { "gatewidth",                 &fGateWidth,                 kDouble },
       { "pulsenoiseconst",           &fPulseNoiseConst,           kDouble },
       { "pulsenoisesigma",           &fPulseNoiseSigma,           kDouble },
-      { "pulseshapetau",             &fPulseShapeTau,             kDouble },
       { "do_crosstalk",              &fDoCrossTalk,               kInt    },
       { "crosstalk_mean",            &fCrossTalkMean,             kDouble },
       { "crosstalk_sigma",           &fCrossTalkSigma,            kDouble },
@@ -386,22 +387,31 @@ TSBSSimCherDigitization::AdditiveDigitize (const TSBSCherData& chdata, const TSB
     // 	 << " => Charge " << chdata.GetHitPEyield(ih)*fPMTGain*q_e 
     // 	 << " C, induced voltage: " << ADCval << " V. " << endl;
     
-    // Test
-    double t_TDC_1 = fTrnd.Gaus(time_zero+5.0, 1.0);
-    double t_TDC_2 = fTrnd.Gaus(t_TDC_1+7.5, 1.5);
+    double totalpulsecharge = chdata.GetHitPEyield(ih)*fPMTGain*q_e;
     
-    // Test: it probably does not work that way...
-    int TDCval_1 = TMath::Nint( TMath::Min( fTDCoffset+t_TDC_1*fTDCgain, pow(2, fTDCbits)-1 ) );
-    int TDCval_2 = TMath::Nint( TMath::Min( fTDCoffset+t_TDC_2*fTDCgain, pow(2, fTDCbits)-1 ) );
+    double t_TDC_1, t_TDC_2;// = fTrnd.Gaus(t_TDC_1+7.5, 1.5);
+    bool TDCactive = GetTDCtimes(totalpulsecharge, t_TDC_1, t_TDC_2);
     
-    fTDCtimeArrays.at(idet).first[ipmt] = t_TDC_1;
-    fTDCtimeArrays.at(idet).second[ipmt] = t_TDC_2;
-
-    fTDCArrays.at(idet).first[ipmt] = TDCval_1;
-    fTDCArrays.at(idet).second[ipmt] = TDCval_2;
-    //fTDCArrays[idet][ipmt] = int(fabs(TDCval));
+    if(TDCactive){
+      // Test: it probably does not work that way...
+      int TDCval_1 = TMath::Nint( TMath::Min( fTDCoffset+t_TDC_1*fTDCgain, pow(2, fTDCbits)-1 ) );
+      int TDCval_2 = TMath::Nint( TMath::Min( fTDCoffset+t_TDC_2*fTDCgain, pow(2, fTDCbits)-1 ) );
+      
+      fTDCtimeArrays.at(idet).first[ipmt] = t_TDC_1;
+      fTDCtimeArrays.at(idet).second[ipmt] = t_TDC_2;
+      
+      fTDCArrays.at(idet).first[ipmt] = TDCval_1;
+      fTDCArrays.at(idet).second[ipmt] = TDCval_2;
+      //fTDCArrays[idet][ipmt] = int(fabs(TDCval));
+    }else{
+      fTDCtimeArrays.at(idet).first[ipmt] = -1.e38;
+      fTDCtimeArrays.at(idet).second[ipmt] = -1.e38;
+      
+      fTDCArrays.at(idet).first[ipmt] = 0;
+      fTDCArrays.at(idet).second[ipmt] = 0;
+    }
     
-     //Short_t id = 
+    //Short_t id = 
     SetTreeHit (ih, spect, chdata, time_zero);
   }
   return 0;
@@ -428,6 +438,17 @@ TSBSSimCherDigitization::NoDigitize (const TSBSCherData& chdata, const TSBSSpec&
     }
 }
 
+//___________________________________________________________________________________
+bool 
+TSBSSimCherDigitization::GetTDCtimes(double C,   //total pulse charge
+				     double& t1, // rising time 
+				     double& t2  // falling time
+				     )
+{
+  if(C*fReadOutImpedance/fPMTTransitTime<fTDCthreshold){
+    return false;// return false if the pulse does not cross the set threshold
+  }
+}
 
 
 //___________________________________________________________________________________

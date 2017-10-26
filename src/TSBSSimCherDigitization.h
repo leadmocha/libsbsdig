@@ -44,7 +44,9 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   /* void PrintSamples() const; */
   
   Double_t GetGateWidth(){ return fGateWidth; }
-
+  
+  bool GetTDCtimes(double C, double& t1, double& t2);
+  
   // Tree methods
   // To write a tree with digitization results:
   //   Call InitTree before main loop;
@@ -80,18 +82,19 @@ class TSBSSimCherDigitization: public THaAnalysisObject
  private:
   
   // Database parameters:
+  Double_t fTDCthreshold;
+  Double_t fPMTGain;
+  Double_t fPMTPulseShapeTau;
+  Double_t fPMTTransitTime;
+  Double_t fPMTRiseTime;
+  Double_t fPMTJitter;
+  Double_t fPMTFWHM;
   Double_t fTriggerOffset;
   Double_t fTriggerJitter;
   Double_t fGateWidth;
-  /* Double_t fADCgain; */
-  /* Double_t fADCoffset; */
-  /* Short_t  fADCbits; */
   Double_t fTDCgain;
   Double_t fTDCoffset; 
   Short_t  fTDCbits;
-  Double_t fTDCthreshold;
-  Double_t fPMTGain;
-  Double_t fPulseShapeTau;
   Double_t fPulseNoiseConst;
   Double_t fPulseNoiseSigma;
   Bool_t   fDoCrossTalk;

@@ -2,7 +2,11 @@
 
 # PMT parameters:
 ratedig.pmtgain = 1.e6 # ns 
-ratedig.pulseshapetau = 38.3  # ns
+ratedig.pmttransittime = 33.0  # ns
+ratedig.pmtrisetime = 4.5 # ns
+ratedig.pmtjitter = 4.0 # ns
+ratedig.pmtfwhm = 7.5 # ns
+ratedig.pmtpulseshapetau = 38.3  # ns
 
 # Electronics parameters:
 ratedig.triggeroffset = 15.  # ns 
@@ -14,7 +18,7 @@ ratedig.gatewidth = 10. #ns
 ratedig.tdcoffset = 0.
 ratedig.tdcgain = 1.
 ratedig.tdcbits = 12
-ratedig.tdcthreshold = 6.0 # mV
+ratedig.tdcthreshold = 0.006 # V
 ratedig.readoutimpedance = 50 # ohm
 
 # pedestal noise
