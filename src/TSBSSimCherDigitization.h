@@ -107,7 +107,9 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   UInt_t fNDetectors;  // # N detectors
   std::vector<UInt_t> fNPMTs;  // # N PMTs for each detector
   std::vector< std::pair<TArrayI, TArrayI> > fTDCArrays;
+  // TDC digital value output arrays (1st array: rise time, 2nd array: fall time)
   std::vector< std::pair<TArrayD, TArrayD> > fTDCtimeArrays;
+  // TDC "input" time values (evaluated with the PMT pulse shape)
   TRandom3 fTrnd;     // time randomizer
   
   // Tree

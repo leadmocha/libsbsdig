@@ -37,8 +37,10 @@ the other are just useful complementary MC information.
 TSBSSimCherDigitization:
 This is the core class of the library: it performs the digitization of the Cherenkov data. 
 It produces the following output:
-  std::vector< std::pair<TArrayI, TArrayI> > fTDCArrays;     // TDC digital value output arrays (1: )
-  std::vector< std::pair<TArrayD, TArrayD> > fTDCtimeArrays; // TDC 
+  std::vector< std::pair<TArrayI, TArrayI> > fTDCArrays;     
+  // TDC digital value output arrays (1st array: rise time, 2nd array: fall time)
+  std::vector< std::pair<TArrayD, TArrayD> > fTDCtimeArrays; 
+  // TDC "input" time values (evaluated with the PMT pulse shape)
 These values are then fed to an instance of class TSBSSimEvent, 
 which holds the data structure to fill the output file.
 
@@ -49,6 +51,7 @@ The data structure is the following:
   Int_t     fEvtID;               // Event number
   Double_t  fWeight;              // Event weight
   Int_t     fNSignal;             // Number of clusters from signal
+  TClonesArray*   fMCTracks;      //-> Physics tracks
   struct PMTHit {
     // MC hit data
     Short_t  fID;          // Hit number
@@ -56,8 +59,8 @@ The data structure is the following:
     Int_t    fType;        // GEANT particle type (1 = primary)
     Int_t    fMCtrackPID;  // GEANT particle ID (if any)
     Short_t  fOrigVolFlag; // Flag marking volume of production from the photon
-    Double_t fXPMT;        // X coordinate of the PMT in transport coordinates
-    Double_t fYPMT;        // Y coordinate of the PMT in transport coordinates
+    Float_t  fXPMT;        // X coordinate of the PMT in transport coordinates
+    Float_t  fYPMT;        // Y coordinate of the PMT in transport coordinates
     Float_t  fNpe;         // Number of photoelectrons
     Double_t fTime;        // Arrival time at electronics
     Double_t fTDCtime[2];  // TDC rising and falling times values
@@ -94,7 +97,9 @@ General parameters for DB:
   int fNSigParticle; // number of signal particles
   vector<int>    fSigPID;
   vector<int>    fSigTID;
-  //map< int, vector<GeoInfo> > fGeoInfo;
+  
+  //container for geometry parameters
+  vector<GeoInfo> fGeoInfo;
 
 
 TSBSSimDecoder:
