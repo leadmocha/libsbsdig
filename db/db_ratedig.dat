@@ -19,6 +19,7 @@ ratedig.tdcoffset = 0.
 ratedig.tdcgain = 1.
 ratedig.tdcbits = 12
 ratedig.tdcthreshold = 0.006 # V
+ratedig.tdcresolution = 1.0 # ns
 ratedig.readoutimpedance = 50 # ohm
 
 # pedestal noise

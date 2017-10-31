@@ -37,6 +37,8 @@ the other are just useful complementary MC information.
 TSBSSimCherDigitization:
 This is the core class of the library: it performs the digitization of the Cherenkov data. 
 It produces the following output:
+  std::vector< std::pair<TArrayI, TArrayI> > fTDCArrays;     // TDC digital value output arrays (1: )
+  std::vector< std::pair<TArrayD, TArrayD> > fTDCtimeArrays; // TDC 
 These values are then fed to an instance of class TSBSSimEvent, 
 which holds the data structure to fill the output file.
 

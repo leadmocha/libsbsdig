@@ -45,7 +45,7 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   
   Double_t GetGateWidth(){ return fGateWidth; }
   
-  bool GetTDCtimes(double C, double& t1, double& t2);
+  bool GetTDCtimes(double C, double t0, double& t1, double& t2);
   
   // Tree methods
   // To write a tree with digitization results:
@@ -83,6 +83,7 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   
   // Database parameters:
   Double_t fTDCthreshold;
+  Double_t fTDCresolution;
   Double_t fPMTGain;
   Double_t fPMTPulseShapeTau;
   Double_t fPMTTransitTime;

@@ -286,6 +286,7 @@ TSBSSimCherDigitization::ReadDatabase (const TDatime& date)
       { "tdcoffset",                 &fTDCoffset,                 kDouble },
       { "tdcbits",                   &fTDCbits,                   kInt    },
       { "tdcthreshold",              &fTDCthreshold,              kDouble },
+      { "tdcresolution",             &fTDCresolution,             kDouble },
       { "triggeroffset",             &fTriggerOffset,             kDouble },
       { "triggerjitter",             &fTriggerJitter,             kDouble },
       { "gatewidth",                 &fGateWidth,                 kDouble },
@@ -304,6 +305,11 @@ TSBSSimCherDigitization::ReadDatabase (const TDatime& date)
   if (err)
     return kInitError; 
   
+  // fPMTTransitTime*= 1.e-9;
+  // fPMTRiseTime*= 1.e-9;
+  // fPMTJitter*= 1.e-9;
+  // fPMTFWHM*= 1.e-9;
+  // fTDCresolution*= 1.e-9;
   /*
   if( fEleSamplingPoints < 0 || fEleSamplingPoints > 10 )
     fEleSamplingPoints = 10;
@@ -378,8 +384,8 @@ TSBSSimCherDigitization::AdditiveDigitize (const TSBSCherData& chdata, const TSB
     
     time_set[itime] = true;
     
-    // Time at which the photoelectron gets out of the photocathode.
-    Double_t time_zero = event_time[itime] + chdata.GetHitTime(ih);
+    // time_zero is defined as the beginning of the pulse being drawn out of the PMT anode
+    Double_t time_zero = event_time[itime] + chdata.GetHitTime(ih) + fPMTTransitTime;
     
     //Things will happen in here...
     // double ADCval = chdata.GetHitPEyield(ih)*fPMTGain*q_e*fReadOutImpedance;
@@ -389,8 +395,8 @@ TSBSSimCherDigitization::AdditiveDigitize (const TSBSCherData& chdata, const TSB
     
     double totalpulsecharge = chdata.GetHitPEyield(ih)*fPMTGain*q_e;
     
-    double t_TDC_1, t_TDC_2;// = fTrnd.Gaus(t_TDC_1+7.5, 1.5);
-    bool TDCactive = GetTDCtimes(totalpulsecharge, t_TDC_1, t_TDC_2);
+    double t_TDC_1, t_TDC_2;
+    bool TDCactive = GetTDCtimes(totalpulsecharge, time_zero, t_TDC_1, t_TDC_2);
     
     if(TDCactive){
       // Test: it probably does not work that way...
@@ -441,12 +447,18 @@ TSBSSimCherDigitization::NoDigitize (const TSBSCherData& chdata, const TSBSSpec&
 //___________________________________________________________________________________
 bool 
 TSBSSimCherDigitization::GetTDCtimes(double C,   //total pulse charge
+				     double time_zero, //time of the beginning of the pulse
 				     double& t1, // rising time 
 				     double& t2  // falling time
 				     )
 {
-  if(C*fReadOutImpedance/fPMTTransitTime<fTDCthreshold){
+  if(C*fReadOutImpedance/(fPMTFWHM*1.0e-9)<fTDCthreshold){
+    cout << " threshold: " << fTDCthreshold << " V; "
+	 << " PMT signal max voltage " << C*fReadOutImpedance/(fPMTFWHM*1.0e-9) << endl;
     return false;// return false if the pulse does not cross the set threshold
+  }else{
+    t1 = fTrnd.Gaus(t1, fTDCresolution);
+    t2 = fTrnd.Gaus(t2, fTDCresolution);
   }
 }
 
