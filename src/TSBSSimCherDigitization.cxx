@@ -453,8 +453,8 @@ TSBSSimCherDigitization::GetTDCtimes(double C,   //total pulse charge
 				     )
 {
   if(C*fReadOutImpedance/(fPMTFWHM*1.0e-9)<fTDCthreshold){
-    cout << " threshold: " << fTDCthreshold << " V; "
-	 << " PMT signal max voltage " << C*fReadOutImpedance/(fPMTFWHM*1.0e-9) << endl;
+    // cout << " threshold: " << fTDCthreshold << " V; "
+    // 	 << " PMT signal max voltage " << C*fReadOutImpedance/(fPMTFWHM*1.0e-9) << endl;
     return false;// return false if the pulse does not cross the set threshold
   }else{
     t1 = fTrnd.Gaus(t1, fTDCresolution);
