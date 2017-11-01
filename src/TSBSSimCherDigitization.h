@@ -85,7 +85,7 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   Double_t fTDCthreshold;
   Double_t fTDCresolution;
   Double_t fPMTGain;
-  Double_t fPMTPulseShapeTau;
+  //Double_t fPMTPulseShapeTau;
   Double_t fPMTTransitTime;
   Double_t fPMTRiseTime;
   Double_t fPMTJitter;
@@ -93,8 +93,7 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   Double_t fTriggerOffset;
   Double_t fTriggerJitter;
   Double_t fGateWidth;
-  Double_t fTDCgain;
-  Double_t fTDCoffset; 
+  Double_t fTDCTimeConversion;
   Short_t  fTDCbits;
   Double_t fPulseNoiseConst;
   Double_t fPulseNoiseSigma;

@@ -277,13 +277,12 @@ TSBSSimCherDigitization::ReadDatabase (const TDatime& date)
   const DBRequest request[] =
     {
       { "pmtgain",                   &fPMTGain,                   kDouble },
-      { "pmtpulseshapetau",          &fPMTPulseShapeTau,          kDouble },
+      //{ "pmtpulseshapetau",          &fPMTPulseShapeTau,          kDouble },
       { "pmttransittime",            &fPMTTransitTime,            kDouble },
       { "pmtrisetime",               &fPMTRiseTime,               kDouble },
       { "pmtjitter",                 &fPMTJitter,                 kDouble },
       { "pmtfwhm",                   &fPMTFWHM,                   kDouble },
-      { "tdcgain",                   &fTDCgain,                   kDouble },
-      { "tdcoffset",                 &fTDCoffset,                 kDouble },
+      { "tdctimeconversion",         &fTDCTimeConversion,         kDouble },
       { "tdcbits",                   &fTDCbits,                   kInt    },
       { "tdcthreshold",              &fTDCthreshold,              kDouble },
       { "tdcresolution",             &fTDCresolution,             kDouble },
@@ -399,9 +398,9 @@ TSBSSimCherDigitization::AdditiveDigitize (const TSBSCherData& chdata, const TSB
     bool TDCactive = GetTDCtimes(totalpulsecharge, time_zero, t_TDC_1, t_TDC_2);
     
     if(TDCactive){
-      // Test: it probably does not work that way...
-      int TDCval_1 = TMath::Nint( TMath::Min( fTDCoffset+t_TDC_1*fTDCgain, pow(2, fTDCbits)-1 ) );
-      int TDCval_2 = TMath::Nint( TMath::Min( fTDCoffset+t_TDC_2*fTDCgain, pow(2, fTDCbits)-1 ) );
+      // data flow test: it does not work that way...
+      int TDCval_1 = TMath::Nint( TMath::Min( t_TDC_1/fTDCTimeConversion, pow(2, fTDCbits)-1 ) );
+      int TDCval_2 = TMath::Nint( TMath::Min( t_TDC_2/fTDCTimeConversion, pow(2, fTDCbits)-1 ) );
       
       fTDCtimeArrays.at(idet).first[ipmt] = t_TDC_1;
       fTDCtimeArrays.at(idet).second[ipmt] = t_TDC_2;
@@ -452,6 +451,13 @@ TSBSSimCherDigitization::GetTDCtimes(double C,   //total pulse charge
 				     double& t2  // falling time
 				     )
 {
+  //dumm... test data flow
+  if(C>0){
+    t1 = fTrnd.Uniform(0.0, 25.0);
+    t2 = fTrnd.Uniform(0.0, 25.0);
+    return true;
+  }
+
   if(C*fReadOutImpedance/(fPMTFWHM*1.0e-9)<fTDCthreshold){
     // cout << " threshold: " << fTDCthreshold << " V; "
     // 	 << " PMT signal max voltage " << C*fReadOutImpedance/(fPMTFWHM*1.0e-9) << endl;
@@ -459,6 +465,7 @@ TSBSSimCherDigitization::GetTDCtimes(double C,   //total pulse charge
   }else{
     t1 = fTrnd.Gaus(t1, fTDCresolution);
     t2 = fTrnd.Gaus(t2, fTDCresolution);
+    return true;
   }
 }
 
