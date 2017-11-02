@@ -16,6 +16,7 @@
 #include "TVector3.h"
 //#include "TArrayS.h"
 #include <vector>
+#include <stdint.h>
 
 class TClonesArray;
 
@@ -87,13 +88,13 @@ public:
     Float_t  fYPMT;        // Y coordinate of the PMT in transport coordinates
     Float_t  fNpe;         // Number of photoelectrons
     Double_t fTime;        // Arrival time at electronics
-    Double_t fTDCtime[2];  // TDC rising and falling times values
+    Double_t fTDCtime[2];  // TDC rising and falling times values wrt trigger time
     // Digitization results for this hit
     Short_t  fDetID;       // Detector ID
     Short_t  fChannel;     // Channel number
     Short_t  fPMTrow;      // Row number: cross reference to Channel number
     Short_t  fPMTcol;      // Column number: cross reference to Channel number
-    Int_t    fTDC[2];      // TDC values
+    uint32_t fTDC[2];      // TDC VETROC words
   };
   std::vector<PMTHit> fPMTHits;  // All MC-generated clusters in the GEMs
 

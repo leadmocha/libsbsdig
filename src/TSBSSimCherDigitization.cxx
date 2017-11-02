@@ -584,8 +584,36 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
     hit.fPMTcol = round(PMTcol_);
   }
   hit.fPMTcol = int((hit.fYPMT+manager->GetPMTmatrixHext(hit.fDetID)/2.0)/manager->GetInterPMTDist(hit.fDetID));
-  hit.fTDC[0] = fTDCArrays.at(idet).first[ipmt];
-  hit.fTDC[1] = fTDCArrays.at(idet).second[ipmt];
+  //hit.fTDC[0] = fTDCArrays.at(idet).first[ipmt];
+  //hit.fTDC[1] = fTDCArrays.at(idet).second[ipmt];
+  
+  uint32_t TDCvetrocWord0, TDCvetrocWord1;
+  TDCvetrocWord0 = TDCvetrocWord1 = 0;
+  
+  bool header[8] = {0, 0, 0, 0, 0, 0, 1, 1};
+  bool channel[8];
+  bool tdc[16];
+  
+  //cout << "Vetroc words: init: " << TDCvetrocWord0 << " " << TDCvetrocWord1 << endl;
+  for(int i = 0; i<16; i++){
+    if(i<8){
+      TDCvetrocWord0 ^= (-header[i] ^ TDCvetrocWord0) & (1 << (i+24));
+      TDCvetrocWord1 ^= (-header[i] ^ TDCvetrocWord1) & (1 << (i+24));
+      channel[i] = (ipmt >> i) & 1;
+      TDCvetrocWord0 ^= (-channel[i] ^ TDCvetrocWord0) & (1 << (i+16));
+      TDCvetrocWord1 ^= (-channel[i] ^ TDCvetrocWord1) & (1 << (i+16));
+    }
+    tdc[i] = (fTDCArrays.at(idet).first[ipmt] >> i) & 1;
+    TDCvetrocWord0 ^= (-tdc[i] ^ TDCvetrocWord0) & (1 << i);
+    tdc[i] = (fTDCArrays.at(idet).second[ipmt] >> i) & 1;
+    TDCvetrocWord1 ^= (-tdc[i] ^ TDCvetrocWord1) & (1 << i);
+  }
+  
+  TDCvetrocWord1 ^= (-1 ^ TDCvetrocWord1) & (1 << 26);
+  //cout << "Vetroc words: test: " << TDCvetrocWord0 << " " << TDCvetrocWord1 << endl;
+  
+  hit.fTDC[0] = TDCvetrocWord0;
+  hit.fTDC[1] = TDCvetrocWord1;
   
   fEvent->fPMTHits.push_back( hit );
   
