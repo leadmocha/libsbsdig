@@ -36,7 +36,7 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
     manager->LoadGeoInfo("g4sbs_gc");
     dds = new TSBSSpec ("g4sbs_gc", "BB spectrometer");
     outname = Form("digitized_grinch_%s.root", bg.c_str());
-    infile_sig = "/volatile/halla/sbs/efuchey/misc/test_gc_20170727_15/gc_signal_0.root";
+    infile_sig = "/volatile/halla/sbs/efuchey/misc/test_gc_20170727_09/gc_signal_0.root";
     infile_bkgd_prefix = "/volatile/halla/sbs/efuchey/gmn13.5_beam_bkgd_20170630_14";
     dds->Init(run_time);
     break;

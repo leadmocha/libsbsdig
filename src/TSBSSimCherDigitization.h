@@ -12,6 +12,7 @@
 #include "THaAnalysisObject.h"
 
 #include <vector>
+#include <map>
 
 class TFile;
 class TTree;
@@ -33,6 +34,7 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   //full initialization of all parameters with database
   void Initialize(const TSBSSpec& spect);
   Int_t ReadDatabase (const TDatime& date);
+  void ReadPMTtimesDataFiles();
   
   //This is in those three functions that the job is done, more specifically in AddititveDigitize
   Int_t Digitize (const TSBSCherData& gdata, const TSBSSpec& spect); // digitize event
@@ -45,7 +47,7 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   
   Double_t GetGateWidth(){ return fGateWidth; }
   
-  bool GetTDCtimes(double C, double t0, double& t1, double& t2);
+  bool GetTDCtimes(int detnum, double C, double t0, double& t1, double& t2);
   
   // Tree methods
   // To write a tree with digitization results:
@@ -85,11 +87,11 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   Double_t fTDCthreshold;
   Double_t fTDCresolution;
   Double_t fPMTGain;
-  //Double_t fPMTPulseShapeTau;
+  /* Double_t fPMTPulseShapeTau; */
   Double_t fPMTTransitTime;
-  Double_t fPMTRiseTime;
-  Double_t fPMTJitter;
-  Double_t fPMTFWHM;
+  /* Double_t fPMTRiseTime; */
+  /* Double_t fPMTJitter; */
+  /* Double_t fPMTFWHM; */
   Double_t fTriggerOffset;
   Double_t fTriggerJitter;
   Double_t fGateWidth;
@@ -110,6 +112,10 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   std::vector< std::pair<TArrayD, TArrayD> > fTDCtimeArrays;
   // TDC "input" time values (evaluated with the PMT pulse shape)
   TRandom3 fTrnd;     // time randomizer
+  TString fPMTtimesDataFileNames;
+  
+  std::vector<Double_t> fPulseHeight;
+  std::vector< std::map< Double_t, std::pair<Double_t, Double_t> > > fPulseTimes;
   
   // Tree
 

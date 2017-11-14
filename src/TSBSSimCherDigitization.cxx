@@ -265,7 +265,8 @@ TSBSSimCherDigitization::Initialize(const TSBSSpec& spect)
     TArrayD TDCtimearray2(fNPMTs[i]);
     fTDCtimeArrays.push_back(std::make_pair(TDCtimearray1, TDCtimearray2));
   }
-
+  
+  if(strcmp(fPMTtimesDataFileNames.Data(),"")!=0)ReadPMTtimesDataFiles();
 }
 
 Int_t
@@ -279,9 +280,10 @@ TSBSSimCherDigitization::ReadDatabase (const TDatime& date)
       { "pmtgain",                   &fPMTGain,                   kDouble },
       //{ "pmtpulseshapetau",          &fPMTPulseShapeTau,          kDouble },
       { "pmttransittime",            &fPMTTransitTime,            kDouble },
-      { "pmtrisetime",               &fPMTRiseTime,               kDouble },
-      { "pmtjitter",                 &fPMTJitter,                 kDouble },
-      { "pmtfwhm",                   &fPMTFWHM,                   kDouble },
+      // { "pmtrisetime",               &fPMTRiseTime,               kDouble },
+      // { "pmtjitter",                 &fPMTJitter,                 kDouble },
+      // { "pmtfwhm",                   &fPMTFWHM,                   kDouble },
+      { "pmttimesdatafilenames",     &fPMTtimesDataFileNames,     kTString, 0, 1},
       { "tdctimeconversion",         &fTDCTimeConversion,         kDouble },
       { "tdcbits",                   &fTDCbits,                   kInt    },
       { "tdcthreshold",              &fTDCthreshold,              kDouble },
@@ -298,7 +300,7 @@ TSBSSimCherDigitization::ReadDatabase (const TDatime& date)
       { "readoutimpedance",          &fReadOutImpedance,          kDouble },
       { 0 }
     };
-
+  
   Int_t err = LoadDB (file, date, request, fPrefix);
   fclose(file);
   if (err)
@@ -320,6 +322,87 @@ TSBSSimCherDigitization::ReadDatabase (const TDatime& date)
   */
   
   return kOK;
+}
+
+void 
+TSBSSimCherDigitization::ReadPMTtimesDataFiles()
+{
+  cout << "Reading PMT times data files " << endl;
+  
+  // retrieve here if there are several files... (TODO)
+  TString* filenames[fNDetectors];
+
+  Int_t index0 = 0;
+  Int_t index1 = 0;
+  
+  for(int i = 0; i<fNDetectors; i++){
+    index0 = index1;
+    if(index0>0)index0++;
+    index1 = fPMTtimesDataFileNames.Index(" ", index0);
+    if(i==fNDetectors-1)index1 = fPMTtimesDataFileNames.Sizeof();
+    filenames[i] = new TString(fPMTtimesDataFileNames(index0, index1-index0));
+    
+    cout << i << "  --  " << index0 << " " << index1 << "  --  " << filenames[i]->Data() << endl;
+    
+    ifstream in(filenames[i]->Data());
+    if(!in.is_open()){
+      cout << filenames[i]->Data() << " does not exist: exit" << endl;
+      return;
+    }
+    
+    std::map< Double_t, std::pair<Double_t, double_t> > PMTtimes_detector;
+    std::pair<Double_t, double_t> t_values;
+    Double_t pulseheight, ne, tb, tr, tf;
+    Double_t ne_prev, tr_prev, tf_prev;
+    Double_t tr_calc, tf_calc;
+    
+    ne = tb = tr = tf = 1.0e38;
+    
+    in.ignore(100, ';');
+    
+    in >> pulseheight;
+    
+    fPulseHeight.push_back(pulseheight);
+    
+    in.ignore(100, ';');
+    
+    double i = 1.0;
+    
+    while(1){
+      ne_prev = ne;
+      tr_prev = tr;
+      tf_prev = tf;
+      
+      in >> ne >> tb >> tr >> tf;
+      if(!in.good())break;
+      
+      double ne_ = i*fPMTGain;
+      
+      if(ne_==ne){
+	cout  << ne_ << " ne " << ne << " tr " << tr << " tf " << tf << endl;
+
+	t_values = std::make_pair(tr-tb, tf-tb);
+	PMTtimes_detector.insert(std::pair<Double_t, std::pair<Double_t, Double_t> >(ne_,  t_values));
+	i++;
+      }else if(ne_prev<ne_ && ne_<ne){
+	
+	double b = (log(tr-tb)-log(tr_prev-tb))/(ne-ne_prev);
+	tr_calc = (tr_prev-tb)*exp((ne_-ne_prev)*b);
+	b = (log(30.0-(tf-tb))-log(30.0-(tf_prev-tb)))/(ne-ne_prev);
+	tf_calc = 30.0-(30.0-(tf_prev-tb))*exp((ne_-ne_prev)*b);
+	
+	cout << "ne " << ne_prev << " " << ne_ << " " << ne << endl;
+	cout << "tr " << tr_prev-tb << " " << tr_calc << " " << tr-tb << endl;
+	cout << "tf " << tf_prev-tb << " " << tf_calc << " " << tf-tb << endl;
+	
+	t_values = std::make_pair(tr_calc, tf_calc);
+	PMTtimes_detector.insert(std::pair<Double_t, std::pair<Double_t, Double_t> >(ne_,  t_values));
+	i++;
+      }
+      if(i>30)break;
+    }
+    fPulseTimes.push_back(PMTtimes_detector);
+  }
 }
 
 Int_t
@@ -368,34 +451,33 @@ TSBSSimCherDigitization::AdditiveDigitize (const TSBSCherData& chdata, const TSB
       continue;
     
     //Short_t itype = (chdata.GetParticleType(ih)==1) ? 1 : 2; // primary = 1, secondaries = 2
-    
+    if( !time_set[itime] ) {
     // Trigger time jitter, including an arbitrary offset to align signal timing
-    Double_t trigger_jitter = fTrnd.Gaus(0, fTriggerJitter);
-    //cout << "Offset, Jitter: " << fTriggerOffset << " " << fTriggerJitter << " => trig jitter = " << trigger_jitter << endl;
-    if( is_background ) {
-      // For background data, uniformly randomize event time between
-      event_time[itime] = fTrnd.Uniform(fGateWidth) - fGateWidth/2.0 + trigger_jitter - fTriggerOffset;
-      //cout << "GateWidth " << fGateWidth << ", sampling period " << fEleSamplingPeriod << endl;
-    } else {
-      // Signal events occur at t = 0, smeared only by the trigger jitter
+      Double_t trigger_jitter = fTrnd.Gaus(0, fTriggerJitter);
+      //cout << "Offset, Jitter: " << fTriggerOffset << " " << fTriggerJitter << " => trig jitter = " << trigger_jitter << endl;
+      //if( is_background ) {
+	// For background data, uniformly randomize event time between
+      //event_time[itime] = fTrnd.Uniform(fGateWidth) - fGateWidth/2.0 + trigger_jitter - fTriggerOffset;
+	//cout << "GateWidth " << fGateWidth << ", sampling period " << fEleSamplingPeriod << endl;
+      //} else {
+	// Signal events occur at t = 0, smeared only by the trigger jitter
       event_time[itime] = trigger_jitter-fTriggerOffset;
+      //}
     }
-    
     time_set[itime] = true;
     
     // time_zero is defined as the beginning of the pulse being drawn out of the PMT anode
     Double_t time_zero = event_time[itime] + chdata.GetHitTime(ih) + fPMTTransitTime;
+    if( is_background ) {
+      time_zero+= fTrnd.Uniform(fGateWidth) - fGateWidth/2.0;
+    }
     
-    //Things will happen in here...
-    // double ADCval = chdata.GetHitPEyield(ih)*fPMTGain*q_e*fReadOutImpedance;
-    // cout << "N pe: " << chdata.GetHitPEyield(ih) << ", PMT gain: " << fPMTGain 
-    // 	 << " => Charge " << chdata.GetHitPEyield(ih)*fPMTGain*q_e 
-    // 	 << " C, induced voltage: " << ADCval << " V. " << endl;
-    
-    double totalpulsecharge = chdata.GetHitPEyield(ih)*fPMTGain*q_e;
+    double totalpulsecharge = chdata.GetHitPEyield(ih)*fPMTGain;//*q_e; in electrons
     
     double t_TDC_1, t_TDC_2;
-    bool TDCactive = GetTDCtimes(totalpulsecharge, time_zero, t_TDC_1, t_TDC_2);
+    bool TDCactive = GetTDCtimes(idet, totalpulsecharge, time_zero, t_TDC_1, t_TDC_2);
+    
+    //cout << t_TDC_1 << " " << t_TDC_2 << endl;
     
     if(TDCactive){
       // data flow test: it does not work that way...
@@ -445,26 +527,25 @@ TSBSSimCherDigitization::NoDigitize (const TSBSCherData& chdata, const TSBSSpec&
 
 //___________________________________________________________________________________
 bool 
-TSBSSimCherDigitization::GetTDCtimes(double C,   //total pulse charge
+TSBSSimCherDigitization::GetTDCtimes(int detnum, // detctor ID
+				     double C,   // total pulse charge
 				     double time_zero, //time of the beginning of the pulse
 				     double& t1, // rising time 
 				     double& t2  // falling time
 				     )
 {
   //dumm... test data flow
-  if(C>0){
-    t1 = fTrnd.Uniform(0.0, 25.0);
-    t2 = fTrnd.Uniform(0.0, 25.0);
-    return true;
-  }
-
-  if(C*fReadOutImpedance/(fPMTFWHM*1.0e-9)<fTDCthreshold){
-    // cout << " threshold: " << fTDCthreshold << " V; "
+  if(C*fPulseHeight[detnum]<fTDCthreshold){
+    cout << "Pulse amplitude = " << C*fPulseHeight[detnum]
+	 << " V below threshold = " << fTDCthreshold << " V." << endl;
     // 	 << " PMT signal max voltage " << C*fReadOutImpedance/(fPMTFWHM*1.0e-9) << endl;
     return false;// return false if the pulse does not cross the set threshold
   }else{
-    t1 = fTrnd.Gaus(t1, fTDCresolution);
-    t2 = fTrnd.Gaus(t2, fTDCresolution);
+    std::map< Double_t, std::pair<Double_t, Double_t> >::iterator it = fPulseTimes[detnum].find(C);
+    std::pair<Double_t, Double_t> time_pair = it->second;
+    t1 = time_zero+time_pair.first;
+    t2 = time_zero+time_pair.second;
+    
     return true;
   }
 }
