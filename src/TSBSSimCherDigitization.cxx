@@ -342,7 +342,7 @@ TSBSSimCherDigitization::ReadPMTtimesDataFiles()
     if(i==fNDetectors-1)index1 = fPMTtimesDataFileNames.Sizeof();
     filenames[i] = new TString(fPMTtimesDataFileNames(index0, index1-index0));
     
-    cout << i << "  --  " << index0 << " " << index1 << "  --  " << filenames[i]->Data() << endl;
+    //cout << i << "  --  " << index0 << " " << index1 << "  --  " << filenames[i]->Data() << endl;
     
     ifstream in(filenames[i]->Data());
     if(!in.is_open()){
@@ -379,8 +379,8 @@ TSBSSimCherDigitization::ReadPMTtimesDataFiles()
       double ne_ = i*fPMTGain;
       
       if(ne_==ne){
-	cout  << ne_ << " ne " << ne << " tr " << tr << " tf " << tf << endl;
-
+	// cout  << ne_ << " ne " << ne << " tr " << tr << " tf " << tf << endl;
+	
 	t_values = std::make_pair(tr-tb, tf-tb);
 	PMTtimes_detector.insert(std::pair<Double_t, std::pair<Double_t, Double_t> >(ne_,  t_values));
 	i++;
@@ -391,9 +391,9 @@ TSBSSimCherDigitization::ReadPMTtimesDataFiles()
 	b = (log(30.0-(tf-tb))-log(30.0-(tf_prev-tb)))/(ne-ne_prev);
 	tf_calc = 30.0-(30.0-(tf_prev-tb))*exp((ne_-ne_prev)*b);
 	
-	cout << "ne " << ne_prev << " " << ne_ << " " << ne << endl;
-	cout << "tr " << tr_prev-tb << " " << tr_calc << " " << tr-tb << endl;
-	cout << "tf " << tf_prev-tb << " " << tf_calc << " " << tf-tb << endl;
+	// cout << "ne " << ne_prev << " " << ne_ << " " << ne << endl;
+	// cout << "tr " << tr_prev-tb << " " << tr_calc << " " << tr-tb << endl;
+	// cout << "tf " << tf_prev-tb << " " << tf_calc << " " << tf-tb << endl;
 	
 	t_values = std::make_pair(tr_calc, tf_calc);
 	PMTtimes_detector.insert(std::pair<Double_t, std::pair<Double_t, Double_t> >(ne_,  t_values));

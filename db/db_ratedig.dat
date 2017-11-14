@@ -1,7 +1,7 @@
 950101
 
 # PMT parameters:
-ratedig.pmtgain = 7.1e6
+ratedig.pmtgain = 7.0e6
 ratedig.pmttransittime = 33.0  # ns
 ratedig.pmttimesdatafilenames = Table_9125B_tr_tf_pulse_Thr3mV.txt
 #ratedig.pmtrisetime = 4.5 # ns
