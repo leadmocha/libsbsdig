@@ -1,5 +1,6 @@
 generalinfo.ndetectors = 1
-generalinfo.g4sbs_detectortype = 1
+generalinfo.g4sbs_exptype = 1
+generalinfo.g4sbs_dettype = 1
 generalinfo.chan_per_slot = 2048
 
 generalinfo.nsignal = 1

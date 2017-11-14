@@ -27,10 +27,11 @@ void TSBSDBManager::LoadGeneralInfo(const string& fileName)
   }
   const string prefix = "generalinfo.";
   DBRequest request[] = {
-    {"g4sbs_detectortype",  &fg4sbsDetectorType , kInt,    0, 1},
-    {"ndetectors",          &fNDetectors        , kInt,    0, 1},
-    {"chan_per_slot",       &fChanPerSlot       , kInt,    0, 1},
-    {"nsignal",             &fNSigParticle      , kInt,    0, 1},
+    {"g4sbs_exptype",  &fg4sbsExpType , kInt,    0, 1},
+    {"g4sbs_dettype",  &fg4sbsDetType , kInt,    0, 1},
+    {"ndetectors",     &fNDetectors   , kInt,    0, 1},
+    {"chan_per_slot",  &fChanPerSlot  , kInt,    0, 1},
+    {"nsignal",        &fNSigParticle , kInt,    0, 1},
     { 0 }
   };
   int pid, tid;

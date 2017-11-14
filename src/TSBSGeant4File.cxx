@@ -49,17 +49,17 @@ Int_t TSBSGeant4File::Open(){
     TChain* C1 = (TChain*)fFile->Get("T");//Get the tree from the file
     
 #if D_FLAG>1 
-    cout << "Detector option " << fManager->Getg4sbsDetectorType() << endl;
+    cout << "Detector option " << fManager->Getg4sbsDetType() << endl;
 #endif
     
     // Detector flag. See the printout content below.
-    if(fManager->Getg4sbsDetectorType()<1 && fManager->Getg4sbsDetectorType()>2){
+    if(fManager->Getg4sbsDetType()<1 && fManager->Getg4sbsDetType()>2){
       cout << "Invalid detector option: Set correct option in db_generalinfo.dat" << endl;
       cout << "(remider: 1 - GRINCH; 2 - RICH)" << endl;
       return 0;
     }
     
-    fTree = new g4sbs_tree(C1, fManager->Getg4sbsDetectorType());
+    fTree = new g4sbs_tree(C1, fManager->Getg4sbsExpType());
     // g4sbs_tree declare all variables, branches, etc... 
     // to read, event by event, the varaibles stored in the tree. 
     // See comments in g4sbs_tree for more details...
@@ -115,7 +115,7 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
   
   double weight = fTree->ev_solang*fTree->ev_sigma; 
     
-  int det_id;//2017/02/09: now corresponds to fManager->Getg4sbsDetectorType()
+  int det_id;//2017/02/09: now corresponds to fManager->Getg4sbsDetType()
   
   int PMTID;
   double XPMT;
@@ -137,9 +137,12 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
   // NB: See comment lines 128-129 of TSBSGeant4File.h 
   //variables for the correction of hits given by very small momenta
 
-  switch(fManager->Getg4sbsDetectorType()){
-    
+  switch(fManager->Getg4sbsDetType()){
   case(1)://BB GEMs
+    if(fManager->Getg4sbsExpType()==3){
+      cout << "You are trying to analyze an experiment without GRINCH" << endl;
+      return -1;
+    }
     if(d_flag>1){
       cout << "Number of Hits: " << fTree->Earm_GRINCH_hit_nhits << endl;
     } // DEBUG
@@ -340,6 +343,10 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
     }
     break;
   case(2)://RICH
+    if(fManager->Getg4sbsExpType()<4){
+      cout << "You are trying to analyze an experiment without RICH" << endl;
+      return -1;
+    }
     if(d_flag>1){
       cout << "Number of Hits: " << fTree->Harm_RICH_hit_nhits << endl;
     } // DEBUG
@@ -539,7 +546,7 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
     }
     break;
     
-  }//end switch(fManager->Getg4sbsDetectorType)
+  }//end switch(fManager->Getg4sbsDetType)
     
   return 1;
 }

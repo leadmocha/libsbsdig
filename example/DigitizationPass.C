@@ -39,8 +39,8 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
     dds = new TSBSSpec ("g4sbs_gc", "BB spectrometer");
     outname = Form("digitized_grinch_%s.root", bg.c_str());
     infile_sig_prefix = "/volatile/halla/sbs/efuchey/gmn_elastic/gmn13.5_elastic_sig_20171018_14";
-    if(testdis)infile_sig_prefix = "/volatile/halla/sbs/efuchey/misc/test_gc_20170727_09/";//"gc_signal_0.root";
-    infile_bkgd_prefix = "/volatile/halla/sbs/efuchey/gmn13.5_beam_bkgd_20170630_14";
+    if(testdis)infile_sig_prefix = "/volatile/halla/sbs/efuchey/misc/test_gc_20170727_09";//"gc_signal_0.root";
+    infile_bkgd_prefix = "/volatile/halla/sbs/efuchey/gmn_beam_bkgd/gmn13.5_beam_bkgd_20170630_14";
     dds->Init(run_time);
     break;
     //case(2):
@@ -127,11 +127,15 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
 	gen = f->GetGenData(0);
 	Ngood++;
       }else{
-	cout << "No generated data for event " << nevent 
-	     << ", skip it (Nhits = " << f->GetNData() << ")" << endl;
+	if(print)
+	  cout << "No generated data for event " << nevent 
+	       << ", skip it (Nhits = " << f->GetNData() << ")" << endl;
 	nevent++;
 	continue;
       }
+      
+      //if(print)
+      cout << "Evt " << nevent << " has hits and generated data " << endl;
       
       ddd->SetTreeEvent((*chd), (*f), nevent);
     
@@ -147,81 +151,85 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
 	}
       }
       ddd->Digitize(*chd, *dds);
-      //ddd->NoDigitize(*chd, *dds);
-    
+      
       // Access to generated vertex and momentum
       // gen->GetV();
       // gen->GetP();
       // gen->GetWeight();
     
-      /*
+
       // Add some number of background files...
       int N_bg_file_g_post = N_bg_file_g+nbacktoadd;
  
       if(nbacktoadd){
-      for(int Nfile = N_bg_file_g; Nfile < N_bg_file_g_post; Nfile++){
-      //if(print)cout << N_bg_file_g << " <= " << Nfile << " < " << N_bg_file_g+nbacktoadd << endl;
-      TSBSGeant4File *fback = new TSBSGeant4File(Form("%s/beam_bkchd_%d.root",infile_bkchd_prefix.c_str(), Nfile));
-      int open = fback->Open();
-      if(!open){
-      N_bg_file_g_post++;
-      N_bg_file_g++;
+	for(int Nfile = N_bg_file_g; Nfile < N_bg_file_g_post; Nfile++){
+	  //if(print)cout << N_bg_file_g << " <= " << Nfile << " < " << N_bg_file_g+nbacktoadd << endl;
+	  TSBSGeant4File *fback = new TSBSGeant4File(Form("%s/beam_bkgd_%d.root",infile_bkgd_prefix.c_str(), Nfile));
+	  int open = fback->Open();
+	  if(!open){
+	    N_bg_file_g_post++;
+	    N_bg_file_g++;
 	  
-      if(N_bg_file_g>=2000){
-      int n_temp = Nfile;
-      Nfile = N_bg_file_g_post-n_temp;
-      N_bg_file_g_post = nbacktoadd;
-      N_bg_file_g = 0;
-      }
-      //if(print)cout << Form("/group/exjpsi/eric/31722/beam_bkchd_%d.root does not exist", Nfile) << endl;
-      continue;
-      }
+	    if(N_bg_file_g>=2000){
+	      int n_temp = Nfile;
+	      Nfile = N_bg_file_g_post-n_temp;
+	      N_bg_file_g_post = nbacktoadd;
+	      N_bg_file_g = 0;
+	    }
+	    //if(print)cout << Form("/group/exjpsi/eric/31722/beam_bkgd_%d.root does not exist", Nfile) << endl;
+	    continue;
+	  }
 	  
-      fback->SetSource(1);
-	  
-      int backidx = 0;
-      //while( hadback = fback->ReadNextEvent() && backidx < nbacktoadd ){
-      while( backidx < fback->GetEntries() ){
-      hadback = fback->ReadNextEvent();
-      chb = fback->GetCherData();
+	  fback->SetSource(1);
+	  //if(print)
+	  printf("The background file read is %s\n", fback->GetFileName());
 	    
-      if(print && chb->GetNHit()>0){
-      cout << "Bkchd evt: " << chb->GetEvent() << ", number of hits " 
-      << chb->GetNHit() << endl;
-      int nback = 0;
-      while(nback<chb->GetNHit()){
-`      //if(chd->GetParticleID(ndata)>1)continue;
-      chb->Print();
-      cout << "hit number " << nback << endl;
-      chb->PrintHit(nback);
-      nback++;
-      }
+	  int backidx = 0;
+	  //while( hadback = fback->ReadNextEvent() && backidx < nbacktoadd ){
+	  while( backidx < fback->GetEntries() ){
+	    hadback = fback->ReadNextEvent();
+	    chb = fback->GetCherData();
+
+	    if(chb->GetNHit()==0){
+	      continue;
+	    }
+	    if(print){
+	      cout << "Bkgd evt: " << chb->GetEvent() << ", number of hits " 
+		   << chb->GetNHit() << endl;
+	      int nback = 0;
+	      while(nback<chb->GetNHit()){
+		//if(chd->GetParticleID(ndata)>1)continue;
+		chb->Print();
+		cout << "hit number " << nback << endl;
+		chb->PrintHit(nback);
+		nback++;
+	      }
 	    
-      }
+	    }
 	  
-      ddd->AdditiveDigitize(*chb, *dds);
+	    ddd->AdditiveDigitize(*chb, *dds);
 	    
-      // //Randomize times based on gate width
-      // for( int bidx = 0; bidx < chb->GetNHit(); bidx++ ){
-      //   double timeshift = gRandom->Uniform(-ddd->GetGateWidth(), 75.0 );//ns
-      //   chb->SetHitTime(bidx, chb->GetHitTime(bidx) + timeshift );
-      // }	
-      // //chd->AddGEMData(chb);
-      backidx++;
-      }
+	    // //Randomize times based on gate width
+	    // for( int bidx = 0; bidx < chb->GetNHit(); bidx++ ){
+	    //   double timeshift = gRandom->Uniform(-ddd->GetGateWidth(), 75.0 );//ns
+	    //   chb->SetHitTime(bidx, chb->GetHitTime(bidx) + timeshift );
+	    // }	
+	    // //chd->AddGEMData(chb);
+	    backidx++;
+	  }
 	  
-      // if( backidx != nbacktoadd ){
-      // printf("Warning:  Not enough background events to be added (%d)\n", backidx);
-      // }
+	  // if( backidx != nbacktoadd ){
+	  // printf("Warning:  Not enough background events to be added (%d)\n", backidx);
+	  // }
 	  
-      fback->Close();
-      }
-      //if(print)cout << "new number of hits in GEM data " << chd->GetNHit() << endl;
-      N_bg_file_g = N_bg_file_g_post;
+	  fback->Close();
+	}
+	//if(print)cout << "new number of hits in GEM data " << chd->GetNHit() << endl;
+	N_bg_file_g = N_bg_file_g_post;
       }//end if nbacktoadd
     
       if(N_bg_file_g>=2000)N_bg_file_g = 0;
-      */
+      
       ddd->FillTree();
       
       //if(nevent==7)ddd->GetEvent()->Print("all");

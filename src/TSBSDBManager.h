@@ -24,9 +24,10 @@ public:
   void LoadGeneralInfo(const string& fileName);
   void LoadGeoInfo(const string& prefix);
   
-  const int    &   GetNDetectors()        { return fNDetectors;        }
-  const int    &   Getg4sbsDetectorType() { return fg4sbsDetectorType; }
-  const int    &   GetChanPerSlot()       { return fChanPerSlot;       }
+  const int    &   GetNDetectors()   { return fNDetectors;   }
+  const int    &   Getg4sbsExpType() { return fg4sbsExpType; }
+  const int    &   Getg4sbsDetType() { return fg4sbsDetType; }
+  const int    &   GetChanPerSlot()  { return fChanPerSlot;  }
   
   const int    &   GetSigPID(unsigned int i);
   const int    &   GetSigTID(unsigned int i);
@@ -53,9 +54,15 @@ public:
   int fChanPerSlot;  // number of PMTs per slot
   
   // Parameters for TSBSGeant4File
-  int fg4sbsDetectorType;// flag to determine which type of GEM should be read.
-  //Choices are: 1 - GRINCH
-  //Choices are: 2 - RICH
+  int fg4sbsExpType;// experiment flag. Choices are
+  // 1 - GMn;
+  // 2 - GEn;
+  // 3 - GEp;
+  // 4 - SIDIS;
+  // 5 - A1n;
+  int fg4sbsDetType;// flag to determine which type of GEM should be read. Choices are:
+  // 1 - GRINCH
+  // 2 - RICH
   
   // Parameters for signal particles
   int fNSigParticle; // number of signal particles
