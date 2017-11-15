@@ -10,7 +10,8 @@ using namespace std;
 
 //Recommanded constructor
 TSBSCher::TSBSCher( const char *name, const char *desc )
-  : THaPidDetector (name, desc)
+//  : THaDetector (name, desc)
+  : THaCherenkov (name, desc)
 {
   fNPMTs = 0;
   fNPMTrows = 0;
@@ -95,7 +96,7 @@ void
 TSBSCher::Print ()
 {
   //Print TSBSCher info
-  cout << "I'm a GEM chamber named " << GetName() << endl;
+  cout << "I'm a Cherenkov detector named " << GetName() << endl;
   cout << " Total number of PMTs = " << fNPMTs << ", set in " << fNPMTrows << " rows of " 
        << fNPMTcolsMax << " or " << fNPMTcolsMax-1 << " PMTs each." << endl;
   cout << " Distance between PMTs: " << fInterPMTDist << " m" << endl

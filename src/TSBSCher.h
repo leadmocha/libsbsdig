@@ -1,14 +1,16 @@
 #ifndef __TSBSCHER_H
 #define __TSBSCHER_H
 
-#include "THaPidDetector.h"
+//#include "THaDetector.h"
+#include "THaCherenkov.h"
 
 class THaEvData;
 
 // TSBSCher also inherits form THaPidDetector, which grants it all the functions from its class
 // (see http://hallaweb.jlab.org/podd/doc/html_v16/ClassIndex.html for more info).
 
-class TSBSCher : public THaPidDetector {
+//class TSBSCher : public THaDetector {
+class TSBSCher : public THaCherenkov {
  public:
   //Constructors and destructor
   TSBSCher(const char *name, const char *desc);//It is recommended to use this constructor
