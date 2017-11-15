@@ -1,21 +1,14 @@
 #ifndef __TSBSCHER_H
 #define __TSBSCHER_H
 
-#include "THaDetector.h"
+#include "THaPidDetector.h"
 
 class THaEvData;
 
-// In the SBS geometry, a chamber is a box (as defined it TSBSBox class). 
-// Refer to the comment in the header of TSBSBox class for more info.
-
-// It uses many of the methods from this class (namely the transformations methods),
-// which it completes by offering the options to use these methods
-// with a TVector3 object as an input instead of 3 doubles.
-
-// TSBSCher also inherits form THaDetector, which grants it all the functions from its class
+// TSBSCher also inherits form THaPidDetector, which grants it all the functions from its class
 // (see http://hallaweb.jlab.org/podd/doc/html_v16/ClassIndex.html for more info).
 
-class TSBSCher : public THaDetector {
+class TSBSCher : public THaPidDetector {
  public:
   //Constructors and destructor
   TSBSCher(const char *name, const char *desc);//It is recommended to use this constructor

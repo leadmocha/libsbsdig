@@ -10,7 +10,7 @@ using namespace std;
 
 //Recommanded constructor
 TSBSCher::TSBSCher( const char *name, const char *desc )
-  : THaDetector (name, desc)
+  : THaPidDetector (name, desc)
 {
   fNPMTs = 0;
   fNPMTrows = 0;
