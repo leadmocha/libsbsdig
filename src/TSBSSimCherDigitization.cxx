@@ -243,6 +243,8 @@ void TSBSSimCherDigitization::DeleteObjects()
   
   fTDCArrays.clear();
   fTDCtimeArrays.clear();
+  fPulseHeight.clear();
+  fPulseTimes.clear();
 }
 
 void
@@ -668,6 +670,22 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
   //hit.fTDC[0] = fTDCArrays.at(idet).first[ipmt];
   //hit.fTDC[1] = fTDCArrays.at(idet).second[ipmt];
   
+  Bool_t newclus = true;
+  //fill the 
+  for(int i_ = 0; i_<fEvent->fMCClusterHitID.size(); i_++){
+    if(tscd.GetParticleType(ih)==fEvent->fMCClusterHitID[i_].first){
+      fEvent->fMCClusterHitID[i_].second.push_back(ih);
+      newclus = false;
+      break;
+    }
+  }
+  if(newclus){
+    Int_t trkID = tscd.GetParticleType(ih);
+    std::vector<Short_t> ClusterPMTlist;
+    ClusterPMTlist.push_back(ih);
+    fEvent->fMCClusterHitID.push_back(make_pair(trkID, ClusterPMTlist));
+  }
+  
   uint32_t TDCvetrocWord0, TDCvetrocWord1;
   TDCvetrocWord0 = TDCvetrocWord1 = 0;
   
@@ -703,6 +721,25 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
   
   return hit.fID;
 }
+
+void
+TSBSSimCherDigitization::CleanClusterList ()
+{
+  //if(fEvent->fMCClusterHitID.size()>1)cout << "Cluster list size = " << fEvent->fMCClusterHitID.size() << endl;
+  for(int i_ = fEvent->fMCClusterHitID.size()-1; i_>=0; i_--){
+    // if(fEvent->fMCClusterHitID.size()>1){
+    //   cout << " i_ = " << i_ << "; MC track ID " << fEvent->fMCClusterHitID[i_].first 
+    // 	   << " cluster size " << fEvent->fMCClusterHitID[i_].second.size() << endl;
+    //   for(int j_ = 0; j_<fEvent->fMCClusterHitID[i_].second.size(); j_++){
+    // 	cout << " j_ = " << " PMT hit ID " << fEvent->fMCClusterHitID[i_].second[j_] << endl;
+    //   }
+    // }
+    if(fEvent->fMCClusterHitID[i_].second.size()<2){
+      fEvent->fMCClusterHitID.erase(fEvent->fMCClusterHitID.begin()+i_);
+    }
+  }
+}
+
 void
 TSBSSimCherDigitization::FillTree ()
 {
@@ -716,6 +753,7 @@ TSBSSimCherDigitization::FillTree ()
 
       )
     {
+      CleanClusterList();
       fOFile->cd();
       //fEvent->Print("all");
       fOTree->Fill();

@@ -52,24 +52,27 @@ The data structure is the following:
   Double_t  fWeight;              // Event weight
   Int_t     fNSignal;             // Number of clusters from signal
   TClonesArray*   fMCTracks;      //-> Physics tracks
+  std::vector< std::pair< Int_t, std::vector<Short_t> > > fMCClusterHitID;
+  // collections of hit IDs coming from the same MC track ID
+  // save only clusters with size >= 2
   struct PMTHit {
     // MC hit data
     Short_t  fID;          // Hit number
     Int_t    fSource;      // MC data set source (0 = signal, >0 background)
     Int_t    fType;        // GEANT particle type (1 = primary)
     Int_t    fMCtrackPID;  // GEANT particle ID (if any)
-    Short_t  fOrigVolFlag; // Flag marking volume of production from the photon
+    Short_t  fOrigVolFlag; // 
     Float_t  fXPMT;        // X coordinate of the PMT in transport coordinates
     Float_t  fYPMT;        // Y coordinate of the PMT in transport coordinates
     Float_t  fNpe;         // Number of photoelectrons
     Double_t fTime;        // Arrival time at electronics
-    Double_t fTDCtime[2];  // TDC rising and falling times values
+    Double_t fTDCtime[2];  // TDC rising and falling times values wrt trigger time
     // Digitization results for this hit
     Short_t  fDetID;       // Detector ID
     Short_t  fChannel;     // Channel number
     Short_t  fPMTrow;      // Row number: cross reference to Channel number
     Short_t  fPMTcol;      // Column number: cross reference to Channel number
-    Int_t    fTDC[2];      // TDC values
+    uint32_t fTDC[2];      // TDC VETROC words
   };
 std::vector<PMTHit> fPMTHits;
 

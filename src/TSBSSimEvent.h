@@ -76,7 +76,10 @@ public:
   
   // MC tracks
   TClonesArray*   fMCTracks;      //-> Physics tracks
-  
+  std::vector< std::pair< Int_t, std::vector<Short_t> > > fMCClusterHitID;
+  // collections of hit IDs coming from the same MC track ID
+  // save only clusters with size >= 2
+
   struct PMTHit {
     // MC hit data
     Short_t  fID;          // Hit number

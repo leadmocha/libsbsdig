@@ -81,6 +81,7 @@ void TSBSSimEvent::Clear( const Option_t* opt )
 
   fNSignal = 0;
   fPMTHits.clear();
+  fMCClusterHitID.clear();
 }
 
 //-----------------------------------------------------------------------------
@@ -103,13 +104,24 @@ void TSBSSimEvent::Print( const Option_t* opt ) const
   cout << "Number of hits:             " << fPMTHits.size()   << endl;
   
   TString sopt(opt);
-  bool do_all    = sopt.Contains("all",   TString::kIgnoreCase);
-  bool do_hit    = sopt.Contains("hit",   TString::kIgnoreCase) || do_all;
-  bool do_track  = sopt.Contains("track", TString::kIgnoreCase) || do_all;
+  bool do_all   = sopt.Contains("all",   TString::kIgnoreCase);
+  bool do_hit   = sopt.Contains("hit",   TString::kIgnoreCase) || do_all;
+  bool do_clust = sopt.Contains("clust", TString::kIgnoreCase) || do_all;
+  bool do_track = sopt.Contains("track", TString::kIgnoreCase) || do_all;
   
   if( do_track && fMCTracks ) {
     for( Int_t i=0; i<GetNtracks(); ++i ) {
       fMCTracks->UncheckedAt(i)->Print(opt);
+    }
+  }
+  if( do_clust ) {
+    cout << "Cluster list size = " << fMCClusterHitID.size() << endl;
+    for(int i_ = 0; i_<fMCClusterHitID.size(); i_++){
+      cout << " i_ = " << i_ << "; MC track ID " << fMCClusterHitID[i_].first 
+	   << " cluster size " << fMCClusterHitID[i_].second.size() << endl;
+      for(int j_ = 0; j_<fMCClusterHitID[i_].second.size(); j_++){
+	cout << " j_ = " << " PMT hit ID " << fMCClusterHitID[i_].second[j_] << endl;
+      }
     }
   }
   if( do_hit ) {
