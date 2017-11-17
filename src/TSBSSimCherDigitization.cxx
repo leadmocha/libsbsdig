@@ -645,7 +645,7 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
   UInt_t idet = tscd.GetHitDetID(ih);
   UInt_t ipmt = tscd.GetHitPMTID(ih);
   
-  hit.fID = ih;
+  hit.fID = fEvent->fPMTHits.size();//ih;
   hit.fSource = tscd.GetSource();
   hit.fType = (tscd.GetParticleType(ih)==1) ? 1 : 2;// primary = 1, secondaries = 2
   hit.fMCtrackPID = tscd.GetMCtrackPID(ih);

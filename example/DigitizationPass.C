@@ -189,11 +189,7 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
 	  while( backidx < fback->GetEntries() ){
 	    hadback = fback->ReadNextEvent();
 	    chb = fback->GetCherData();
-
-	    if(chb->GetNHit()==0){
-	      continue;
-	    }
-	    if(print){
+	    if(print && chb->GetNHit()>0){
 	      cout << "Bkgd evt: " << chb->GetEvent() << ", number of hits " 
 		   << chb->GetNHit() << endl;
 	      int nback = 0;

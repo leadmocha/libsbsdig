@@ -142,7 +142,7 @@ void TSBSSimEvent::Print( const Option_t* opt ) const
 	   << " ns, TDC falling time = " << h.fTDCtime[1] 
 	   << endl;
       cout << " Channel = " << h.fChannel 
-	   << ", TDC values for rising time: " << h.fTDC[0] 
+	   << ", TDC 'words' for rising time: " << h.fTDC[0] 
 	   << "; for falling time: " << h.fTDC[1] 
 	   << endl;
     }
