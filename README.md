@@ -17,6 +17,7 @@ and will be used by class TSBSSimCherDigitization.cxx.
 TSBSCherData: 
 Constitutes the internal data container for the library;
 The structure of the data stored is the following:
+
     UInt_t    fDetID;          // Hit Detector (if many)
     UInt_t    fPMTID;          // Hit PMT
     Double_t  fXPMT;           // X coordinate of the PMT in transport coordinates
@@ -31,22 +32,26 @@ The structure of the data stored is the following:
     TVector3  fVtx_MCtrack;    // vertex of the MC particle which produced the hit (*)
     UInt_t    fOriginVolFlag;  // origin volume of the photon
     //  (*) valid if MC track is identified (OriginVolFlag !=4)
+
 Note the first 5 parameters are essential for the digitization itself,
 the other are just useful complementary MC information.
 
 TSBSSimCherDigitization:
 This is the core class of the library: it performs the digitization of the Cherenkov data. 
 It produces the following output:
+
     std::vector< std::pair<TArrayI, TArrayI> > fTDCArrays;     
     // TDC digital value output arrays (1st array: rise time, 2nd array: fall time)
     std::vector< std::pair<TArrayD, TArrayD> > fTDCtimeArrays; 
     // TDC "input" time values (evaluated with the PMT pulse shape)
+
 These values are then fed to an instance of class TSBSSimEvent, 
 which holds the data structure to fill the output file.
 
 TSBSSimEvent:
 Holds the data structure to fill the output file. 
 The data structure is the following: 
+
     Int_t     fRunID;               // Run number
     Int_t     fEvtID;               // Event number
     Double_t  fWeight;              // Event weight
@@ -74,13 +79,14 @@ The data structure is the following:
       Short_t  fPMTcol;      // Column number: cross reference to Channel number
       uint32_t fTDC[2];      // TDC VETROC words
     };
-std::vector<PMTHit> fPMTHits;
+    std::vector<PMTHit> fPMTHits;
 
 Auxilliary classes:
 
 TSBSDBManager:
 Useful class to unfold the databases and manage the parameters stored in them:
 General parameters for DB:
+
     //variable for data base information
     int fNPMTs;        // number of PMTs
     int fNPMTrows;     // number of PMT rows
@@ -112,6 +118,7 @@ crateslot arrays for low-level decoding by detectors.
 
 TSBSCher:
 Detector class; contains the detector geometry (in this case the PMT matrix gemoetry):
+
     int    fNPMTs;         // number of PMTs
     int    fNPMTrows;      // number of PMT rows
     int    fNPMTcolsMax;   // max number of PMT columns 
@@ -121,6 +128,7 @@ Detector class; contains the detector geometry (in this case the PMT matrix gemo
     double fPMTdistY;      // Y distance between the center of 2 PMT tubes in consecutive columns, in m
     double fX_TCPMT;       // X position of the top close PMT center in the PMT matrix (transport coord)
     double fY_TCPMT;       // Y position of the top close PMT center in the PMT matrix (transport coord)
+
 it uses its own database.
 
 TSBSSpec:
