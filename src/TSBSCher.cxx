@@ -65,7 +65,8 @@ TSBSCher::ReadGeometry (FILE* file, const TDatime& date,
       {"npmts",        &fNPMTs,        kInt,    0, 1},
       {"npmtrows",     &fNPMTrows,     kInt,    0, 1},
       {"npmtcolsmax",  &fNPMTcolsMax,  kInt,    0, 1},
-      {"interpmtdist", &fInterPMTDist, kDouble, 0, 1},
+      {"pmtdistx",     &fPMTdistX,     kDouble, 0, 1},
+      {"pmtdisty",     &fPMTdistY,     kDouble, 0, 1},
       {"x_tcpmt",      &fX_TCPMT,      kDouble, 0, 1},
       {"y_tcpmt",      &fY_TCPMT,      kDouble, 0, 1},
       {0}
@@ -75,8 +76,8 @@ TSBSCher::ReadGeometry (FILE* file, const TDatime& date,
   if (err)
     return err;
   
-  fPMTmatrixHext = (fNPMTcolsMax-1)*fInterPMTDist;
-  fPMTmatrixVext = (fNPMTrows-1)*fInterPMTDist;
+  fPMTmatrixHext = (fNPMTcolsMax-1)*fPMTdistY;
+  fPMTmatrixVext = (fNPMTrows-1)*fPMTdistX;
   
   return kOK;
 }
@@ -99,7 +100,8 @@ TSBSCher::Print ()
   cout << "I'm a Cherenkov detector named " << GetName() << endl;
   cout << " Total number of PMTs = " << fNPMTs << ", set in " << fNPMTrows << " rows of " 
        << fNPMTcolsMax << " or " << fNPMTcolsMax-1 << " PMTs each." << endl;
-  cout << " Distance between PMTs: " << fInterPMTDist << " m" << endl
+  cout << " Distance between 2 PMTs rows : " << fPMTdistX << " m" << endl
+       << " Distance between 2 PMTs columns : " << fPMTdistY << " m" << endl
        << " horizontal/vertical extension of PMT matrix (m) : " 
        << fPMTmatrixHext << "/" << fPMTmatrixVext << endl;
   cout << "Position of top close PMT in PMT matrix (in transport coord): " << endl

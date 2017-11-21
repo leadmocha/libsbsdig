@@ -13,6 +13,7 @@
 #include <cassert>
 #include <map>
 #include "TSBSDBManager.h"
+#include <stdint.h>
 
 class THaCrateMap;
 
@@ -42,8 +43,8 @@ public:
   Short_t  fChannel;     // Channel number
   Short_t  fPMTrow;      // Row number: cross reference to Channel number
   Short_t  fPMTcol;      // Column number: cross reference to Channel number
-  Int_t    fTDC1;      // TDC value for rising time
-  Int_t    fTDC2;      // TDC value for falling time
+  uint32_t fTDC1;        // VETROC TDC "word" for rising time
+  uint32_t fTDC2;        // VETROC TDC "word" for falling time
   
   ClassDef(TSBSSimPMTHit,1) // A Monte Carlo hit at a GEM tracking chamber
 };

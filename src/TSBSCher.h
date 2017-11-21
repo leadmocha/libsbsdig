@@ -39,7 +39,8 @@ class TSBSCher : public THaCherenkov {
   int    fNPMTcolsMax;   // max number of PMT columns 
   double fPMTmatrixHext; // horizontal extension, in m, of the PMT matrix (from lower PMT center to higher PMT center)
   double fPMTmatrixVext; // vertical extension, in m, of the PMT matrix (from left PMT center to right PMT center)
-  double fInterPMTDist;  // center to center PMT distance, in m
+  double fPMTdistX;      // projected X distance between the center of 2 PMT tubes in consecutive rows, in m
+  double fPMTdistY;      // Y distance between the center of 2 PMT tubes in consecutive columns, in m
   double fX_TCPMT;       // X position of the top close PMT center in the PMT matrix (transport coord)
   double fY_TCPMT;       // Y position of the top close PMT center in the PMT matrix (transport coord)
 
