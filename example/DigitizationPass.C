@@ -134,8 +134,8 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
 	continue;
       }
       
-      //if(print)
-      cout << "Evt " << nevent << " has hits and generated data " << endl;
+      if(print)
+	cout << "Evt " << nevent << " has hits and generated data " << endl;
       
       ddd->SetTreeEvent((*chd), (*f), nevent);
     

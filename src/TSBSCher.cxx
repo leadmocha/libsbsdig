@@ -62,6 +62,9 @@ TSBSCher::ReadGeometry (FILE* file, const TDatime& date,
   
   const DBRequest request[] =
     {
+      {"zckov_in",     &fZCkovIn,      kDouble, 0, 1},
+      {"n_radiator",   &fNradiator,    kDouble, 0, 1},
+      {"l_radiator",   &fLradiator,    kDouble, 0, 1},
       {"npmts",        &fNPMTs,        kInt,    0, 1},
       {"npmtrows",     &fNPMTrows,     kInt,    0, 1},
       {"npmtcolsmax",  &fNPMTcolsMax,  kInt,    0, 1},

@@ -79,12 +79,16 @@ void TSBSDBManager::LoadGeoInfo(const string& prefix)
   GeoInfo thisGeo;
   
   DBRequest request[] = {
+    {"zckov_in",     &thisGeo.fZCkovIn,      kDouble, 0, 1},
+    {"n_radiator",   &thisGeo.fNradiator,    kDouble, 0, 1},
+    {"l_radiator",   &thisGeo.fLradiator,    kDouble, 0, 1},
     {"npmts",        &thisGeo.fNPMTs,        kInt,    0, 1},
     {"npmtrows",     &thisGeo.fNPMTrows,     kInt,    0, 1},
     {"npmtcolsmax",  &thisGeo.fNPMTcolsMax,  kInt,    0, 1},
-    {"interpmtdist", &thisGeo.fInterPMTDist, kDouble, 0, 1},
+    {"pmtdistx",     &thisGeo.fPMTdistX,     kDouble, 0, 1},
+    {"pmtdisty",     &thisGeo.fPMTdistY,     kDouble, 0, 1},
     {"x_tcpmt",      &thisGeo.fX_TCPMT,      kDouble, 0, 1},
-    {"x_tcpmt",      &thisGeo.fY_TCPMT,      kDouble, 0, 1},
+    {"y_tcpmt",      &thisGeo.fY_TCPMT,      kDouble, 0, 1},
     { 0 }
   };
   
@@ -97,8 +101,8 @@ void TSBSDBManager::LoadGeoInfo(const string& prefix)
     int err = LoadDB(input, request,detector_prefix.str());
     if( err ) exit(2);
     
-    thisGeo.fPMTmatrixHext = (thisGeo.fNPMTcolsMax-1)*thisGeo.fInterPMTDist;
-    thisGeo.fPMTmatrixVext = (thisGeo.fNPMTrows-1)*thisGeo.fInterPMTDist;
+    thisGeo.fPMTmatrixHext = (thisGeo.fNPMTcolsMax-1)*thisGeo.fPMTdistY;
+    thisGeo.fPMTmatrixVext = (thisGeo.fNPMTrows-1)*thisGeo.fPMTdistX;
     
     fGeoInfo.push_back(thisGeo);
   }
@@ -192,6 +196,27 @@ bool TSBSDBManager::CheckIndex(int i)
 }
 
 //_________________________________________________________________________
+const double & TSBSDBManager::GetZCkovIn(int i)
+{
+  if (!CheckIndex(i)) return fErrVal;
+  return fGeoInfo.at(i).fZCkovIn;
+}
+
+//_________________________________________________________________________
+const double & TSBSDBManager::GetNradiator(int i)
+{
+  if (!CheckIndex(i)) return fErrVal;
+  return fGeoInfo.at(i).fNradiator;
+}
+
+//_________________________________________________________________________
+const double & TSBSDBManager::GetLradiator(int i)
+{
+  if (!CheckIndex(i)) return fErrVal;
+  return fGeoInfo.at(i).fLradiator;
+}
+
+//_________________________________________________________________________
 const int & TSBSDBManager::GetNPMTs(int i)
 {
   if (!CheckIndex(i)) return fErrID;
@@ -227,10 +252,17 @@ const double & TSBSDBManager::GetPMTmatrixVext(int i)
 }
 
 //_________________________________________________________________________
-const double & TSBSDBManager::GetInterPMTDist(int i)
+const double & TSBSDBManager::GetPMTdistX(int i)
 {
   if (!CheckIndex(i)) return fErrVal;
-  return fGeoInfo.at(i).fInterPMTDist;
+  return fGeoInfo.at(i).fPMTdistX;
+}
+
+//_________________________________________________________________________
+const double & TSBSDBManager::GetPMTdistY(int i)
+{
+  if (!CheckIndex(i)) return fErrVal;
+  return fGeoInfo.at(i).fPMTdistY;
 }
 
 //_________________________________________________________________________

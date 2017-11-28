@@ -32,12 +32,16 @@ public:
   const int    &   GetSigPID(unsigned int i);
   const int    &   GetSigTID(unsigned int i);
   
+  const double &   GetZCkovIn(int i);
+  const double &   GetNradiator(int i);
+  const double &   GetLradiator(int i);
   const int    &   GetNPMTs(int i);
   const int    &   GetNPMTrows(int i);
   const int    &   GetNPMTcolsMax(int i);
   const double &   GetPMTmatrixHext(int i);
   const double &   GetPMTmatrixVext(int i);
-  const double &   GetInterPMTDist(int i);
+  const double &   GetPMTdistX(int i);
+  const double &   GetPMTdistY(int i);
   const double &   GetX_TCPMTs(int i);
   const double &   GetY_TCPMTs(int i);
     

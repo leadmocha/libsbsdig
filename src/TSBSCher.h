@@ -34,6 +34,10 @@ class TSBSCher : public THaCherenkov {
   void Print ();
   
  private:
+  int    fZCkovIn;       // Z of the entrance window in the spectrometer central ray;
+  int    fNradiator;     // radiator index of refraction;
+  int    fLradiator;     // radiator length on central ray;
+  //int    fNquartz;       // quartz window index of refraction;
   int    fNPMTs;         // number of PMTs
   int    fNPMTrows;      // number of PMT rows
   int    fNPMTcolsMax;   // max number of PMT columns 
