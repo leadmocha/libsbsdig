@@ -76,7 +76,7 @@ public:
   
   // MC tracks
   TClonesArray*   fMCTracks;      //-> Physics tracks
-  std::vector< std::pair< Int_t, std::vector<Short_t> > > fMCClusterHitID;
+  //std::vector< std::pair< Int_t, std::vector<Short_t> > > fMCClusterHitID;
   // collections of hit IDs coming from the same MC track ID
   // save only clusters with size >= 2
 
@@ -85,7 +85,8 @@ public:
     Short_t  fID;          // Hit number
     Int_t    fSource;      // MC data set source (0 = signal, >0 background)
     Int_t    fType;        // GEANT particle type (1 = primary)
-    Int_t    fMCtrackPID;  // GEANT particle ID (if any)
+    Int_t    fMCtrackID;   // GEANT track ID
+    Int_t    fMCtrackPID;  // GEANT particle ID (defined only if particle is primary)
     Short_t  fOrigVolFlag; // 
     Float_t  fXPMT;        // X coordinate of the PMT in transport coordinates
     Float_t  fYPMT;        // Y coordinate of the PMT in transport coordinates

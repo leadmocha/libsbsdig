@@ -66,7 +66,7 @@ class TSBSSimCherDigitization: public THaAnalysisObject
 		      //TSolGEMVStrip* const *dh,
 		      const TSBSCherData& tsgd,
 		      Double_t t0 ); // called from Digitization
-  void CleanClusterList();//remove the "clusters" with 1 hit size...
+  //void CleanClusterList();//remove the "clusters" with 1 hit size...
   void FillTree ();
   void WriteTree () const;
   void CloseTree () const;

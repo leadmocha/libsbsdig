@@ -81,7 +81,7 @@ void TSBSSimEvent::Clear( const Option_t* opt )
 
   fNSignal = 0;
   fPMTHits.clear();
-  fMCClusterHitID.clear();
+  //fMCClusterHitID.clear();
 }
 
 //-----------------------------------------------------------------------------
@@ -114,6 +114,7 @@ void TSBSSimEvent::Print( const Option_t* opt ) const
       fMCTracks->UncheckedAt(i)->Print(opt);
     }
   }
+  /*
   if( do_clust ) {
     cout << "Cluster list size = " << fMCClusterHitID.size() << endl;
     for(int i_ = 0; i_<fMCClusterHitID.size(); i_++){
@@ -124,6 +125,7 @@ void TSBSSimEvent::Print( const Option_t* opt ) const
       }
     }
   }
+  */
   if( do_hit ) {
     for( vector<PMTHit>::const_iterator ih = fPMTHits.begin();
 	 ih != fPMTHits.end(); ++ih ) {

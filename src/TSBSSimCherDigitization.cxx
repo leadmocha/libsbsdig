@@ -648,6 +648,7 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
   hit.fID = fEvent->fPMTHits.size();//ih;
   hit.fSource = tscd.GetSource();
   hit.fType = (tscd.GetParticleType(ih)==1) ? 1 : 2;// primary = 1, secondaries = 2
+  hit.fMCtrackID = tscd.GetParticleType(ih);
   hit.fMCtrackPID = tscd.GetMCtrackPID(ih);
   hit.fOrigVolFlag = tscd.GetOriginVolFlag(ih);
   hit.fXPMT = tscd.GetHitXPMT(ih);
@@ -670,6 +671,7 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
   //hit.fTDC[0] = fTDCArrays.at(idet).first[ipmt];
   //hit.fTDC[1] = fTDCArrays.at(idet).second[ipmt];
   
+  /*
   Bool_t newclus = true;
   //fill the 
   for(int i_ = 0; i_<fEvent->fMCClusterHitID.size(); i_++){
@@ -685,6 +687,7 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
     ClusterPMTlist.push_back(ih);
     fEvent->fMCClusterHitID.push_back(make_pair(trkID, ClusterPMTlist));
   }
+  */
   
   uint32_t TDCvetrocWord0, TDCvetrocWord1;
   TDCvetrocWord0 = TDCvetrocWord1 = 0;
@@ -722,6 +725,7 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
   return hit.fID;
 }
 
+/*
 void
 TSBSSimCherDigitization::CleanClusterList ()
 {
@@ -739,6 +743,7 @@ TSBSSimCherDigitization::CleanClusterList ()
     }
   }
 }
+*/
 
 void
 TSBSSimCherDigitization::FillTree ()
@@ -753,7 +758,7 @@ TSBSSimCherDigitization::FillTree ()
 
       )
     {
-      CleanClusterList();
+      //CleanClusterList();
       fOFile->cd();
       //fEvent->Print("all");
       fOTree->Fill();
