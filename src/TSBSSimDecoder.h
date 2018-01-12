@@ -110,8 +110,10 @@ class TSBSSimDecoder : public Podd::SimDecoder {
 protected:
   typedef std::map<Int_t,Int_t> PMTMap_t;
 
+  TClonesArray* fMCCherHits;
+  TClonesArray* fMCCherClusters;
   // Event-by-event data
-  PMTMap_t      fPMTMap;   //! Map ROCKey -> index of corresponding strip
+  PMTMap_t      fPMTMap;   //! Map ROCKey -> index of corresponding PMT
 
   // Event-by-event data
 #if ANALYZER_VERSION_CODE >= 67072  // ANALYZER_VERSION(1,6,0)

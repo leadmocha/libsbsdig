@@ -47,7 +47,8 @@ TSBSSimDecoder::TSBSSimDecoder()
 {
   // Constructor
 
-  fMCHits     = new TClonesArray( "TSBSSimPMTHit",    200 );
+  fMCCherHits     = new TClonesArray( "TSBSSimPMTHit",      200 );
+  fMCCherClusters = new TClonesArray( "TSBSSimCherCluster", 200 );
   
   DefineVariables();
 
@@ -74,109 +75,39 @@ Int_t TSBSSimDecoder::DefineVariables( THaAnalysisObject::EMode mode )
   SimDecoder::DefineVariables( mode );
 
   RVarDef vars[] = {
-    // Generated track info
-    //{ "tr.n",      "Number of tracks",      "GetNMCTracks()" },  // already defined in Podd::SimDecoder
-    { "tr.vx",     "Track origin x (m)",    "fMCTracks.TSBSSimTrack.VX()" },
-    { "tr.vy",     "Track origin y (m)",    "fMCTracks.TSBSSimTrack.VY()" },
-    { "tr.vz",     "Track origin z (m)",    "fMCTracks.TSBSSimTrack.VZ()" },
-    { "tr.p",      "Track momentum (GeV)",  "fMCTracks.TSBSSimTrack.P() "},
-    { "tr.theta",  "Track theta_p (rad)",   "fMCTracks.TSBSSimTrack.PTheta()" },
-    { "tr.phi",    "Track phi_p (rad)",     "fMCTracks.TSBSSimTrack.PPhi()" },
-    { "tr.pid",    "Track PID (PDG)",       "fMCTracks.TSBSSimTrack.fPID" },
-    { "tr.num",    "GEANT track number",    "fMCTracks.TSBSSimTrack.fNumber" },
-    { "tr.planes", "Bitpattern of planes hit", "fMCTracks.TSBSSimTrack.fHitBits" },
-    { "tr.nhits",  "Number of tracker hits","fMCTracks.TSBSSimTrack.fNHits" },
-    { "tr.nfound", "Number of hits found",  "fMCTracks.TSBSSimTrack.fNHitsFound" },
-    { "tr.flags",  "Reconstruction status", "fMCTracks.TSBSSimTrack.fReconFlags" },
-
-    // Results of fit to MC points - measures multiple scattering
-    // Those below are not useful for SBS, which needs X, Y, Xdir, Ydir (unless otherwise demonstrated)
-    // refer to comment in TSBSSimEvent.h l. 30-32
-    // { "tr.mcfit.r",     "Track x from MC fit [m]", "fMCTracks.TSBSSimTrack.MCFitR()" },
-    // { "tr.mcfit.phi",   "Track phi from MC fit [rad]", "fMCTracks.TSBSSimTrack.MCFitPhi()" },
-    // { "tr.mcfit.thdir", "Track dir theta from MC fit [rad]", "fMCTracks.TSBSSimTrack.MCFitThetaDir()" },
-    // { "tr.mcfit.phdir", "Track x from MC fit [rad]", "fMCTracks.TSBSSimTrack.MCFitPhiDir()" },
-    // { "tr.mcfit.x",     "Track x from MC fit [m]",       "fMCTracks.TSBSSimTrack.MCFitX_print()" },
-    { "tr.mcfit.x",     "Track x from MC fit [m]",       "fMCTracks.TSBSSimTrack.fMCFitPar[0]" },
-    { "tr.mcfit.xdir",  "Track dir x from MC fit [rad]", "fMCTracks.TSBSSimTrack.fMCFitPar[1]" },
-    { "tr.mcfit.y",     "Track y from MC fit [rad]",     "fMCTracks.TSBSSimTrack.fMCFitPar[2]" },
-    { "tr.mcfit.ydir",  "Track dir y from MC fit [rad]", "fMCTracks.TSBSSimTrack.fMCFitPar[3]" },
-    { "tr.mcfit.chi2",  "Chi2 of MC fit",                "fMCTracks.TSBSSimTrack.fMCFitPar[4]" },
-    { "tr.mcfit.ndof",  "NDoF of MC fit",                "fMCTracks.TSBSSimTrack.fMCFitPar[5]" },
-    { "tr.mcfit.vx",    "Vertex x from MC fit [m]",      "fMCTracks.TSBSSimTrack.fMCFitPar[6]" },
-    { "tr.mcfit.vy",    "Vertex y from MC fit [m]",      "fMCTracks.TSBSSimTrack.fMCFitPar[7]" },
-    { "tr.mcfit.vz",    "Vertex z from MC fit [m]",      "fMCTracks.TSBSSimTrack.fMCFitPar[8]" },
-
-    // Results of fit to reconstructed MC hits - checks hit resolution effects
-    // independent of track finding
-    // Those below are not useful for SBS, which needs X, Y, Xdir, Ydir (unless otherwise demonstrated)
-    // refer to comment in TSBSSimEvent.h l. 30-32
-    // { "tr.fit.r",     "Track x from rec hit fit [m]", "fMCTracks.TSBSSimTrack.RcFitR()" },
-    // { "tr.fit.phi",   "Track phi from rec hit fit [rad]", "fMCTracks.TSBSSimTrack.RcFitPhi()" },
-    // { "tr.fit.thdir", "Track dir theta from rec hit fit [rad]", "fMCTracks.TSBSSimTrack.RcFitThetaDir()" },
-    // { "tr.fit.phdir", "Track x from rec hit fit [rad]", "fMCTracks.TSBSSimTrack.RcFitPhiDir()" },
-    { "tr.fit.x",     "Track x from rec hit fit [m]",       "fMCTracks.TSBSSimTrack.fRcFitPar[0]" },
-    { "tr.fit.xdir",  "Track dir x from rec hit fit [rad]", "fMCTracks.TSBSSimTrack.fRcFitPar[1]" },
-    { "tr.fit.y",     "Track y from rec hit fit [rad]",     "fMCTracks.TSBSSimTrack.fRcFitPar[2]" },
-    { "tr.fit.ydir",  "Track dir y from rec hit fit [rad]", "fMCTracks.TSBSSimTrack.fRcFitPar[3]" },
-    { "tr.fit.chi2",  "Chi2 of rec hit fit",                "fMCTracks.TSBSSimTrack.fRcFitPar[4]" },
-    { "tr.fit.ndof",  "NDoF of rec hit fit",                "fMCTracks.TSBSSimTrack.fRcFitPar[5]" },
-    { "tr.fit.vx",    "Vertex x from rec hit fit [m]",      "fMCTracks.TSBSSimTrack.fRcFitPar[6]" },
-    { "tr.fit.vy",    "Vertex y from rec hit fit [m]",      "fMCTracks.TSBSSimTrack.fRcFitPar[7]" },
-    { "tr.fit.vz",    "Vertex z from rec hit fit [m]",      "fMCTracks.TSBSSimTrack.fRcFitPar[8]" },
-
-    // "Back tracks": hits of the primary particle in the first tracker plane
-    { "btr.n",     "Number of back tracks",     "GetNBackTracks()" },
-    { "btr.pid",   "Track PID (PDG)",           "fBackTracks.TSBSSimBackTrack.fPID" },
-    { "btr.num",   "GEANT particle number",     "fBackTracks.TSBSSimBackTrack.fType" },
-    { "btr.planes","Bitpattern of planes hit",  "fBackTracks.TSBSSimBackTrack.fHitBits" },
-    { "btr.ufail", "Undigitized u planes",      "fBackTracks.TSBSSimBackTrack.fUfailBits" },
-    { "btr.vfail", "Undigitized v planes",      "fBackTracks.TSBSSimBackTrack.fVfailBits" },
-    { "btr.sect",  "Sector number",             "fBackTracks.TSBSSimBackTrack.fSector" },
-    { "btr.p",     "Track momentum (GeV)",      "fBackTracks.TSBSSimBackTrack.P() "},
-    // Track position in Cartesian/TRANSPORT coordinates, optimal for SBS, not for SoLID
-    { "btr.x",     "Track pos lab x [m]",       "fBackTracks.TSBSSimBackTrack.X()" },
-    { "btr.y",     "Track pos lab y [m]",       "fBackTracks.TSBSSimBackTrack.Y()" },
-    { "btr.th",    "Track dir tan(theta)",      "fBackTracks.TSBSSimBackTrack.ThetaT()" },
-    { "btr.ph",    "Track dir tan(phi)",        "fBackTracks.TSBSSimBackTrack.PhiT()" },
-    // Track position and direction in cylindrical coordinates, good for SoLID
-    // { "btr.r",     "Track pos lab r_trans (m)", "fBackTracks.TSBSSimBackTrack.R()" },
-    // { "btr.theta", "Track pos lab theta [rad]", "fBackTracks.TSBSSimBackTrack.Theta()" },
-    // { "btr.phi",   "Track pos lab phi [rad]",   "fBackTracks.TSBSSimBackTrack.Phi()" },
-    // { "btr.thdir", "Track dir theta [rad]",     "fBackTracks.TSBSSimBackTrack.ThetaDir()" },
-    // { "btr.phdir", "Track dir phi [rad]",       "fBackTracks.TSBSSimBackTrack.PhiDir()" },
-    // Hit coordinates in first tracker plane, relative to plane origin
-    { "btr.hx",    "Track pos plane x [m]",     "fBackTracks.TSBSSimBackTrack.HX()" },
-    { "btr.hy",    "Track pos plane y [m]",     "fBackTracks.TSBSSimBackTrack.HY()" },
-
-    // Digitized hits registered in the GEMs
-    //    { "hit.n",     "Number of MC hits",          "GetNMCHits()" },
-    { "hit.id",    "MC hit number",              "fMCHits.TSBSSimGEMHit.fID" },
-    { "hit.sect",  "MC hit sector",              "fMCHits.TSBSSimGEMHit.fSector" },
-    { "hit.rsect", "MC hit non-mapped sector",   "fMCHits.TSBSSimGEMHit.fRealSector" },
-    { "hit.plane", "MC hit plane",               "fMCHits.TSBSSimGEMHit.fPlane" },
-    { "hit.src",   "MC data set source",         "fMCHits.TSBSSimGEMHit.fSource" },
-    { "hit.type",  "MC hit GEANT counter",       "fMCHits.TSBSSimGEMHit.fType" },
-    { "hit.pid",   "MC hit PID (PDG)",           "fMCHits.TSBSSimGEMHit.fPID" },
-    { "hit.p",     "MC hit particle mom [GeV]",  "fMCHits.TSBSSimGEMHit.P()" },
-    { "hit.x",     "MC hit lab x position [m]",  "fMCHits.TSBSSimGEMHit.X()" },
-    { "hit.y",     "MC hit lab y position [m]",  "fMCHits.TSBSSimGEMHit.Y()" },
-    { "hit.z",     "MC hit lab z position [m]",  "fMCHits.TSBSSimGEMHit.Z()" },
-    // Hit position in cylindrical/spherical coordinates, good for SoLID
-    // { "hit.r",     "MC hit lab r [m]",           "fMCHits.TSBSSimGEMHit.R()" },
-    // { "hit.theta", "MC hit lab theta [rad]",     "fMCHits.TSBSSimGEMHit.Theta()" },
-    // { "hit.phi",   "MC hit lab phi [rad]",       "fMCHits.TSBSSimGEMHit.Phi()" },
-    { "hit.charge","MC hit cluster charge",      "fMCHits.TSBSSimGEMHit.fCharge" },
-    { "hit.time",  "MC hit time offset [s]",     "fMCHits.TSBSSimGEMHit.fTime" },
-    { "hit.usz",   "MC hit u cluster size",      "fMCHits.TSBSSimGEMHit.fUSize" },
-    { "hit.ustart","MC hit u cluster 1st strip", "fMCHits.TSBSSimGEMHit.fUStart" },
-    { "hit.upos",  "MC hit u cluster center [m]","fMCHits.TSBSSimGEMHit.fUPos" },
-    { "hit.vsz",   "MC hit v cluster size",      "fMCHits.TSBSSimGEMHit.fVSize" },
-    { "hit.vstart","MC hit v cluster 1st strip", "fMCHits.TSBSSimGEMHit.fVStart" },
-    { "hit.vpos",  "MC hit v cluster center [m]","fMCHits.TSBSSimGEMHit.fVPos" },
+    // PMT hits
+    { "ch.pmt.id",      "MC Cher PMT ID",             "fMCCherHits.TSBSSimPMTHits.fID"          },
+    { "ch.pmt.src",     "MC Cher PMT Source",         "fMCCherHits.TSBSSimPMTHits.fSource"      },
+    { "ch.pmt.type",    "MC Cher PMT Type",           "fMCCherHits.TSBSSimPMTHits.fType"        },
+    { "ch.pmt.MCID",    "MC Cher PMT MC track ID",    "fMCCherHits.TSBSSimPMTHits.fMCtrackID"   },
+    { "ch.pmt.MCPID",   "MC Cher PMT MC track PID",   "fMCCherHits.TSBSSimPMTHits.fMCtrackPID"  },
+    { "ch.pmt.origVol", "MC Cher PMT origin volume",  "fMCCherHits.TSBSSimPMTHits.fOrigVolFlag" },
+    { "ch.pmt.x",       "MC Cher PMT X (m)",          "fMCCherHits.TSBSSimPMTHits.fXPMT"        },
+    { "ch.pmt.y",       "MC Cher PMT Y (m)",          "fMCCherHits.TSBSSimPMTHits.fYPMT"        },
+    { "ch.pmt.Npe",     "MC Cher PMT N pe",           "fMCCherHits.TSBSSimPMTHits.fNpe"         },
+    { "ch.pmt.t0",      "MC Cher PMT t0 (ns)",        "fMCCherHits.TSBSSimPMTHits.fTime"        },
+    { "ch.pmt.tr",      "MC Cher PMT rise time (ns)", "fMCCherHits.TSBSSimPMTHits.fTDCtime1"    },
+    { "ch.pmt.tf",      "MC Cher PMT fall time (ns)", "fMCCherHits.TSBSSimPMTHits.fTDCtime2"    },
+    { "ch.pmt.detID",   "MC Cher PMT detector ID",    "fMCCherHits.TSBSSimPMTHits.fDetID"       },
+    { "ch.pmt.chan",    "MC Cher PMT chan",           "fMCCherHits.TSBSSimPMTHits.fChannel"     },
+    { "ch.pmt.row",     "MC Cher PMT row",            "fMCCherHits.TSBSSimPMTHits.fPMTrow"      },
+    { "ch.pmt.col",     "MC Cher PMT col",            "fMCCherHits.TSBSSimPMTHits.fPMTcol"      },
     
-    { "pt.fmctrk", "MC point track number",      "fMCPoints.Podd::MCTrackPoint.fMCTrack" },
-    
+    // PMT clusters
+    { "ch.cl.size",    "MC Cher clus size",                "fMCCherClusters.TSBSSimCherCluster.fSize"           },
+    { "ch.cl.X",       "MC Cher clus avg X (m)",           "fMCCherClusters.TSBSSimCherCluster.fXcenter"        },
+    { "ch.cl.Y",       "MC Cher clus avg Y (m)",           "fMCCherClusters.TSBSSimCherCluster.fXcenter"        },
+    { "ch.cl.X_w",     "MC Cher clus avg X (w Npe) (m)",   "fMCCherClusters.TSBSSimCherCluster.fXcenter_w"      },
+    { "ch.cl.Y_w",     "MC Cher clus avg X (w Npe) (m)",   "fMCCherClusters.TSBSSimCherCluster.fYcenter_w"      },
+    { "ch.cl.Npe",     "MC Cher clus Npe total",           "fMCCherClusters.TSBSSimCherCluster.fYcenter_w"      },
+    { "ch.cl.tr_avg",  "MC Cher clus avg rise time (ns)",  "fMCCherClusters.TSBSSimCherCluster.fMeanRisingTime" },
+    { "ch.cl.tr_rms",  "MC Cher clus rise time rms (ns)",  "fMCCherClusters.TSBSSimCherCluster.fRisingTimeRMS"  },
+    { "ch.cl.tf_avg",  "MC Cher clus avg fall time (ns)",  "fMCCherClusters.TSBSSimCherCluster.fMeanRisingTime" },
+    { "ch.cl.tf_rms",  "MC Cher clus fall time rms (ns)",  "fMCCherClusters.TSBSSimCherCluster.fRisingTimeRMS"  },
+    { "ch.cl.MCPID",   "MC Cher clus track G4PID",         "fMCCherClusters.TSBSSimCherCluster.fMCtrackPID"     },
+    /*
+      if something is to be added, can be found easily in libsbsgem::TSBSSimDecoder
+    */
     { 0 }
   };
 
@@ -723,6 +654,49 @@ TSBSSimPMTHit::TSBSSimPMTHit( const TSBSSimEvent::PMTHit& h )
 //-----------------------------------------------------------------------------
 void TSBSSimPMTHit::Print( const Option_t* ) const
 {
-  // Print TSBSSimGEMHit info
+  cout << "hit = " << fID 
+       << ", type = "    << fType 
+       << ", src = "    << fSource 
+       << endl;
+  cout << "PMT row = "   << fPMTrow 
+       << ", PMT col = "   << fPMTcol 
+       << ", X_PMT = "   << fXPMT 
+       << " m, Y_PMT = "   << fYPMT 
+       << " m, number of photoelectrons = " << fNpe 
+       << ", time = " << fTime 
+       << " ns; TDC rising time = " << fTDCtime1
+       << " ns, TDC falling time = " << fTDCtime2 
+       << endl;
+  cout << " Channel = " << fChannel 
+       << ", TDC 'words' for rising time: " << fTDC1
+       << "; for falling time: " << fTDC2 
+       << endl;
+}
+
+//-----------------------------------------------------------------------------
+void TSBSSimCherCluster::Print( const Option_t* ) const
+{
+  cout << "Cluster size: " << fSize << "." << endl;
+  cout << " hit list: " << endl;
+  for(int i = 0; i<fSize; i++){
+    cout << fHitList.at(i) << "; ";
+  }
+  cout << endl;
+  
+  cout << "Cluster center: X = " << fXcenter 
+       << " m, Y = " << fYcenter 
+       << " m." << endl;
+  cout << "(weighted with Npe: X = " << fXcenter_w 
+       << " m, Y = " << fYcenter_w 
+       << " m.)" << endl;
+  cout << "Cluster mean rising time " << fMeanRisingTime
+       << " ns (RMS " << fRisingTimeRMS 
+       << " ns)" << endl;
+  cout << "Cluster mean falling time " << fMeanFallingTime
+       << " ns (RMS " << fFallingTimeRMS 
+       << " ns)" << endl;
+  cout << "total number of photoelectrons " << fNpe 
+       << "MC track PID " << fMCtrackPID 
+       << endl;
 }
 
