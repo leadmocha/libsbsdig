@@ -29,7 +29,8 @@ public:
 
   Short_t  fID;          // Hit number
   Int_t    fSource;      // MC data set source (0 = signal, >0 background)
-  Int_t    fType;        // GEANT particle type (1 = primary)
+  Char_t   fType;        // GEANT particle type (1 = primary)
+  Int_t    fMCtrackID;   // GEANT track ID (if any)
   Int_t    fMCtrackPID;  // GEANT particle ID (if any)
   Short_t  fOrigVolFlag; // 
   Float_t  fXPMT;        // X coordinate of the PMT in transport coordinates
@@ -49,6 +50,30 @@ public:
   ClassDef(TSBSSimPMTHit,1) // A Monte Carlo hit at a GEM tracking chamber
 };
 
+class TSBSSimCherCluster : public TObject {
+public:
+  TSBSSimCherCluster() {}
+  
+  virtual void Print( const Option_t* opt="" ) const;
+  
+  //TList*     fHitList;   //List of hits belonging to this cluster
+  std::vector<int> fHitList; //List of hits belonging to this cluster
+  
+  Int_t      fSize;      // Number of Hits in the cluster 
+  
+  Float_t    fXcenter;   // X mean of all hits in the list
+  Float_t    fYcenter;   // Y mean of all hits in the list
+  Float_t    fXcenter_w; // Weighted X mean : (Sum of x*adc)/(sum adc) of all hits in the list
+  Float_t    fYcenter_w; // Weighted Y mean : (Sum of y*adc)/(sum adc) of all hits in the list
+  Int_t      fNpe;       // Total number of photoelectrons 
+  
+  Float_t    fMeanRisingTime;  // Mean rising time of all hits in the list
+  Float_t    fMeanFallingTime; // Mean falling time of all hits in the list
+  Float_t    fRisingTimeRMS;   // Rising time RMS of all hits in the list
+  Float_t    fFallingTimeRMS;  // Falling time RMS of all hits in the list
+  
+  Int_t      fMCtrackPID;      // MC track PID, if applicable
+};
 
 //-----------------------------------------------------------------------------
 // SoLID simulation decoder class
