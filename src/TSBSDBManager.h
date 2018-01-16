@@ -28,6 +28,7 @@ public:
   const int    &   Getg4sbsExpType() { return fg4sbsExpType; }
   const int    &   Getg4sbsDetType() { return fg4sbsDetType; }
   const int    &   GetChanPerSlot()  { return fChanPerSlot;  }
+  const int    &   GetSlotPerCrate() { return fSlotPerCrate; }
   
   const int    &   GetSigPID(unsigned int i);
   const int    &   GetSigTID(unsigned int i);
@@ -55,7 +56,8 @@ public:
   
   //variable for data base information
   int fNDetectors;  // number of Cherenkov detectors in arm (usually 1...)
-  int fChanPerSlot;  // number of PMTs per slot
+  int fChanPerSlot;  // number of PMTs per VETROC
+  int fSlotPerCrate;  // number of VETROC per crate
   
   // Parameters for TSBSGeant4File
   int fg4sbsExpType;// experiment flag. Choices are

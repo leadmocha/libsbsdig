@@ -31,6 +31,7 @@ void TSBSDBManager::LoadGeneralInfo(const string& fileName)
     {"g4sbs_dettype",  &fg4sbsDetType , kInt,    0, 1},
     {"ndetectors",     &fNDetectors   , kInt,    0, 1},
     {"chan_per_slot",  &fChanPerSlot  , kInt,    0, 1},
+    {"slot_per_crate", &fSlotPerCrate , kInt,    0, 1},
     {"nsignal",        &fNSigParticle , kInt,    0, 1},
     { 0 }
   };

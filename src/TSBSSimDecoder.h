@@ -72,6 +72,7 @@ public:
   Float_t    fRisingTimeRMS;   // Rising time RMS of all hits in the list
   Float_t    fFallingTimeRMS;  // Falling time RMS of all hits in the list
   
+  Int_t      fMCtrackID;      // MC track ID
   Int_t      fMCtrackPID;      // MC track PID, if applicable
 };
 
@@ -92,13 +93,28 @@ class TSBSSimDecoder : public Podd::SimDecoder {
   virtual void  Clear( Option_t* opt="" );
   virtual Int_t DefineVariables( THaAnalysisObject::EMode mode =
 				 THaAnalysisObject::kDefine );
-  virtual Podd::MCHitInfo GetMCHitInfo( Int_t crate, Int_t slot, Int_t chan ) const;
-
+  //virtual Podd::MCHitInfo GetMCHitInfo( Int_t crate, Int_t slot, Int_t chan ) const;
+  
+  Int_t    GetNPMThits()  const {
+    return (fMCCherHits) ? fMCCherHits->GetLast()+1 : 0;
+  }
+  Int_t    GetNPMTclus()  const {
+    return (fMCCherClus) ? fMCCherClus->GetLast()+1 : 0;
+  }
+    
   TSBSSimPMTHit* GetPMTHit( Int_t i ) const {
-    TObject* obj = fMCHits->UncheckedAt(i);
+    TObject* obj = fMCCherHits->UncheckedAt(i);
     assert( dynamic_cast<TSBSSimPMTHit*>(obj) );
     return static_cast<TSBSSimPMTHit*>(obj);
   }
+  
+  TSBSSimCherCluster* GetPMTclus( Int_t i ) const {
+    TObject* obj = fMCCherClus->UncheckedAt(i);
+    assert( dynamic_cast<TSBSSimCherCluster*>(obj) );
+    return static_cast<TSBSSimCherCluster*>(obj);
+  }
+  
+  
 
   // Workaround for fubar THaEvData
 #if ANALYZER_VERSION_CODE >= 67072  // ANALYZER_VERSION(1,6,0)
@@ -111,7 +127,7 @@ protected:
   typedef std::map<Int_t,Int_t> PMTMap_t;
 
   TClonesArray* fMCCherHits;
-  TClonesArray* fMCCherClusters;
+  TClonesArray* fMCCherClus;
   // Event-by-event data
   PMTMap_t      fPMTMap;   //! Map ROCKey -> index of corresponding PMT
 

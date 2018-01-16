@@ -47,8 +47,8 @@ TSBSSimDecoder::TSBSSimDecoder()
 {
   // Constructor
 
-  fMCCherHits     = new TClonesArray( "TSBSSimPMTHit",      200 );
-  fMCCherClusters = new TClonesArray( "TSBSSimCherCluster", 200 );
+  fMCCherHits = new TClonesArray( "TSBSSimPMTHit",      2000 );
+  fMCCherClus = new TClonesArray( "TSBSSimCherCluster", 500 );
   
   DefineVariables();
 
@@ -94,17 +94,18 @@ Int_t TSBSSimDecoder::DefineVariables( THaAnalysisObject::EMode mode )
     { "ch.pmt.col",     "MC Cher PMT col",            "fMCCherHits.TSBSSimPMTHits.fPMTcol"      },
     
     // PMT clusters
-    { "ch.cl.size",    "MC Cher clus size",                "fMCCherClusters.TSBSSimCherCluster.fSize"           },
-    { "ch.cl.X",       "MC Cher clus avg X (m)",           "fMCCherClusters.TSBSSimCherCluster.fXcenter"        },
-    { "ch.cl.Y",       "MC Cher clus avg Y (m)",           "fMCCherClusters.TSBSSimCherCluster.fXcenter"        },
-    { "ch.cl.X_w",     "MC Cher clus avg X (w Npe) (m)",   "fMCCherClusters.TSBSSimCherCluster.fXcenter_w"      },
-    { "ch.cl.Y_w",     "MC Cher clus avg X (w Npe) (m)",   "fMCCherClusters.TSBSSimCherCluster.fYcenter_w"      },
-    { "ch.cl.Npe",     "MC Cher clus Npe total",           "fMCCherClusters.TSBSSimCherCluster.fYcenter_w"      },
-    { "ch.cl.tr_avg",  "MC Cher clus avg rise time (ns)",  "fMCCherClusters.TSBSSimCherCluster.fMeanRisingTime" },
-    { "ch.cl.tr_rms",  "MC Cher clus rise time rms (ns)",  "fMCCherClusters.TSBSSimCherCluster.fRisingTimeRMS"  },
-    { "ch.cl.tf_avg",  "MC Cher clus avg fall time (ns)",  "fMCCherClusters.TSBSSimCherCluster.fMeanRisingTime" },
-    { "ch.cl.tf_rms",  "MC Cher clus fall time rms (ns)",  "fMCCherClusters.TSBSSimCherCluster.fRisingTimeRMS"  },
-    { "ch.cl.MCPID",   "MC Cher clus track G4PID",         "fMCCherClusters.TSBSSimCherCluster.fMCtrackPID"     },
+    { "ch.cl.size",    "MC Cher clus size",                "fMCCherClus.TSBSSimCherCluster.fSize"           },
+    { "ch.cl.X",       "MC Cher clus avg X (m)",           "fMCCherClus.TSBSSimCherCluster.fXcenter"        },
+    { "ch.cl.Y",       "MC Cher clus avg Y (m)",           "fMCCherClus.TSBSSimCherCluster.fXcenter"        },
+    { "ch.cl.X_w",     "MC Cher clus avg X (w Npe) (m)",   "fMCCherClus.TSBSSimCherCluster.fXcenter_w"      },
+    { "ch.cl.Y_w",     "MC Cher clus avg X (w Npe) (m)",   "fMCCherClus.TSBSSimCherCluster.fYcenter_w"      },
+    { "ch.cl.Npe",     "MC Cher clus Npe total",           "fMCCherClus.TSBSSimCherCluster.fYcenter_w"      },
+    { "ch.cl.tr_avg",  "MC Cher clus avg rise time (ns)",  "fMCCherClus.TSBSSimCherCluster.fMeanRisingTime" },
+    { "ch.cl.tr_rms",  "MC Cher clus rise time rms (ns)",  "fMCCherClus.TSBSSimCherCluster.fRisingTimeRMS"  },
+    { "ch.cl.tf_avg",  "MC Cher clus avg fall time (ns)",  "fMCCherClus.TSBSSimCherCluster.fMeanRisingTime" },
+    { "ch.cl.tf_rms",  "MC Cher clus fall time rms (ns)",  "fMCCherClus.TSBSSimCherCluster.fRisingTimeRMS"  },
+    { "ch.cl.MCID",    "MC Cher clus track G4ID",          "fMCCherClus.TSBSSimCherCluster.fMCtrackID"      },
+    { "ch.cl.MCPID",   "MC Cher clus track G4PID",         "fMCCherClus.TSBSSimCherCluster.fMCtrackPID"     },
     /*
       if something is to be added, can be found easily in libsbsgem::TSBSSimDecoder
     */
@@ -145,30 +146,21 @@ int TSBSSimDecoder::LoadEvent(const Int_t* evbuffer )
 
 //-----------------------------------------------------------------------------
 static inline
-void PMTtoROC( Int_t s_plane, Int_t s_sector, Int_t s_proj,
-	       Int_t s_chan,
+void PMTtoROC( Int_t s_chan,
 	       Int_t& crate, Int_t& slot, Int_t& chan )
 {
-  // Convert location parameters (plane,sector,proj,chan) of the given strip
+  // Convert location parameters (row, col, chan) of the given PMT
   // to hardware channel (crate,slot,chan)
   // The (crate,slot,chan) assignment must match the detmap definition in
   // the database!  See TreeSearch/dbconvert.cxx
-  
-  // cout << "Chan per slot ? " << fManager->GetChanPerSlot() << endl;
-  // cout << "Module per readout ? " << fManager->GetModulesPerReadOut() << endl;
-  // cout << "N readout ? " << fManager->GetNReadOut() << ", N Chambers ? " << fManager->GetNChamber() << endl;
-  // cout << "Chambers per crate ? " << fManager->GetChambersPerCrate() << endl;
-  // cout << "Module per readout ? " << fManager->GetModulesPerChamber() << endl;
+  // In the case of GRINCH/RICH: 
+  // crate = GTP; slot = VETROC; chan = PMT. (NINOs are "transparent", in a similar way to the MPDs)
   
   div_t d = div( s_chan, fManager->GetChanPerSlot() );
-  Int_t module = d.quot;
+  slot = d.quot;
   chan = d.rem;
-  Int_t ix = module;// stupid... // +
-  //   fManager->GetModulesPerReadOut()*( s_proj + fManager->GetNReadOut()*( s_plane + fManager->GetNChamber()*s_sector ));
-  
-  //cout << "StripToROC: module " << module << ", ix " << ix << endl;
-  
-  d = div( ix, 1.);// stupid... //fManager->GetChambersPerCrate()*fManager->GetModulesPerChamber() );
+
+  d = div( slot, fManager->GetSlotPerCrate() );
   crate = d.quot;
   slot  = d.rem;
 }
@@ -178,7 +170,7 @@ static inline
 Int_t MakeROCKey( Int_t crate, Int_t slot, Int_t chan )
 {
   return chan +
-    fManager->GetChanPerSlot()*( slot );// stupid... //+ fManager->GetChambersPerCrate()*fManager->GetModulesPerChamber()*crate );
+    fManager->GetChanPerSlot()*( slot + fManager->GetSlotPerCrate()*crate );
 }
 
 //-----------------------------------------------------------------------------
@@ -197,6 +189,7 @@ Int_t TSBSSimDecoder::PMTfromROC( Int_t crate, Int_t slot, Int_t chan ) const
   return found->second;
 }
 
+/*
 //-----------------------------------------------------------------------------
 MCHitInfo TSBSSimDecoder::GetMCHitInfo( Int_t crate, Int_t slot, Int_t chan ) const
 {
@@ -216,7 +209,6 @@ MCHitInfo TSBSSimDecoder::GetMCHitInfo( Int_t crate, Int_t slot, Int_t chan ) co
 
   MCHitInfo mc;
   
-  /*
   // if(strip.fProj==0 && strip.fPlane==4 && strip.fTime1>50.0)
   //   printf("%f \n", strip.fTime1);
   
@@ -322,10 +314,11 @@ MCHitInfo TSBSSimDecoder::GetMCHitInfo( Int_t crate, Int_t slot, Int_t chan ) co
   //   cout << strip.fADC[k] << " ";
   // }
   // cout << endl;
-  */
+  
   
   return mc;
 }
+*/
 
 //-----------------------------------------------------------------------------
 static inline Int_t NumberOfSetBits( UInt_t v )
@@ -363,6 +356,81 @@ Int_t TSBSSimDecoder::DoLoadEvent(const Int_t* evbuffer )
   const TSBSSimEvent* simEvent = reinterpret_cast<const TSBSSimEvent*>(buffer);
   
   Int_t ret = HED_OK;
+  
+  Bool_t newclus;
+  
+  for( vector<TSBSSimEvent::PMTHit>::size_type i = 0;
+       i < simEvent->fPMTHits.size(); ++i ) {
+    const TSBSSimEvent::PMTHit& h = simEvent->fPMTHits[i];
+
+    // if( c.fPlane < 0 || c.fPlane >= fManager->GetNChamber() ) {
+    //   Error( here, "Illegal plane number = %d in cluster. "
+    // 	     "Should never happen. Call expert.", c.fPlane );
+    //   simEvent->Print("clust");
+    //   return HED_FATAL;
+    // }
+    newclus = true;
+    
+    new( (*fMCCherHits)[GetNPMThits()] ) TSBSSimPMTHit(h);
+    
+    for(int j = 0; j<GetNPMTclus(); j++){
+      
+      TSBSSimCherCluster* c = GetPMTclus(j);
+      
+      if(h.fMCtrackID==c->fMCtrackID){
+	//Add a hit to the cluster
+	newclus = false;
+	c->fHitList.push_back(h.fID);
+	//if( !fHitList ) fHitList = new TList;
+	//fHitList->AddLast( theHit );
+	c->fSize+=1;
+	Int_t listnewsize = c->fSize;
+	c->fXcenter = (c->fXcenter*((Double_t)(listnewsize-1))+h.fXPMT)/((Double_t)listnewsize);
+	c->fYcenter = (c->fYcenter*((Double_t)(listnewsize-1))+h.fYPMT)/((Double_t)listnewsize);
+	
+	c->fXcenter_w = c->fXcenter_w*c->fNpe;
+	c->fYcenter_w = c->fYcenter_w*c->fNpe;
+	c->fNpe+= h.fNpe;
+	c->fXcenter_w+= h.fNpe*h.fXPMT;
+	c->fYcenter_w+= h.fNpe*h.fYPMT;
+	c->fXcenter_w = c->fXcenter_w/c->fNpe;
+	c->fYcenter_w = c->fYcenter_w/c->fNpe;
+	
+	c->fMeanRisingTime = (c->fMeanRisingTime*((Double_t)(listnewsize-1))+h.fTDCtime[0])/((Double_t)listnewsize);
+	c->fMeanFallingTime = (c->fMeanFallingTime*((Double_t)(listnewsize-1))+h.fTDCtime[0])/((Double_t)listnewsize);
+	c->fRisingTimeRMS = sqrt((pow(c->fRisingTimeRMS, 2)*((Double_t)(listnewsize-1))+ pow(h.fTDCtime[0], 2))/
+			      ((Double_t)listnewsize));
+	c->fFallingTimeRMS = sqrt((pow(c->fFallingTimeRMS, 2)*((Double_t)(listnewsize-1))+ pow(h.fTDCtime[1], 2))/
+			       ((Double_t)listnewsize));
+      }
+      
+    }
+    
+    if(newclus){
+      new( (*fMCCherClus)[GetNPMTclus()] ) TSBSSimCherCluster();
+      
+      
+    }
+  }
+  
+  /*
+  Bool_t newclus = true;
+  //fill the 
+  for(int i_ = 0; i_<fEvent->fMCClusterHitID.size(); i_++){
+    if(tscd.GetParticleType(ih)==fEvent->fMCClusterHitID[i_].first){
+      fEvent->fMCClusterHitID[i_].second.push_back(ih);
+      newclus = false;
+      break;
+    }
+  }
+  if(newclus){
+    Int_t trkID = tscd.GetParticleType(ih);
+    std::vector<Short_t> ClusterPMTlist;
+    ClusterPMTlist.push_back(ih);
+    fEvent->fMCClusterHitID.push_back(make_pair(trkID, ClusterPMTlist));
+  }
+  */
+  
   /*
   if (first_decode || fNeedInit) {
     if( (ret = init_cmap()) != HED_OK )
