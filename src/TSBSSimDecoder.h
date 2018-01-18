@@ -74,6 +74,8 @@ public:
   
   Int_t      fMCtrackID;      // MC track ID
   Int_t      fMCtrackPID;      // MC track PID, if applicable
+
+  ClassDef(TSBSSimCherCluster,1) // A Monte Carlo hit at a GEM tracking chamber
 };
 
 //-----------------------------------------------------------------------------
@@ -101,7 +103,7 @@ class TSBSSimDecoder : public Podd::SimDecoder {
   Int_t    GetNPMTclus()  const {
     return (fMCCherClus) ? fMCCherClus->GetLast()+1 : 0;
   }
-    
+  
   TSBSSimPMTHit* GetPMTHit( Int_t i ) const {
     TObject* obj = fMCCherHits->UncheckedAt(i);
     assert( dynamic_cast<TSBSSimPMTHit*>(obj) );
@@ -114,8 +116,6 @@ class TSBSSimDecoder : public Podd::SimDecoder {
     return static_cast<TSBSSimCherCluster*>(obj);
   }
   
-  
-
   // Workaround for fubar THaEvData
 #if ANALYZER_VERSION_CODE >= 67072  // ANALYZER_VERSION(1,6,0)
   static Int_t GetMAXSLOT() { return Decoder::MAXSLOT; }

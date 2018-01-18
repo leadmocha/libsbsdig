@@ -689,6 +689,10 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
   }
   */
   
+  div_t d = div( ipmt, manager->GetChanPerSlot() );
+  hit.fVETROCID = d.quot;
+  int i_chan = d.rem;
+  
   uint32_t TDCvetrocWord0, TDCvetrocWord1;
   TDCvetrocWord0 = TDCvetrocWord1 = 0;
   
@@ -701,7 +705,7 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
     if(i<8){
       TDCvetrocWord0 ^= (-header[i] ^ TDCvetrocWord0) & (1 << (i+24));
       TDCvetrocWord1 ^= (-header[i] ^ TDCvetrocWord1) & (1 << (i+24));
-      channel[i] = (ipmt >> i) & 1;
+      channel[i] = (i_chan >> i) & 1;
       TDCvetrocWord0 ^= (-channel[i] ^ TDCvetrocWord0) & (1 << (i+16));
       TDCvetrocWord1 ^= (-channel[i] ^ TDCvetrocWord1) & (1 << (i+16));
     }

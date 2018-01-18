@@ -198,7 +198,7 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
 	  }
 	}
       }
-
+      
       //Filling hit_data temporary array...
       //hit_data_temp[0] = (double)PMTrow;
       //hit_data_temp[1] = (double)PMTcol;
@@ -623,7 +623,7 @@ void TSBSGeant4File::GetCherData(TSBSCherData* chd)
       chd->SetHitTimeRMS(nchdata,            h->GetData(5) ); 
       chd->SetParticleType(nchdata,  (UInt_t)h->GetData(6) );//  Track type (1 primary, >1 secondary) 
       chd->SetMCtrackPID(nchdata,     (Int_t)h->GetData(10));
-      chd->SetOriginVolFlag(nchdata, (UInt_t)h->GetData(15));
+      chd->SetOriginVolFlag(nchdata, (UInt_t)h->GetData(17));
       
       // Vector information
       TVector3 X_det(h->GetData(7), h->GetData(8), h->GetData(9));

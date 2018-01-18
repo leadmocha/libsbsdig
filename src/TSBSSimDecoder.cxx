@@ -146,7 +146,7 @@ int TSBSSimDecoder::LoadEvent(const Int_t* evbuffer )
 
 //-----------------------------------------------------------------------------
 static inline
-void PMTtoROC( Int_t s_chan,
+void PMTtoROC( Int_t h_chan,
 	       Int_t& crate, Int_t& slot, Int_t& chan )
 {
   // Convert location parameters (row, col, chan) of the given PMT
@@ -156,7 +156,7 @@ void PMTtoROC( Int_t s_chan,
   // In the case of GRINCH/RICH: 
   // crate = GTP; slot = VETROC; chan = PMT. (NINOs are "transparent", in a similar way to the MPDs)
   
-  div_t d = div( s_chan, fManager->GetChanPerSlot() );
+  div_t d = div( h_chan, fManager->GetChanPerSlot() );
   slot = d.quot;
   chan = d.rem;
 
@@ -356,13 +356,44 @@ Int_t TSBSSimDecoder::DoLoadEvent(const Int_t* evbuffer )
   const TSBSSimEvent* simEvent = reinterpret_cast<const TSBSSimEvent*>(buffer);
   
   Int_t ret = HED_OK;
+  if (first_decode || fNeedInit) {
+    if( (ret = init_cmap()) != HED_OK )
+      return ret;
+    if( (ret = init_slotdata(fMap)) != HED_OK)
+      return ret;
+    first_decode = false;
+  }
+
+  if( fDoBench ) fBench->Begin("clearEvent");
+  Clear();
+  for( int i=0; i<fNSlotClear; i++ )
+    crateslot[fSlotClear[i]]->clearEvent();
+  if( fDoBench ) fBench->Stop("clearEvent");
+
+  // FIXME: needed?
+  evscaler = 0;
+  event_length = 0;
+  
+  event_type = 1;
+  event_num = simEvent->fEvtID;
+  recent_event = event_num;
+
+  // Event weight
+  fWeight = simEvent->fWeight;
+
+  //
+  if( fDoBench ) fBench->Begin("physics_decode");
+  
   
   Bool_t newclus;
-  
+  Int_t crate, slot, chan;
+  // Decode the digitized PMT data.  Populate crateslot array.
   for( vector<TSBSSimEvent::PMTHit>::size_type i = 0;
        i < simEvent->fPMTHits.size(); ++i ) {
     const TSBSSimEvent::PMTHit& h = simEvent->fPMTHits[i];
-
+    
+    PMTtoROC(h.fChannel, crate, slot, chan);
+    
     // if( c.fPlane < 0 || c.fPlane >= fManager->GetNChamber() ) {
     //   Error( here, "Illegal plane number = %d in cluster. "
     // 	     "Should never happen. Call expert.", c.fPlane );
@@ -380,7 +411,7 @@ Int_t TSBSSimDecoder::DoLoadEvent(const Int_t* evbuffer )
       if(h.fMCtrackID==c->fMCtrackID){
 	//Add a hit to the cluster
 	newclus = false;
-	c->fHitList.push_back(h.fID);
+	c->fHitList.push_back(h.fChannel);
 	//if( !fHitList ) fHitList = new TList;
 	//fHitList->AddLast( theHit );
 	c->fSize+=1;
@@ -432,33 +463,6 @@ Int_t TSBSSimDecoder::DoLoadEvent(const Int_t* evbuffer )
   */
   
   /*
-  if (first_decode || fNeedInit) {
-    if( (ret = init_cmap()) != HED_OK )
-      return ret;
-    if( (ret = init_slotdata(fMap)) != HED_OK)
-      return ret;
-    first_decode = false;
-  }
-  if( fDoBench ) fBench->Begin("clearEvent");
-  Clear();
-  for( int i=0; i<fNSlotClear; i++ )
-    crateslot[fSlotClear[i]]->clearEvent();
-  if( fDoBench ) fBench->Stop("clearEvent");
-
-  // FIXME: needed?
-  evscaler = 0;
-  event_length = 0;
-  
-  event_type = 1;
-  event_num = simEvent->fEvtID;
-  recent_event = event_num;
-
-  // Event weight
-  fWeight = simEvent->fWeight;
-
-  //
-  if( fDoBench ) fBench->Begin("physics_decode");
-
   // Decode the digitized strip data.  Populate crateslot array.
   for( vector<TSBSSimEvent::DigiGEMStrip>::size_type i = 0;
        i < simEvent->fGEMStrips.size(); i++) {
