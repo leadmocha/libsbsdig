@@ -34,12 +34,12 @@ void DigitizationPass(int fspec = 1, // Spectrometer flag:
   TSBSDBManager* manager = TSBSDBManager::GetInstance();
   switch(fspec){
   case(1):
-    manager->LoadGeneralInfo("db_generalinfo_gc.dat");
-    manager->LoadGeoInfo("g4sbs_gc");
-    dds = new TSBSSpec ("g4sbs_gc", "BB spectrometer");
+    manager->LoadGeneralInfo("db_generalinfo_grinch.dat");
+    manager->LoadGeoInfo("g4sbs_grinch");
+    dds = new TSBSSpec ("g4sbs_grinch", "BB spectrometer");
     outname = Form("digitized_grinch_%s.root", bg.c_str());
     infile_sig_prefix = "/volatile/halla/sbs/efuchey/gmn_elastic/gmn13.5_elastic_sig_20171211_08";
-    if(testdis)infile_sig_prefix = "/volatile/halla/sbs/efuchey/misc/test_gc_20170727_09";//"gc_signal_0.root";
+    if(testdis)infile_sig_prefix = "/volatile/halla/sbs/efuchey/misc/test_grinch_20170727_09";//"grinch_signal_0.root";
     infile_bkgd_prefix = "/volatile/halla/sbs/efuchey/gmn_beam_bkgd/gmn13.5_beam_bkgd_20170630_14";
     dds->Init(run_time);
     break;
