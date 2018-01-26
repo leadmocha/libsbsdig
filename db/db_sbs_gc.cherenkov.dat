@@ -1,0 +1,34 @@
+# -*- mode: Text -*-
+#
+# Database for SBS-offline
+#
+# Converted from db_g4sbs_gc.dat
+
+sbs_gc.cherenkov.MCdata = 1
+
+# "Crate map". Specifies the overall DAQ module configuration.
+# The map can be common to all instruments. It's just a lookup table
+# for (crate,slot) -> (model,nchan)
+#
+# Each row is:     crate slot_lo slot_hi model# nchan
+#
+sbs_gc.cherenkov.cratemap = \
+                   0     0       3       9876   128
+# Cherenkov detector map
+#
+sbs_gc.cherenkov.detmap = \
+                   0  0  0 127 \
+                   0  1  0 127 \
+                   0  2  0 127 \
+                   0  3  0 125
+
+sbs_gc.cherenkov.zckov_in = 1.3824
+sbs_gc.cherenkov.n_radiator = 1.00137
+sbs_gc.cherenkov.l_radiator = 0.66
+sbs_gc.cherenkov.npmts = 510
+sbs_gc.cherenkov.npmtrows = 60
+sbs_gc.cherenkov.npmtcolsmax = 9
+sbs_gc.cherenkov.pmtdistx = 0.031
+sbs_gc.cherenkov.pmtdisty = 0.031
+sbs_gc.cherenkov.x_tcpmt = -0.9145
+sbs_gc.cherenkov.y_tcpmt = -0.124
