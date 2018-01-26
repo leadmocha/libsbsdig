@@ -1,8 +1,12 @@
 libsbscer library:
 
-The purpose of this library is to digitize the Cherenkov detectors output from G4SBS.
-This can be done with no significant modifications of G4SBS, 
-provided that the hit time dispersion is small (<1 ns).
+The purpose of this library is to digitize the detectors output from G4SBS 
+(with the exception of the HCal, for the time being).
+NB: so far, only Cherenkov digitization has been coded;
+GEM digitization exists in another repository, which will have to be merged (TODO_1);
+other subsystems have to be written:
+Scintillators (TODO_2);
+EM calorimeters (TODO_3);
 
 The list of classes and their functions are the following: 
 
@@ -14,11 +18,15 @@ Reads the G4SBS output to extract the useful data for the digitization of the se
 This data will be stored by an instance of class TSBSCherData, 
 and will be used by class TSBSSimCherDigitization.cxx.
 
-TSBSCherData: 
+TSBSGEM/Cher/Scint/ECal/Data: 
 Constitutes the internal data container for the library;
 The structure of the data stored is the following:
 
-    UInt_t    fDetID;          // Hit Detector (if many)
+GEM:
+to be merged (see TODO_1);
+
+Cher:
+    UInt_t    fDetID;          // Hit detector ID
     UInt_t    fPMTID;          // Hit PMT
     Double_t  fXPMT;           // X coordinate of the PMT in transport coordinates
     Double_t  fYPMT;           // Y coordinate of the PMT in transport coordinates
@@ -31,84 +39,124 @@ The structure of the data stored is the following:
     TVector3  fMom_MCtrack;    // momentum of the MC particle which produced the hit (*)
     TVector3  fVtx_MCtrack;    // vertex of the MC particle which produced the hit (*)
     UInt_t    fOriginVolFlag;  // origin volume of the photon
-    //  (*) valid if MC track is identified (OriginVolFlag !=4)
-
+    //  (*) valid if identified
 Note the first 5 parameters are essential for the digitization itself,
 the other are just useful complementary MC information.
 
-TSBSSimCherDigitization:
-This is the core class of the library: it performs the digitization of the Cherenkov data. 
+Scint:
+to be written (see TODO_2);
+
+ECal:
+to be written (see TODO_3);
+
+
+TSBSSimGEM/Cher/Scint/ECalDigitization:
+This is the core class of the library: it performs the digitization of the subsystem data. 
+Ideally, one shall write a generic class, TSBSSimDigitization, from which all other classes will inherit (TODO)
 It produces the following output:
 
-    std::vector< std::pair<TArrayI, TArrayI> > fTDCArrays;     
-    // TDC digital value output arrays (1st array: rise time, 2nd array: fall time)
-    std::vector< std::pair<TArrayD, TArrayD> > fTDCtimeArrays; 
-    // TDC "input" time values (evaluated with the PMT pulse shape)
+GEM:
+to be merged (see TODO_1);
+
+Cher:
+  std::vector< std::pair<TArrayI, TArrayI> > fTDCArrays;
+  // TDC digital value output arrays (1st array: rise time, 2nd array: fall time)
+  std::vector< std::pair<TArrayD, TArrayD> > fTDCtimeArrays;
+  // TDC "input" time values (evaluated with the PMT pulse shape)
+
+Scint:
+to be written (see TODO_2);
+
+ECal:
+to be written (see TODO_3);
+
 
 These values are then fed to an instance of class TSBSSimEvent, 
 which holds the data structure to fill the output file.
 
 TSBSSimEvent:
 Holds the data structure to fill the output file. 
-The data structure is the following: 
+The data structure is the following (to be completed as the library progresses)
 
-    Int_t     fRunID;               // Run number
-    Int_t     fEvtID;               // Event number
-    Double_t  fWeight;              // Event weight
-    Int_t     fNSignal;             // Number of clusters from signal
-    TClonesArray*   fMCTracks;      //-> Physics tracks
-    std::vector< std::pair< Int_t, std::vector<Short_t> > > fMCClusterHitID;
-    // collections of hit IDs coming from the same MC track ID
-    // save only clusters with size >= 2
-    struct PMTHit {
+  // Event identification
+  Int_t     fRunID;               // Run number
+  Int_t     fEvtID;               // Event number
+
+  Double_t  fWeight;              // Event weight
+  Int_t     fNSignal;             // Number of clusters from trigger track (signal)
+  
+  // MC tracks
+  TClonesArray*   fMCTracks;      //-> Physics tracks
+  //std::vector< std::pair< Int_t, std::vector<Short_t> > > fMCClusterHitID;
+  // collections of hit IDs coming from the same MC track ID
+  // save only clusters with size >= 2
+
+  struct PMTHit {
     // MC hit data
-      Short_t  fID;          // Hit number
-      Int_t    fSource;      // MC data set source (0 = signal, >0 background)
-      Int_t    fType;        // GEANT particle type (1 = primary)
-      Int_t    fMCtrackPID;  // GEANT particle ID (if any)
-      Short_t  fOrigVolFlag; // 
-      Float_t  fXPMT;        // X coordinate of the PMT in transport coordinates
-      Float_t  fYPMT;        // Y coordinate of the PMT in transport coordinates
-      Float_t  fNpe;         // Number of photoelectrons
-      Double_t fTime;        // Arrival time at electronics
-      Double_t fTDCtime[2];  // TDC rising and falling times values wrt trigger time
-      // Digitization results for this hit
-      Short_t  fDetID;       // Detector ID
-      Short_t  fChannel;     // Channel number
-        Short_t  fPMTrow;      // Row number: cross reference to Channel number
-      Short_t  fPMTcol;      // Column number: cross reference to Channel number
-      uint32_t fTDC[2];      // TDC VETROC words
-    };
-    std::vector<PMTHit> fPMTHits;
+    Short_t  fID;          // Hit number
+    Int_t    fSource;      // MC data set source (0 = signal, >0 background)
+    Char_t   fType;        // GEANT particle type (1 = primary)
+    Int_t    fMCtrackID;   // GEANT track ID
+    Int_t    fMCtrackPID;  // GEANT particle ID (defined only if particle is primary)
+    Short_t  fOrigVolFlag; // 
+    Float_t  fXPMT;        // X coordinate of the PMT in transport coordinates
+    Float_t  fYPMT;        // Y coordinate of the PMT in transport coordinates
+    Float_t  fNpe;         // Number of photoelectrons
+    Double_t fTime;        // Arrival time at electronics
+    Double_t fTDCtime[2];  // TDC rising and falling times values wrt trigger time
+    // Digitization results for this hit
+    Short_t  fDetID;       // Detector ID
+    Short_t  fChannel;     // Channel number
+    Short_t  fPMTrow;      // Row number: cross reference to Channel number
+    Short_t  fPMTcol;      // Column number: cross reference to Channel number
+    Char_t   fVETROCID;    // VETROC ID
+    uint32_t fTDC[2];      // TDC VETROC words
+  };
+  std::vector<PMTHit> fPMTHits;  // All MC-generated clusters in the GEMs
+
 
 Auxilliary classes:
 
 TSBSDBManager:
 Useful class to unfold the databases and manage the parameters stored in them:
-General parameters for DB:
+General parameters for DB (To be completed):
 
-    //variable for data base information
-    int fNPMTs;        // number of PMTs
-    int fNPMTrows;     // number of PMT rows
-    int fNPMTcolsmax;  // max number of PMT columns 
-    // (PMTs staggered with fNPMTcolsmax rows and fNPMTcolsmax-1 rows)
-    //  o o o o 
-    // o o o o o -> would be fNPMTcolsmax
-    //  o o o o
-    int fChanPerSlot;  // number of PMTs per slot
+  //variable for data base information
+  int fNDetectors;  // number of Cherenkov detectors in arm (usually 1...)
+  int fChanPerSlot;  // number of PMTs per VETROC
+  int fSlotPerCrate;  // number of VETROC per crate
   
-    // Parameters for TSBSGeant4File
-    int fg4sbsDetectorType;// flag to determine which type of GEM should be read.
-    //Choices are: 1 - GRINCH
-    //Choices are: 2 - RICH
+  // Parameters for TSBSGeant4File
+  int fg4sbsExpType;// experiment flag. Choices are
+  // 1 - GMn;
+  // 2 - GEn;
+  // 3 - GEp;
+  // 4 - SIDIS;
+  // 5 - A1n;
+  int fg4sbsDetType;// flag to determine which type of GEM should be read. Choices are:
+  // 1 - GRINCH
+  // 2 - RICH
   
-    // Parameters for signal particles
-    int fNSigParticle; // number of signal particles
-    vector<int>    fSigPID;
-    vector<int>    fSigTID;
+  // Parameters for signal particles
+  int fNSigParticle; // number of signal particles
+  vector<int>    fSigPID;
+  vector<int>    fSigTID;
   
-    //container for geometry parameters
-    vector<GeoInfo> fGeoInfo;
+struct GeoInfo{
+  int    fZCkovIn;       // Z of the entrance window in the spectrometer central ray;
+  int    fNradiator;     // radiator index of refraction;
+  int    fLradiator;     // radiator length on central ray;
+  //int    fNquartz;       // quartz window index of refraction;
+  int    fNPMTs;         // number of PMTs
+  int    fNPMTrows;      // number of PMT rows
+  int    fNPMTcolsMax;   // max number of PMT columns 
+  double fPMTmatrixHext; // horizontal extension, in m, of the PMT matrix (from lower PMT center to higher PMT center)
+  double fPMTmatrixVext; // vertical extension, in m, of the PMT matrix (from left PMT center to right PMT center)
+  double fPMTdistX;      // projected X distance between the center of 2 PMT tubes in consecutive rows, in m
+  double fPMTdistY;      // Y distance between the center of 2 PMT tubes in consecutive columns, in m
+  double fX_TCPMT;       // X position of the top close PMT center in the PMT matrix (transport coord)
+  double fY_TCPMT;       // Y position of the top close PMT center in the PMT matrix (transport coord)
+};
 
 
 TSBSSimDecoder:
@@ -116,9 +164,17 @@ Interprets event buffer from input as TSBSSimEvent objects
 (containing digitized simulation data) and unpacks them into
 crateslot arrays for low-level decoding by detectors.
 
-TSBSCher:
-Detector class; contains the detector geometry (in this case the PMT matrix gemoetry):
+TSBSSpec:
+Spectrometer class which "carry" the detectors classes. 
 
+
+Detector classes; contain the detector geometries. They use their own database.
+
+
+TSBSGEMChamber/Plane:
+to be merged (see TODO_1);
+
+TSBSCher:
     int    fNPMTs;         // number of PMTs
     int    fNPMTrows;      // number of PMT rows
     int    fNPMTcolsMax;   // max number of PMT columns 
@@ -129,10 +185,10 @@ Detector class; contains the detector geometry (in this case the PMT matrix gemo
     double fX_TCPMT;       // X position of the top close PMT center in the PMT matrix (transport coord)
     double fY_TCPMT;       // Y position of the top close PMT center in the PMT matrix (transport coord)
 
-it uses its own database.
+TSBSScint:
+to be written (see TODO_2);
 
-TSBSSpec:
-Spectrometer class to "carry" the detector. 
-Likely, it will be pretty similar to the class with the same name in liblibsolgem/libsbsgem.
+TSBSECal:
+to be written (see TODO_3);
 
 
