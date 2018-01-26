@@ -1,4 +1,4 @@
-libsbscer library:
+libsbsdig library:
 
 The purpose of this library is to digitize the detectors output from G4SBS 
 (with the exception of the HCal, for the time being).
