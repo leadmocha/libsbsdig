@@ -3,7 +3,7 @@ include Makefile.arch
 
 #------------------------------------------------------------------------------
 
-NAME    := libsbscer
+NAME    := libsbsdig
 
 SOLINCLUDE := -I$(shell pwd)/src
 
@@ -69,13 +69,13 @@ OBJS	= $(SRC:.cxx=.$(ObjSuf)) $(DICT).o
 HDR	= $(SRC:.cxx=.h) src/Linkdef.h
 ROHDR	= $(SRC:.cxx=.h) src/Linkdef.h
 
-LIBSBSCER	= libsbscer.so
+LIBSBSDIG	= libsbsdig.so
 
-PROGRAMS	= $(LIBSBSCER)
+PROGRAMS	= $(LIBSBSDIG)
 
 all:	$(PROGRAMS)
 
-$(LIBSBSCER):	$(OBJS)
+$(LIBSBSDIG):	$(OBJS)
 	$(LD) $(SOFLAGS) $^ -o $@ $(LDFLAGS) 
 
 clean:
