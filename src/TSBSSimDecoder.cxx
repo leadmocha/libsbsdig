@@ -73,39 +73,41 @@ Int_t TSBSSimDecoder::DefineVariables( THaAnalysisObject::EMode mode )
     return THaAnalysisObject::kOK;
   
   SimDecoder::DefineVariables( mode );
-
+  
+  cout << "Read TSBSSimDecoder variables " << endl;
+  
   RVarDef vars[] = {
     // PMT hits
-    { "ch.pmt.id",      "MC Cher PMT ID",             "fMCCherHits.TSBSSimPMTHits.fID"          },
-    { "ch.pmt.src",     "MC Cher PMT Source",         "fMCCherHits.TSBSSimPMTHits.fSource"      },
-    { "ch.pmt.type",    "MC Cher PMT Type",           "fMCCherHits.TSBSSimPMTHits.fType"        },
-    { "ch.pmt.MCID",    "MC Cher PMT MC track ID",    "fMCCherHits.TSBSSimPMTHits.fMCtrackID"   },
-    { "ch.pmt.MCPID",   "MC Cher PMT MC track PID",   "fMCCherHits.TSBSSimPMTHits.fMCtrackPID"  },
-    { "ch.pmt.origVol", "MC Cher PMT origin volume",  "fMCCherHits.TSBSSimPMTHits.fOrigVolFlag" },
-    { "ch.pmt.x",       "MC Cher PMT X (m)",          "fMCCherHits.TSBSSimPMTHits.fXPMT"        },
-    { "ch.pmt.y",       "MC Cher PMT Y (m)",          "fMCCherHits.TSBSSimPMTHits.fYPMT"        },
-    { "ch.pmt.Npe",     "MC Cher PMT N pe",           "fMCCherHits.TSBSSimPMTHits.fNpe"         },
-    { "ch.pmt.t0",      "MC Cher PMT t0 (ns)",        "fMCCherHits.TSBSSimPMTHits.fTime"        },
-    { "ch.pmt.tr",      "MC Cher PMT rise time (ns)", "fMCCherHits.TSBSSimPMTHits.fTDCtime1"    },
-    { "ch.pmt.tf",      "MC Cher PMT fall time (ns)", "fMCCherHits.TSBSSimPMTHits.fTDCtime2"    },
-    { "ch.pmt.detID",   "MC Cher PMT detector ID",    "fMCCherHits.TSBSSimPMTHits.fDetID"       },
-    { "ch.pmt.chan",    "MC Cher PMT chan",           "fMCCherHits.TSBSSimPMTHits.fChannel"     },
-    { "ch.pmt.row",     "MC Cher PMT row",            "fMCCherHits.TSBSSimPMTHits.fPMTrow"      },
-    { "ch.pmt.col",     "MC Cher PMT col",            "fMCCherHits.TSBSSimPMTHits.fPMTcol"      },
+    { "cer.pmt.id",      "MC Cher PMT ID",             "fMCCherHits.TSBSSimPMTHit.fID"          },
+    { "cer.pmt.src",     "MC Cher PMT Source",         "fMCCherHits.TSBSSimPMTHit.fSource"      },
+    { "cer.pmt.type",    "MC Cher PMT Type",           "fMCCherHits.TSBSSimPMTHit.fType"        },
+    { "cer.pmt.MCID",    "MC Cher PMT MC track ID",    "fMCCherHits.TSBSSimPMTHit.fMCtrackID"   },
+    { "cer.pmt.MCPID",   "MC Cher PMT MC track PID",   "fMCCherHits.TSBSSimPMTHit.fMCtrackPID"  },
+    { "cer.pmt.origVol", "MC Cher PMT origin volume",  "fMCCherHits.TSBSSimPMTHit.fOrigVolFlag" },
+    { "cer.pmt.x",       "MC Cher PMT X (m)",          "fMCCherHits.TSBSSimPMTHit.fXPMT"        },
+    { "cer.pmt.y",       "MC Cher PMT Y (m)",          "fMCCherHits.TSBSSimPMTHit.fYPMT"        },
+    { "cer.pmt.Npe",     "MC Cher PMT N pe",           "fMCCherHits.TSBSSimPMTHit.fNpe"         },
+    { "cer.pmt.t0",      "MC Cher PMT t0 (ns)",        "fMCCherHits.TSBSSimPMTHit.fTime"        },
+    { "cer.pmt.tr",      "MC Cher PMT rise time (ns)", "fMCCherHits.TSBSSimPMTHit.fTDCtime1"    },
+    { "cer.pmt.tf",      "MC Cher PMT fall time (ns)", "fMCCherHits.TSBSSimPMTHit.fTDCtime2"    },
+    { "cer.pmt.detID",   "MC Cher PMT detector ID",    "fMCCherHits.TSBSSimPMTHit.fDetID"       },
+    { "cer.pmt.chan",    "MC Cher PMT chan",           "fMCCherHits.TSBSSimPMTHit.fChannel"     },
+    { "cer.pmt.row",     "MC Cher PMT row",            "fMCCherHits.TSBSSimPMTHit.fPMTrow"      },
+    { "cer.pmt.col",     "MC Cher PMT col",            "fMCCherHits.TSBSSimPMTHit.fPMTcol"      },
     
     // PMT clusters
-    { "ch.cl.size",    "MC Cher clus size",                "fMCCherClus.TSBSSimCherCluster.fSize"           },
-    { "ch.cl.X",       "MC Cher clus avg X (m)",           "fMCCherClus.TSBSSimCherCluster.fXcenter"        },
-    { "ch.cl.Y",       "MC Cher clus avg Y (m)",           "fMCCherClus.TSBSSimCherCluster.fXcenter"        },
-    { "ch.cl.X_w",     "MC Cher clus avg X (w Npe) (m)",   "fMCCherClus.TSBSSimCherCluster.fXcenter_w"      },
-    { "ch.cl.Y_w",     "MC Cher clus avg X (w Npe) (m)",   "fMCCherClus.TSBSSimCherCluster.fYcenter_w"      },
-    { "ch.cl.Npe",     "MC Cher clus Npe total",           "fMCCherClus.TSBSSimCherCluster.fYcenter_w"      },
-    { "ch.cl.tr_avg",  "MC Cher clus avg rise time (ns)",  "fMCCherClus.TSBSSimCherCluster.fMeanRisingTime" },
-    { "ch.cl.tr_rms",  "MC Cher clus rise time rms (ns)",  "fMCCherClus.TSBSSimCherCluster.fRisingTimeRMS"  },
-    { "ch.cl.tf_avg",  "MC Cher clus avg fall time (ns)",  "fMCCherClus.TSBSSimCherCluster.fMeanRisingTime" },
-    { "ch.cl.tf_rms",  "MC Cher clus fall time rms (ns)",  "fMCCherClus.TSBSSimCherCluster.fRisingTimeRMS"  },
-    { "ch.cl.MCID",    "MC Cher clus track G4ID",          "fMCCherClus.TSBSSimCherCluster.fMCtrackID"      },
-    { "ch.cl.MCPID",   "MC Cher clus track G4PID",         "fMCCherClus.TSBSSimCherCluster.fMCtrackPID"     },
+    { "cer.cl.size",    "MC Cher clus size",                "fMCCherClus.TSBSSimCherCluster.fSize"           },
+    { "cer.cl.X",       "MC Cher clus avg X (m)",           "fMCCherClus.TSBSSimCherCluster.fXcenter"        },
+    { "cer.cl.Y",       "MC Cher clus avg Y (m)",           "fMCCherClus.TSBSSimCherCluster.fXcenter"        },
+    { "cer.cl.X_w",     "MC Cher clus avg X (w Npe) (m)",   "fMCCherClus.TSBSSimCherCluster.fXcenter_w"      },
+    { "cer.cl.Y_w",     "MC Cher clus avg X (w Npe) (m)",   "fMCCherClus.TSBSSimCherCluster.fYcenter_w"      },
+    { "cer.cl.Npe",     "MC Cher clus Npe total",           "fMCCherClus.TSBSSimCherCluster.fYcenter_w"      },
+    { "cer.cl.tr_avg",  "MC Cher clus avg rise time (ns)",  "fMCCherClus.TSBSSimCherCluster.fMeanRisingTime" },
+    { "cer.cl.tr_rms",  "MC Cher clus rise time rms (ns)",  "fMCCherClus.TSBSSimCherCluster.fRisingTimeRMS"  },
+    { "cer.cl.tf_avg",  "MC Cher clus avg fall time (ns)",  "fMCCherClus.TSBSSimCherCluster.fMeanRisingTime" },
+    { "cer.cl.tf_rms",  "MC Cher clus fall time rms (ns)",  "fMCCherClus.TSBSSimCherCluster.fRisingTimeRMS"  },
+    { "cer.cl.MCID",    "MC Cher clus track G4ID",          "fMCCherClus.TSBSSimCherCluster.fMCtrackID"      },
+    { "cer.cl.MCPID",   "MC Cher clus track G4PID",         "fMCCherClus.TSBSSimCherCluster.fMCtrackPID"     },
     /*
       if something is to be added, can be found easily in libsbsgem::TSBSSimDecoder
     */
