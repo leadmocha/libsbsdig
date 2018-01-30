@@ -4,7 +4,7 @@
 #
 # Converted from db_g4sbs_grinch.dat
 
-sbs_grinch.cherenkov.MCdata = 1
+sbs_bb.grinch.MCdata = 1
 
 # "Crate map". Specifies the overall DAQ module configuration.
 # The map can be common to all instruments. It's just a lookup table
@@ -12,23 +12,23 @@ sbs_grinch.cherenkov.MCdata = 1
 #
 # Each row is:     crate slot_lo slot_hi model# nchan
 #
-sbs_grinch.cherenkov.cratemap = \
+sbs_bb.grinch.cratemap = \
                    0     0       3       9876   128
 # Cherenkov detector map
 #
-sbs_grinch.cherenkov.detmap = \
+sbs_bb.grinch.detmap = \
                    0  0  0 127 \
                    0  1  0 127 \
                    0  2  0 127 \
                    0  3  0 125
 
-sbs_grinch.cherenkov.zckov_in = 1.3824
-sbs_grinch.cherenkov.n_radiator = 1.00137
-sbs_grinch.cherenkov.l_radiator = 0.66
-sbs_grinch.cherenkov.npmts = 510
-sbs_grinch.cherenkov.npmtrows = 60
-sbs_grinch.cherenkov.npmtcolsmax = 9
-sbs_grinch.cherenkov.pmtdistx = 0.031
-sbs_grinch.cherenkov.pmtdisty = 0.031
-sbs_grinch.cherenkov.x_tcpmt = -0.9145
-sbs_grinch.cherenkov.y_tcpmt = -0.124
+sbs_bb.grinch.zckov_in = 1.3824
+sbs_bb.grinch.n_radiator = 1.00137
+sbs_bb.grinch.l_radiator = 0.66
+sbs_bb.grinch.npmts = 510
+sbs_bb.grinch.npmtrows = 60
+sbs_bb.grinch.npmtcolsmax = 9
+sbs_bb.grinch.pmtdistx = 0.031
+sbs_bb.grinch.pmtdisty = 0.031
+sbs_bb.grinch.x_tcpmt = -0.9145
+sbs_bb.grinch.y_tcpmt = -0.124

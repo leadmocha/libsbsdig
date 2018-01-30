@@ -61,15 +61,16 @@ void ReplayMCDigitized(const char* filename = "digitized",
   THaApparatus* SBS_BBSpec = new SBSBigBite( "sbs_bb", "SBS / BigBite" );
   gHaApps->Add( SBS_BBSpec );
   cout << "Just read " << detsuffix << endl;
-  
+
   SBS_BBSpec->Print("DET");
   
   TString db_prefix = SBS_BBSpec->GetName();
   TString detsuf(detsuffix);
   db_prefix += "."+detsuf;
+  cout << db_prefix.Data() << endl;
   gHaTextvars->Add( "DET", db_prefix.Data() );
   gHaTextvars->Add( "APP", SBS_BBSpec->GetName() );
-  
+
   THaAnalyzer* analyzer = new THaAnalyzer;
   
   TString rootfile(Form("%s_%s_%s", filename, detsuffix, bg.c_str())), infile0(Form("%s_%s_%s", filename, detsuffix, bg.c_str()));
@@ -101,39 +102,6 @@ void ReplayMCDigitized(const char* filename = "digitized",
   if( analyzer->Init(run[0]) == 0 ) {
     cout << "initialization successful..." << endl;
     SBSGRINCH* grinch = SBS_BBSpec->GetDetector("grinch");
-    //THaCherenkov* grinch = SBS_BBSpec->GetDetector("grinch");
-      
-    //for(int ns = 0; ns < Nsect; ns++){
-      //THaDetector* 
-    //cout << ns << " " << tracker[ns] << endl;
-    //tracker[ns] = SBS_BBSpec->GetDetector(Form("tracker.%d", ns+1));
-    //tracker[ns]->Print("");
-    //if( tracker[ns] ) {
-    // The SBS trackers' origin really is the origin of the first plane
-    //Double_t z0 = tracker[ns]->GetOrigin().Z();
-    //cout << "z0 = " << z0 << endl;
-    //manager->SetZ0(z0);
-    //} else {
-    //cerr << "ERROR: cannot get tracker detector! z0 may be wrong" << endl;
-    //}
-    // Emulate dummy calorimeter planes
-    // TSBSSimDecoder::SetCaloZ(3.20);  // Calo front is at z = 320 cm
-    // TSBSSimDecoder::SetCaloRes(0.01);  // Calo resolution 1 cm (sigma)
-    // TSBSSimDecoder::EmulateCalorimeter(false);
-    //}//end loop on trackers
-    /*
-    THaDetector* tracker = SBS_BBSpec->GetDetector("tracker.1");
-    tracker->Print("");
-    if( tracker ) {
-      // The SBS trackers' origin really is the origin of the first plane
-      Double_t z0 = tracker->GetOrigin().Z();
-      cout << "z0 = " << z0 << endl;
-      manager->SetZ0(z0);
-    } else {
-      cerr << "ERROR: cannot get tracker detector! z0 may be wrong" << endl;
-    }
-    */
-    //manager->EmulateCalorimeter(false);
     
     // Process the runs
     Int_t ret = 0, ntotal = 0;
