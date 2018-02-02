@@ -22,7 +22,7 @@ class THaCrateMap;
 
 class TSBSSimPMTHit : public TObject {
 public:
-  TSBSSimPMTHit() {}
+  TSBSSimPMTHit();
   TSBSSimPMTHit( const TSBSSimEvent::PMTHit& hit );
 
   virtual void Print( const Option_t* opt="" ) const;
@@ -52,7 +52,7 @@ public:
 
 class TSBSSimCherCluster : public TObject {
 public:
-  TSBSSimCherCluster() {}
+  TSBSSimCherCluster();
   
   virtual void Print( const Option_t* opt="" ) const;
   

@@ -58,10 +58,10 @@ void ReplayMCDigitized(const char* filename = "digitized",
   THaInterface::SetDecoder( TSBSSimDecoder::Class() );
   
   cout << "Reading " << detsuffix << endl;
-  THaApparatus* SBS_BBSpec = new SBSBigBite( "sbs_bb", "SBS / BigBite" );
+  THaApparatus* SBS_BBSpec = new SBSBigBite( "sbs_bb", "SBS / BigBite", 0, true, false, false );
   gHaApps->Add( SBS_BBSpec );
   cout << "Just read " << detsuffix << endl;
-
+  
   SBS_BBSpec->Print("DET");
   
   TString db_prefix = SBS_BBSpec->GetName();
@@ -102,6 +102,8 @@ void ReplayMCDigitized(const char* filename = "digitized",
   if( analyzer->Init(run[0]) == 0 ) {
     cout << "initialization successful..." << endl;
     SBSGRINCH* grinch = SBS_BBSpec->GetDetector("grinch");
+    cout << "grinch object pointer : " << grinch << endl;
+    //grinch->Print("DET");
     
     // Process the runs
     Int_t ret = 0, ntotal = 0;

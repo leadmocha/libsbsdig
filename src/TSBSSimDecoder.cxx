@@ -59,6 +59,10 @@ TSBSSimDecoder::TSBSSimDecoder()
 TSBSSimDecoder::~TSBSSimDecoder() {
 
   DefineVariables( THaAnalysisObject::kDelete );
+  
+  delete fMCCherHits;
+  delete fMCCherClus;
+  
 }
 
 //-----------------------------------------------------------------------------
@@ -96,18 +100,18 @@ Int_t TSBSSimDecoder::DefineVariables( THaAnalysisObject::EMode mode )
     { "cer.pmt.col",     "MC Cher PMT col",            "fMCCherHits.TSBSSimPMTHit.fPMTcol"      },
     
     // PMT clusters
-    { "cer.cl.size",    "MC Cher clus size",                "fMCCherClus.TSBSSimCherCluster.fSize"           },
-    { "cer.cl.X",       "MC Cher clus avg X (m)",           "fMCCherClus.TSBSSimCherCluster.fXcenter"        },
-    { "cer.cl.Y",       "MC Cher clus avg Y (m)",           "fMCCherClus.TSBSSimCherCluster.fXcenter"        },
-    { "cer.cl.X_w",     "MC Cher clus avg X (w Npe) (m)",   "fMCCherClus.TSBSSimCherCluster.fXcenter_w"      },
-    { "cer.cl.Y_w",     "MC Cher clus avg X (w Npe) (m)",   "fMCCherClus.TSBSSimCherCluster.fYcenter_w"      },
-    { "cer.cl.Npe",     "MC Cher clus Npe total",           "fMCCherClus.TSBSSimCherCluster.fYcenter_w"      },
-    { "cer.cl.tr_avg",  "MC Cher clus avg rise time (ns)",  "fMCCherClus.TSBSSimCherCluster.fMeanRisingTime" },
-    { "cer.cl.tr_rms",  "MC Cher clus rise time rms (ns)",  "fMCCherClus.TSBSSimCherCluster.fRisingTimeRMS"  },
-    { "cer.cl.tf_avg",  "MC Cher clus avg fall time (ns)",  "fMCCherClus.TSBSSimCherCluster.fMeanRisingTime" },
-    { "cer.cl.tf_rms",  "MC Cher clus fall time rms (ns)",  "fMCCherClus.TSBSSimCherCluster.fRisingTimeRMS"  },
-    { "cer.cl.MCID",    "MC Cher clus track G4ID",          "fMCCherClus.TSBSSimCherCluster.fMCtrackID"      },
-    { "cer.cl.MCPID",   "MC Cher clus track G4PID",         "fMCCherClus.TSBSSimCherCluster.fMCtrackPID"     },
+    { "cer.cl.size",    "MC Cher clus size",                "fMCCherClus.TSBSSimCherCluster.fSize"            },
+    { "cer.cl.X",       "MC Cher clus avg X (m)",           "fMCCherClus.TSBSSimCherCluster.fXcenter"         },
+    { "cer.cl.Y",       "MC Cher clus avg Y (m)",           "fMCCherClus.TSBSSimCherCluster.fYcenter"         },
+    { "cer.cl.X_w",     "MC Cher clus avg X (w Npe) (m)",   "fMCCherClus.TSBSSimCherCluster.fXcenter_w"       },
+    { "cer.cl.Y_w",     "MC Cher clus avg X (w Npe) (m)",   "fMCCherClus.TSBSSimCherCluster.fYcenter_w"       },
+    { "cer.cl.Npe",     "MC Cher clus Npe total",           "fMCCherClus.TSBSSimCherCluster.fNpe"             },
+    { "cer.cl.tr_avg",  "MC Cher clus avg rise time (ns)",  "fMCCherClus.TSBSSimCherCluster.fMeanRisingTime"  },
+    { "cer.cl.tr_rms",  "MC Cher clus rise time rms (ns)",  "fMCCherClus.TSBSSimCherCluster.fRisingTimeRMS"   },
+    { "cer.cl.tf_avg",  "MC Cher clus avg fall time (ns)",  "fMCCherClus.TSBSSimCherCluster.fMeanFallingTime" },
+    { "cer.cl.tf_rms",  "MC Cher clus fall time rms (ns)",  "fMCCherClus.TSBSSimCherCluster.fFallingTimeRMS"  },
+    { "cer.cl.MCID",    "MC Cher clus track G4ID",          "fMCCherClus.TSBSSimCherCluster.fMCtrackID"       },
+    { "cer.cl.MCPID",   "MC Cher clus track G4PID",         "fMCCherClus.TSBSSimCherCluster.fMCtrackPID"      },
     /*
       if something is to be added, can be found easily in libsbsgem::TSBSSimDecoder
     */
@@ -124,9 +128,12 @@ void TSBSSimDecoder::Clear( Option_t* opt )
 {
   // Clear track and plane data
 
-  SimDecoder::Clear(opt);   // clears fMCHits, fMCTracks and fMCPoints
-
-  fPMTMap.clear();
+  SimDecoder::Clear(opt);   // clears fMCCherHits, fMCCherClus
+  
+  fMCCherHits->Clear(opt);
+  fMCCherClus->Clear(opt);
+  
+  fPMTMap.clear(); 
 }
 
 //-----------------------------------------------------------------------------
@@ -396,6 +403,9 @@ Int_t TSBSSimDecoder::DoLoadEvent(const Int_t* evbuffer )
     
     PMTtoROC(h.fChannel, crate, slot, chan);
     
+    // if(h.fChannel!=crate*16*128+slot*128+chan)
+    //   cout << h.fChannel << " " << crate << " " << slot << " " << chan << endl;
+    
     // if( c.fPlane < 0 || c.fPlane >= fManager->GetNChamber() ) {
     //   Error( here, "Illegal plane number = %d in cluster. "
     // 	     "Should never happen. Call expert.", c.fPlane );
@@ -430,19 +440,39 @@ Int_t TSBSSimDecoder::DoLoadEvent(const Int_t* evbuffer )
 	c->fYcenter_w = c->fYcenter_w/c->fNpe;
 	
 	c->fMeanRisingTime = (c->fMeanRisingTime*((Double_t)(listnewsize-1))+h.fTDCtime[0])/((Double_t)listnewsize);
-	c->fMeanFallingTime = (c->fMeanFallingTime*((Double_t)(listnewsize-1))+h.fTDCtime[0])/((Double_t)listnewsize);
+	c->fMeanFallingTime = (c->fMeanFallingTime*((Double_t)(listnewsize-1))+h.fTDCtime[1])/((Double_t)listnewsize);
 	c->fRisingTimeRMS = sqrt((pow(c->fRisingTimeRMS, 2)*((Double_t)(listnewsize-1))+ pow(h.fTDCtime[0], 2))/
 			      ((Double_t)listnewsize));
 	c->fFallingTimeRMS = sqrt((pow(c->fFallingTimeRMS, 2)*((Double_t)(listnewsize-1))+ pow(h.fTDCtime[1], 2))/
-			       ((Double_t)listnewsize));
+				  ((Double_t)listnewsize));
       }
       
     }
     
     if(newclus){
-      new( (*fMCCherClus)[GetNPMTclus()] ) TSBSSimCherCluster();
+      TSBSSimCherCluster* c = new( (*fMCCherClus)[GetNPMTclus()] ) TSBSSimCherCluster();
       
+      c->fHitList.push_back(h.fChannel);
+      //if( !fHitList ) fHitList = new TList;
+      //fHitList->AddLast( theHit );
+      c->fMCtrackID = h.fMCtrackID;
+      c->fMCtrackPID = h.fMCtrackPID;
       
+      c->fSize+=1;
+      Int_t listnewsize = c->fSize;
+      c->fXcenter = h.fXPMT;
+      c->fYcenter = h.fYPMT;
+      
+      c->fXcenter_w = c->fXcenter_w*c->fNpe;
+      c->fYcenter_w = c->fYcenter_w*c->fNpe;
+      c->fNpe = h.fNpe;
+      c->fXcenter_w = h.fNpe*h.fXPMT;
+      c->fYcenter_w = h.fNpe*h.fYPMT;
+      
+      c->fMeanRisingTime = h.fTDCtime[0];
+      c->fMeanFallingTime = h.fTDCtime[1];
+      c->fRisingTimeRMS = pow(h.fTDCtime[0], 2);
+      c->fFallingTimeRMS = pow(h.fTDCtime[1], 2);	
     }
   }
   
@@ -710,11 +740,32 @@ Int_t TSBSSimDecoder::DoLoadEvent(const Int_t* evbuffer )
   return HED_OK;
 }
 
+// --------------- //
+// Hit functions  //
+// ------------- //
+
+//-----------------------------------------------------------------------------
+TSBSSimPMTHit::TSBSSimPMTHit( )
+  : fID(0), 
+    fSource(0), fType(0), 
+    fMCtrackID(0), fMCtrackPID(0), 
+    fOrigVolFlag(0), 
+    fXPMT(0), fYPMT(0), 
+    fNpe(0), fTime(0), 
+    fTDCtime1(0), fTDCtime2(0),
+    fDetID(0), fChannel(0), 
+    fPMTrow(0), fPMTcol(0), 
+    fTDC1(0), fTDC2(0)
+{
+
+}
+
 //-----------------------------------------------------------------------------
 TSBSSimPMTHit::TSBSSimPMTHit( const TSBSSimEvent::PMTHit& h )
   : fID(h.fID), 
     fSource(h.fSource), fType(h.fType), 
-    fMCtrackPID(h.fMCtrackPID), fOrigVolFlag(h.fOrigVolFlag), 
+    fMCtrackID(h.fMCtrackID), fMCtrackPID(h.fMCtrackPID), 
+    fOrigVolFlag(h.fOrigVolFlag), 
     fXPMT(h.fXPMT), fYPMT(h.fYPMT), 
     fNpe(h.fNpe), fTime(h.fTime), 
     fTDCtime1(h.fTDCtime[0]), fTDCtime2(h.fTDCtime[1]),
@@ -722,7 +773,7 @@ TSBSSimPMTHit::TSBSSimPMTHit( const TSBSSimEvent::PMTHit& h )
     fPMTrow(h.fPMTrow), fPMTcol(h.fPMTcol), 
     fTDC1(h.fTDC[0]), fTDC2(h.fTDC[1])
 {
-  // Construct hit from cluster
+
 }
 
 //-----------------------------------------------------------------------------
@@ -745,6 +796,23 @@ void TSBSSimPMTHit::Print( const Option_t* ) const
        << ", TDC 'words' for rising time: " << fTDC1
        << "; for falling time: " << fTDC2 
        << endl;
+}
+
+// ------------------- //
+// Cluster functions  //
+// ----------------- //
+
+//-----------------------------------------------------------------------------
+TSBSSimCherCluster::TSBSSimCherCluster()
+  : fSize(0),
+    fXcenter(0), fYcenter(0),
+    fXcenter_w(0), fYcenter_w(0),
+    fNpe(0), 
+    fMeanRisingTime(0), fMeanFallingTime(0),
+    fRisingTimeRMS(0), fFallingTimeRMS(0),
+    fMCtrackID(0), fMCtrackPID(0)
+{
+  fHitList.clear();
 }
 
 //-----------------------------------------------------------------------------
