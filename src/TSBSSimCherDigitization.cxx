@@ -662,12 +662,11 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
   hit.fChannel = ipmt;
   hit.fPMTrow = round((hit.fXPMT+manager->GetPMTmatrixVext(hit.fDetID)/2.0)/manager->GetPMTdistX(hit.fDetID));
   double PMTcol_ = (hit.fYPMT+manager->GetPMTmatrixHext(hit.fDetID)/2.0)/manager->GetPMTdistY(hit.fDetID); 
-  if( fabs(PMTcol_ - int(PMTcol_))<1.e-3 ){
-    hit.fPMTcol = int(PMTcol_);
-  }else{
+  if( fabs(PMTcol_ - round(PMTcol_))<1.e-3 ){
     hit.fPMTcol = round(PMTcol_);
+  }else{
+    hit.fPMTcol = int(PMTcol_);
   }
-  hit.fPMTcol = int((hit.fYPMT+manager->GetPMTmatrixHext(hit.fDetID)/2.0)/manager->GetPMTdistY(hit.fDetID));
   //hit.fTDC[0] = fTDCArrays.at(idet).first[ipmt];
   //hit.fTDC[1] = fTDCArrays.at(idet).second[ipmt];
   
