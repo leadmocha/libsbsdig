@@ -13,14 +13,14 @@ sbs_bb.grinch.MCdata = 1
 # Each row is:     crate slot_lo slot_hi model# nchan
 #
 sbs_bb.grinch.cratemap = \
-                   0     0       3       1875   128
+		       0     0       3       1875   128
 # Cherenkov detector map
 #
 sbs_bb.grinch.detmap = \
-                   0  0  0 127 \
-                   0  1  0 127 \
-                   0  2  0 127 \
-                   0  3  0 125
+		     0  0  0 127 \
+		     0  1  0 127 \
+		     0  2  0 127 \
+		     0  3  0 125
 
 sbs_bb.grinch.zckov_in = 1.3824
 sbs_bb.grinch.n_radiator = 1.00137

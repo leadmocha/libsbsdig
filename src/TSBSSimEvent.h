@@ -84,7 +84,7 @@ public:
     // MC hit data
     Short_t  fID;          // Hit number
     Int_t    fSource;      // MC data set source (0 = signal, >0 background)
-    Char_t   fType;        // GEANT particle type (1 = primary)
+    Short_t  fType;        // GEANT particle type (1 = primary)
     Int_t    fMCtrackID;   // GEANT track ID
     Int_t    fMCtrackPID;  // GEANT particle ID (defined only if particle is primary)
     Short_t  fOrigVolFlag; // 
@@ -98,7 +98,7 @@ public:
     Short_t  fChannel;     // Channel number
     Short_t  fPMTrow;      // Row number: cross reference to Channel number
     Short_t  fPMTcol;      // Column number: cross reference to Channel number
-    Char_t   fVETROCID;    // VETROC ID
+    Short_t  fVETROCID;    // VETROC ID
     uint32_t fTDC[2];      // TDC VETROC words
   };
   std::vector<PMTHit> fPMTHits;  // All MC-generated clusters in the GEMs

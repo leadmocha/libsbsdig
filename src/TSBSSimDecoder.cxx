@@ -403,15 +403,38 @@ Int_t TSBSSimDecoder::DoLoadEvent(const Int_t* evbuffer )
     
     PMTtoROC(h.fChannel, crate, slot, chan);
     
-    // if(h.fChannel!=crate*16*128+slot*128+chan)
-    //   cout << h.fChannel << " " << crate << " " << slot << " " << chan << endl;
+    /*
+    cout << "h.fChannel, crate, slot, chan " << h.fChannel << " " << crate << " " << slot << " " << chan << endl;
+    cout << "index, h.fTDC1, 2 " << idx(crate,slot) << " " << h.fTDCtime[0] << " " << h.fTDCtime[1] << endl;
+    UInt_t test = h.fTDC[0];
+    cout << "TDC word 0 = " << test << " -2^31 = ";
+    test+=pow(2, 31);
+    cout << test << "; =>  +2^31 = ";
+    test+=pow(2, 31);
+    cout << test << endl;
+    */
     
-    // if( c.fPlane < 0 || c.fPlane >= fManager->GetNChamber() ) {
-    //   Error( here, "Illegal plane number = %d in cluster. "
-    // 	     "Should never happen. Call expert.", c.fPlane );
-    //   simEvent->Print("clust");
-    //   return HED_FATAL;
-    // }
+    // NB: the VETROC words are subtracted 2^31 to convert them from Uint to Int... 
+    // This *should be temporary* !!!
+    if( crateslot[idx(crate,slot)]->loadData("tdc",chan, h.fTDC[0]-pow(2, 31), h.fTDC[0]-pow(2, 31)) == SD_ERR )
+      return HED_ERR;
+    
+    if( crateslot[idx(crate,slot)]->loadData("tdc",chan, h.fTDC[1]-pow(2, 31), h.fTDC[1]-pow(2, 31)) == SD_ERR )
+      return HED_ERR;
+    
+    /*
+    cout << "crateslot crate, slot, NumChan " << crateslot[idx(crate,slot)]->getCrate() << " " 
+	 << crateslot[idx(crate,slot)]->getSlot() << " " 
+	 << crateslot[idx(crate,slot)]->getNumChan() << endl;
+    for(int j_ = 0; j_<510; j_++)
+      {
+	if(crateslot[idx(crate,slot)]->getNumHits(j_)>0)
+	  cout << "number of hits for channel " << j_ << ": " << crateslot[idx(crate,slot)]->getNumHits(j_) << endl;
+	for(int j__ = 0; j__<crateslot[idx(crate,slot)]->getNumHits(j_); j__++)
+	  cout << crateslot[idx(crate,slot)]->getData(j_, j__) << endl;
+      }
+    */
+    
     newclus = true;
     
     new( (*fMCCherHits)[GetNPMThits()] ) TSBSSimPMTHit(h);

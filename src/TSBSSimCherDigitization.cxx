@@ -689,6 +689,10 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
   }
   */
   
+  // cout << "PMT " << ipmt 
+  //      << " tdc0 " << fTDCArrays.at(idet).first[ipmt] 
+  //      << " tdc1 " << fTDCArrays.at(idet).second[ipmt] << endl;  
+  
   div_t d = div( ipmt, manager->GetChanPerSlot() );
   hit.fVETROCID = d.quot;
   int i_chan = d.rem;
@@ -700,6 +704,7 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
   bool channel[8];
   bool tdc[16];
   
+  //cout << "channel " << i_chan << " time_r " << fTDCArrays.at(idet).first[ipmt] << endl;
   //cout << "Vetroc words: init: " << TDCvetrocWord0 << " " << TDCvetrocWord1 << endl;
   for(int i = 0; i<16; i++){
     if(i<8){
@@ -708,14 +713,21 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
       channel[i] = (i_chan >> i) & 1;
       TDCvetrocWord0 ^= (-channel[i] ^ TDCvetrocWord0) & (1 << (i+16));
       TDCvetrocWord1 ^= (-channel[i] ^ TDCvetrocWord1) & (1 << (i+16));
+      
+      // cout << "header bit " << i << " = " << header[i] 
+      // 	   << ", VETROC word bit " << (i+24) << " = " << ((TDCvetrocWord0 >> (i+24)) & 1UL) << endl;
+      // cout << "channel bit " << i << " = " << channel[i] 
+      // 	   << ", VETROC word bit " << (i+16) << " = " << ((TDCvetrocWord0 >> (i+16)) & 1UL) << endl;
     }
     tdc[i] = (fTDCArrays.at(idet).first[ipmt] >> i) & 1;
-    TDCvetrocWord0 ^= (-tdc[i] ^ TDCvetrocWord0) & (1 << i);
+    TDCvetrocWord0 ^= (-tdc[i] ^ TDCvetrocWord0) & (1UL << i);
+    // cout << "tdc_r bit " << i << " = " << tdc[i] 
+    // 	 << ", VETROC word bit " << i << " = " << ((TDCvetrocWord0 >> i) & 1UL) << endl;
     tdc[i] = (fTDCArrays.at(idet).second[ipmt] >> i) & 1;
-    TDCvetrocWord1 ^= (-tdc[i] ^ TDCvetrocWord1) & (1 << i);
+    TDCvetrocWord1 ^= (-tdc[i] ^ TDCvetrocWord1) & (1UL << i);
   }
   
-  TDCvetrocWord1 ^= (-1 ^ TDCvetrocWord1) & (1 << 26);
+  TDCvetrocWord1 ^= (-1 ^ TDCvetrocWord1) & (1UL << 26);
   //cout << "Vetroc words: test: " << TDCvetrocWord0 << " " << TDCvetrocWord1 << endl;
   
   hit.fTDC[0] = TDCvetrocWord0;
