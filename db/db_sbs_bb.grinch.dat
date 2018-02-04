@@ -32,3 +32,4 @@ sbs_bb.grinch.pmtdistx = 0.031
 sbs_bb.grinch.pmtdisty = 0.031
 sbs_bb.grinch.x_tcpmt = -0.9145
 sbs_bb.grinch.y_tcpmt = -0.124
+sbs_bb.grinch.debug = 1
