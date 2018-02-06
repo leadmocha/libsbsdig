@@ -151,7 +151,7 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
       
       type = fTree->Earm_GRINCH_hit_mTrackNo->at(i);//=1 if primary, >1 if secondary... 
       // GRINCH is supposed to ID electrons only... so a primary will always be with TrackNo = 0
-      PMTID = fTree->Earm_GRINCH_hit_PMT->at(i)/5;
+      PMTID = fTree->Earm_GRINCH_hit_PMT->at(i)/5-1;//to have it numbered from 0 to 509...
       XPMT = fTree->Earm_GRINCH_hit_ypmt->at(i);
       YPMT = fTree->Earm_GRINCH_hit_zpmt->at(i);// we want the PMT matrix to be sorted by increasing y_T
       Npe = fTree->Earm_GRINCH_hit_NumPhotoelectrons->at(i);
