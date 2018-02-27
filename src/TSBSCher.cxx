@@ -10,10 +10,8 @@ using namespace std;
 
 //Recommanded constructor
 TSBSCher::TSBSCher( const char *name, const char *desc )
-//  : THaDetector (name, desc)
-  : THaCherenkov (name, desc)
+  : TSBSDet (name, desc)
 {
-  fNPMTs = 0;
   fNPMTrows = 0;
   fNPMTcolsMax = 0;
   
@@ -32,24 +30,6 @@ const char* TSBSCher::GetDBFileName() const {
     else
       return fPrefix;
 }
-  
-Int_t
-TSBSCher::ReadDatabase (const TDatime& date)
-{
-  //Read the geometry for the TSBSBox
-  //Calls read geometry which, as it name indicates, actually reads the parameters
- 
-  FILE* file = OpenFile (date);
-  if (!file) return kFileError;
-
-  Int_t err = ReadGeometry (file, date, false);
-
-  fclose(file);
-  if (err)
-    return err;
-
-  return kOK;
-}
 
 Int_t
 TSBSCher::ReadGeometry (FILE* file, const TDatime& date,
@@ -62,10 +42,12 @@ TSBSCher::ReadGeometry (FILE* file, const TDatime& date,
   
   const DBRequest request[] =
     {
-      {"zckov_in",     &fZCkovIn,      kDouble, 0, 1},
+      //{"zckov_in",     &fZCkovIn,      kDouble, 0, 1},
+      {"zckov_in",     &fZPos,         kDouble, 0, 1},
       {"n_radiator",   &fNradiator,    kDouble, 0, 1},
       {"l_radiator",   &fLradiator,    kDouble, 0, 1},
-      {"npmts",        &fNPMTs,        kInt,    0, 1},
+      //{"npmts",        &fNPMTs,    kInt,    0, 1},
+      {"npmts",        &fNChannels,    kInt,    0, 1},
       {"npmtrows",     &fNPMTrows,     kInt,    0, 1},
       {"npmtcolsmax",  &fNPMTcolsMax,  kInt,    0, 1},
       {"pmtdistx",     &fPMTdistX,     kDouble, 0, 1},
@@ -89,10 +71,6 @@ TSBSCher::ReadGeometry (FILE* file, const TDatime& date,
 Int_t
 TSBSCher::Decode (const THaEvData& ed )
 {
-  // for (UInt_t i = 0; i < GetNPlanes(); ++i)
-  //   {
-  //     GetPlane (i).Decode (ed);//"Neutralized" function: does nothing and returns 0.
-  //   }
   return 0;
 }
 
@@ -100,8 +78,8 @@ void
 TSBSCher::Print ()
 {
   //Print TSBSCher info
-  cout << "I'm a Cherenkov detector named " << GetName() << endl;
-  cout << " Total number of PMTs = " << fNPMTs << ", set in " << fNPMTrows << " rows of " 
+  cout << "I'm a Cherenkov detector named " << GetName() << ", located " << fZPos << " m away from the spectrometer bending point." << endl;
+  cout << " Total number of PMTs = " << fNChannels << ", set in " << fNPMTrows << " rows of " 
        << fNPMTcolsMax << " or " << fNPMTcolsMax-1 << " PMTs each." << endl;
   cout << " Distance between 2 PMTs rows : " << fPMTdistX << " m" << endl
        << " Distance between 2 PMTs columns : " << fPMTdistY << " m" << endl

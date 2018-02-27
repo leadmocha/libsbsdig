@@ -6,11 +6,10 @@
 
 class THaEvData;
 
-// TSBSDet also inherits form THaPidDetector, which grants it all the functions from its class
+// TSBSDet also inherits form THaDetector, which grants it all the functions from its class
 // (see http://hallaweb.jlab.org/podd/doc/html_v16/ClassIndex.html for more info).
 
 class TSBSDet : public THaDetector {
-  //class TSBSDet : public THaDetenkov {
  public:
   //Constructors and destructor
   TSBSDet(const char *name, const char *desc);//It is recommended to use this constructor
@@ -23,17 +22,17 @@ class TSBSDet : public THaDetector {
   Int_t ReadGeometry (FILE* file, const TDatime& date, Bool_t required);// This class *must* be overloaded 
   const char* GetDBFileName() const;
 
-  Int_t Decode( const THaEvData & ) {}
+  Int_t Decode( const THaEvData & );// This class *must* be overloaded 
   
   // Access to the info of TSBSGEMPlane which is regarded as a subdetector of TSBSDet.
   // (see comments in the code of class TSBSGEMPlane)
   UInt_t GetNChannels() const {return fNChannels;};
   Double_t GetZpos() const {return fZPos;};
   
-  void Print (){}// This class *must* be overloaded 
+  void Print ();// This class *must* be overloaded 
   
- private:
-  UInt_t fNChannels; // number of channels
+ protected:
+  UInt_t   fNChannels; // number of channels
   Double_t fZPos;      // position of the detector from the spectrometer bending point
   
   ClassDef(TSBSDet,0)
