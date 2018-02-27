@@ -14,40 +14,28 @@ class TSBSDet : public THaDetector {
  public:
   //Constructors and destructor
   TSBSDet(const char *name, const char *desc);//It is recommended to use this constructor
-  TSBSDet() : fNPMTs(0), fNPMTrows(0), fNPMTcolsMax(0) {} // for ROOT RTTI
+  TSBSDet() : fNChannels(0), fZPos(0) {} // for ROOT RTTI
 
   virtual ~TSBSDet();
   
   //Read the geometry for the TSBSBox in the data base
   Int_t ReadDatabase (const TDatime& date);
-  Int_t ReadGeometry (FILE* file, const TDatime& date, Bool_t required);
+  Int_t ReadGeometry (FILE* file, const TDatime& date, Bool_t required);// This class *must* be overloaded 
   const char* GetDBFileName() const;
 
-  Int_t Decode( const THaEvData & );
+  Int_t Decode( const THaEvData & ) {}
   
   // Access to the info of TSBSGEMPlane which is regarded as a subdetector of TSBSDet.
   // (see comments in the code of class TSBSGEMPlane)
-  UInt_t GetNPMTs() const {return fNPMTs;};
-  UInt_t GetNPMTrows() const {return fNPMTrows;};
-  UInt_t GetNPMTcolsMax() const {return fNPMTcolsMax;};
+  UInt_t GetNChannels() const {return fNChannels;};
+  Double_t GetZpos() const {return fZPos;};
   
-  void Print ();
+  void Print (){}// This class *must* be overloaded 
   
  private:
-  int    fZCkovIn;       // Z of the entrance window in the spectrometer central ray;
-  int    fNradiator;     // radiator index of refraction;
-  int    fLradiator;     // radiator length on central ray;
-  //int    fNquartz;       // quartz window index of refraction;
-  int    fNPMTs;         // number of PMTs
-  int    fNPMTrows;      // number of PMT rows
-  int    fNPMTcolsMax;   // max number of PMT columns 
-  double fPMTmatrixHext; // horizontal extension, in m, of the PMT matrix (from lower PMT center to higher PMT center)
-  double fPMTmatrixVext; // vertical extension, in m, of the PMT matrix (from left PMT center to right PMT center)
-  double fPMTdistX;      // projected X distance between the center of 2 PMT tubes in consecutive rows, in m
-  double fPMTdistY;      // Y distance between the center of 2 PMT tubes in consecutive columns, in m
-  double fX_TCPMT;       // X position of the top close PMT center in the PMT matrix (transport coord)
-  double fY_TCPMT;       // Y position of the top close PMT center in the PMT matrix (transport coord)
-
+  UInt_t fNChannels; // number of channels
+  Double_t fZPos;      // position of the detector from the spectrometer bending point
+  
   ClassDef(TSBSDet,0)
 
 };

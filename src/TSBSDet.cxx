@@ -13,9 +13,8 @@ TSBSDet::TSBSDet( const char *name, const char *desc )
   : THaDetector (name, desc)
     //: THaCherenkov (name, desc)
 {
-  fNPMTs = 0;
-  fNPMTrows = 0;
-  fNPMTcolsMax = 0;
+  fNChannels = 0;
+  fZPos = 0;
   
   return;
 }
@@ -51,11 +50,12 @@ TSBSDet::ReadDatabase (const TDatime& date)
   return kOK;
 }
 
+/*
 Int_t
 TSBSDet::ReadGeometry (FILE* file, const TDatime& date,
 			      Bool_t required)
 {
-
+  
   Int_t err = THaDetector::ReadGeometry (file, date, required);
   if (err)
     return err;
@@ -85,23 +85,21 @@ TSBSDet::ReadGeometry (FILE* file, const TDatime& date,
   return kOK;
 }
 
+
 //
 Int_t
 TSBSDet::Decode (const THaEvData& ed )
 {
-  // for (UInt_t i = 0; i < GetNPlanes(); ++i)
-  //   {
-  //     GetPlane (i).Decode (ed);//"Neutralized" function: does nothing and returns 0.
-  //   }
   return 0;
 }
+
 
 void
 TSBSDet::Print ()
 {
   //Print TSBSDet info
-  cout << "I'm a Cherenkov detector named " << GetName() << endl;
-  cout << " Total number of PMTs = " << fNPMTs << ", set in " << fNPMTrows << " rows of " 
+  cout << "I'm a Generic Detector named " << GetName() << endl;
+  cout << " Total number of channels = " << fNChannels << endl;
        << fNPMTcolsMax << " or " << fNPMTcolsMax-1 << " PMTs each." << endl;
   cout << " Distance between 2 PMTs rows : " << fPMTdistX << " m" << endl
        << " Distance between 2 PMTs columns : " << fPMTdistY << " m" << endl
@@ -112,3 +110,4 @@ TSBSDet::Print ()
        << "Y = " << fY_TCPMT << endl;
   
 }
+*/
