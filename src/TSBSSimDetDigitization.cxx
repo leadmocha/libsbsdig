@@ -1,4 +1,4 @@
-#include "TSBSSimCherDigitization.h"
+#include "TSBSSimDetDigitization.h"
 
 #include "TCanvas.h"
 #include "TFile.h"
@@ -7,7 +7,7 @@
 #include "TClonesArray.h"
 
 #include "TSBSGeant4File.h"  // needed for g4sbsgendata class def
-#include "TSBSCherData.h"
+#include "TSBSDetData.h"
 #include "TSBSSpec.h"
 #include "TSBSSimEvent.h"
 
@@ -28,10 +28,10 @@ using namespace std;
 static TSBSDBManager* manager = TSBSDBManager::GetInstance();
 /*
 //for some reasons, if these parameters are declared as flags in the .h, it doesn't work...
-Int_t    TSBSSimCherDigitization::fDoCrossTalk = 0;
-Int_t    TSBSSimCherDigitization::fNCStripApart = 0;
-Double_t TSBSSimCherDigitization::fCrossFactor = 0.;
-Double_t TSBSSimCherDigitization::fCrossSigma = 0.;
+Int_t    TSBSSimDetDigitization::fDoCrossTalk = 0;
+Int_t    TSBSSimDetDigitization::fNCStripApart = 0;
+Double_t TSBSSimDetDigitization::fCrossFactor = 0.;
+Double_t TSBSSimDetDigitization::fCrossSigma = 0.;
 
 // Chamber number -> sector/plane helper functions
 
@@ -158,17 +158,17 @@ TSBSDigitizedPlane::Cumulate (const TSolGEMVStrip *vv, Short_t type,
     //will induce a smaller signal as the bigger one going to the APV, 
     //the smaller signal will appear on strips that is 
     //about 32 channels away from the big signal
-    if (!TSBSSimCherDigitization::fDoCrossTalk) return;
+    if (!TSBSSimDetDigitization::fDoCrossTalk) return;
     Int_t isLeft = fRan.Uniform(1.) < 0.5 ? -1 : 1;
-    Double_t factor = TSBSSimCherDigitization::fCrossFactor +
-      fRan.Gaus(0., TSBSSimCherDigitization::fCrossSigma);
+    Double_t factor = TSBSSimDetDigitization::fCrossFactor +
+      fRan.Gaus(0., TSBSSimDetDigitization::fCrossSigma);
     if (factor <= 0.) return; //no induced signal
     
     for( Int_t j=0; j < vv->GetSize(); j++ ) {
       Int_t idx = vv->GetIdx(j);
       assert( idx >= 0 && idx < fNStrips );
       
-      Int_t idxInduce = idx + isLeft*TSBSSimCherDigitization::fNCStripApart;
+      Int_t idxInduce = idx + isLeft*TSBSSimDetDigitization::fNCStripApart;
       if (idxInduce < 0 || idxInduce >= fNStrips ) continue; //outside the readout
       
       SETBIT(fType[idxInduce], kInducedStrip);
@@ -218,7 +218,7 @@ TSBSDigitizedPlane::Threshold( Int_t thr )
 };
 */
 
-TSBSSimCherDigitization::TSBSSimCherDigitization( const TSBSSpec& spect,
+TSBSSimDetDigitization::TSBSSimDetDigitization( const TSBSSpec& spect,
 						const char* name)
   : THaAnalysisObject(name, "GEM simulation digitizer"),
     // fDoMapSector(false), fSignalSector(0), fDP(0), fdh(0), fNChambers(0), fNPlanes(0),
@@ -230,12 +230,12 @@ TSBSSimCherDigitization::TSBSSimCherDigitization( const TSBSSpec& spect,
   fEvent = new TSBSSimEvent(5);
 }
 
-TSBSSimCherDigitization::~TSBSSimCherDigitization()
+TSBSSimDetDigitization::~TSBSSimDetDigitization()
 {
   DeleteObjects();
 }
 
-void TSBSSimCherDigitization::DeleteObjects()
+void TSBSSimDetDigitization::DeleteObjects()
 {
   delete fOFile;      fOFile = 0;
   delete fOTree;      fOTree = 0;
@@ -248,7 +248,7 @@ void TSBSSimCherDigitization::DeleteObjects()
 }
 
 void
-TSBSSimCherDigitization::Initialize(const TSBSSpec& spect)
+TSBSSimDetDigitization::Initialize(const TSBSSpec& spect)
 {
   // Initialize digitization structures based on parameters from given
   // spectrometer
@@ -272,7 +272,7 @@ TSBSSimCherDigitization::Initialize(const TSBSSpec& spect)
 }
 
 Int_t
-TSBSSimCherDigitization::ReadDatabase (const TDatime& date)
+TSBSSimDetDigitization::ReadDatabase (const TDatime& date)
 {
   FILE* file = OpenFile (date);
   if (!file) return kFileError;
@@ -327,7 +327,7 @@ TSBSSimCherDigitization::ReadDatabase (const TDatime& date)
 }
 
 void 
-TSBSSimCherDigitization::ReadPMTtimesDataFiles()
+TSBSSimDetDigitization::ReadPMTtimesDataFiles()
 {
   cout << "Reading PMT times data files " << endl;
   
@@ -408,7 +408,7 @@ TSBSSimCherDigitization::ReadPMTtimesDataFiles()
 }
 
 Int_t
-TSBSSimCherDigitization::Digitize (const TSBSCherData& gdata, const TSBSSpec& spect)
+TSBSSimDetDigitization::Digitize (const TSBSDetData& gdata, const TSBSSpec& spect)
 {
   // Digitize event after clearing all previous digitization results.
 
@@ -428,7 +428,7 @@ TSBSSimCherDigitization::Digitize (const TSBSCherData& gdata, const TSBSSpec& sp
 }
 
 Int_t
-TSBSSimCherDigitization::AdditiveDigitize (const TSBSCherData& chdata, const TSBSSpec& spect)
+TSBSSimDetDigitization::AdditiveDigitize (const TSBSDetData& chdata, const TSBSSpec& spect)
 {
   // Digitize event. Add results to any existing digitized data.
   
@@ -507,7 +507,7 @@ TSBSSimCherDigitization::AdditiveDigitize (const TSBSCherData& chdata, const TSB
 }
 
 void
-TSBSSimCherDigitization::NoDigitize (const TSBSCherData& chdata, const TSBSSpec& spect) // do not digitize event, just fill the tree
+TSBSSimDetDigitization::NoDigitize (const TSBSDetData& chdata, const TSBSSpec& spect) // do not digitize event, just fill the tree
 {
   //  if (!fEvCleared)  //?
   fEvent->Clear();
@@ -529,7 +529,7 @@ TSBSSimCherDigitization::NoDigitize (const TSBSCherData& chdata, const TSBSSpec&
 
 //___________________________________________________________________________________
 bool 
-TSBSSimCherDigitization::GetTDCtimes(int detnum, // detctor ID
+TSBSSimDetDigitization::GetTDCtimes(int detnum, // detctor ID
 				     double C,   // total pulse charge
 				     double time_zero, //time of the beginning of the pulse
 				     double& t1, // rising time 
@@ -555,7 +555,7 @@ TSBSSimCherDigitization::GetTDCtimes(int detnum, // detctor ID
 
 //___________________________________________________________________________________
 void
-TSBSSimCherDigitization::Print() const
+TSBSSimDetDigitization::Print() const
 {
   /*
   cout << "GEM digitization:" << endl;
@@ -587,7 +587,7 @@ TSBSSimCherDigitization::Print() const
 
 // Tree methods
 void
-TSBSSimCherDigitization::InitTree (const TSBSSpec& spect, const TString& ofile)
+TSBSSimDetDigitization::InitTree (const TSBSSpec& spect, const TString& ofile)
 {
   fOFile = new TFile( ofile, "RECREATE");
 
@@ -607,7 +607,7 @@ TSBSSimCherDigitization::InitTree (const TSBSSpec& spect, const TString& ofile)
 }
 
 void
-TSBSSimCherDigitization::SetTreeEvent (const TSBSCherData& tscd,
+TSBSSimDetDigitization::SetTreeEvent (const TSBSDetData& tscd,
 				       const TSBSGeant4File& f, Int_t evnum )
 {
   // Set overall event info.
@@ -631,10 +631,10 @@ TSBSSimCherDigitization::SetTreeEvent (const TSBSCherData& tscd,
 }
 
 Short_t
-TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
+TSBSSimDetDigitization::SetTreeHit (const UInt_t ih,
 				     const TSBSSpec& spect,
 				     //TSolGEMVStrip* const *dh,
-				     const TSBSCherData& tscd,
+				     const TSBSDetData& tscd,
 				     Double_t t0 )
 {
   // Sets the variables in fEvent->fGEMClust describing a hit
@@ -742,7 +742,7 @@ TSBSSimCherDigitization::SetTreeHit (const UInt_t ih,
 
 /*
 void
-TSBSSimCherDigitization::CleanClusterList ()
+TSBSSimDetDigitization::CleanClusterList ()
 {
   //if(fEvent->fMCClusterHitID.size()>1)cout << "Cluster list size = " << fEvent->fMCClusterHitID.size() << endl;
   for(int i_ = fEvent->fMCClusterHitID.size()-1; i_>=0; i_--){
@@ -761,7 +761,7 @@ TSBSSimCherDigitization::CleanClusterList ()
 */
 
 void
-TSBSSimCherDigitization::FillTree ()
+TSBSSimDetDigitization::FillTree ()
 {
   //cout << "Fill tree " << fOFile << " " << fOTree << endl;
   //fOFile = fOTree->GetCurrentFile();//CHECK ?
@@ -781,7 +781,7 @@ TSBSSimCherDigitization::FillTree ()
 }
 
 void
-TSBSSimCherDigitization::WriteTree () const
+TSBSSimDetDigitization::WriteTree () const
 {
   //cout << "write tree " << fOFile << " " << fOTree << endl;
   
@@ -792,7 +792,7 @@ TSBSSimCherDigitization::WriteTree () const
 }
 
 void
-TSBSSimCherDigitization::CloseTree () const
+TSBSSimDetDigitization::CloseTree () const
 {
   if (fOFile) fOFile->Close();
 }
