@@ -5,8 +5,9 @@
 #define __TSBSDetData__
 
 #include <TRandom.h>
+#include <TClonesArray.h>
 #include <TVector3.h>
-#include <vector>
+//#include <vector>
 
 class TSBSDetData 
 {
@@ -18,11 +19,12 @@ class TSBSDetData
   void ClearEvent();
   void InitEvent (UInt_t h);
   
-  void SetNHit (UInt_t h)   { fHitData.resize(h); }
+  void SetNHit (UInt_t h)   { fHitData->Expand(h); }
   void SetEvent (UInt_t id) { fEvtID = id; }
   void SetRun (UInt_t r)    { fRunID = r; }
   void SetSource (Int_t s)  { fSource = s; }
   
+  /*
   // Positions are in mm
   // Time is in ns
   // Momenta are in MeV
@@ -39,12 +41,13 @@ class TSBSDetData
   void SetMCtrackMomentum (UInt_t k, const TVector3& p) { fHitData[k].fMom_MCtrack = p; }
   void SetMCtrackVertex (UInt_t k, const TVector3& X)   { fHitData[k].fVtx_MCtrack = X; }
   void SetOriginVolFlag (UInt_t k, UInt_t volflag)      { fHitData[k].fOriginVolFlag = volflag; }
-  
-  UInt_t GetNHit()   const { return fHitData.size(); }
+  */
+  UInt_t GetNHit()   const { return fHitData->GetSize(); }
   UInt_t GetEvent()  const { return fEvtID; }
   UInt_t GetRun()    const { return fRunID; }
   Int_t  GetSource() const { return fSource; }
   
+  /*
   UInt_t          GetHitDetID (UInt_t k)        const { return fHitData[k].fDetID; }
   UInt_t          GetHitPMTID (UInt_t k)        const { return fHitData[k].fPMTID; }
   Double_t        GetHitXPMT (UInt_t k)         const { return fHitData[k].fXPMT; }
@@ -58,13 +61,14 @@ class TSBSDetData
   const TVector3& GetMCtrackMomentum (UInt_t k) const { return fHitData[k].fMom_MCtrack; }
   const TVector3& GetMCtrackVertex (UInt_t k)   const { return fHitData[k].fVtx_MCtrack; }
   UInt_t          GetOriginVolFlag (UInt_t k)   const { return fHitData[k].fOriginVolFlag; }
-
+  */
   
   void Print() const;
-  void PrintHit (UInt_t k) const;
+  void PrintHit (UInt_t k) const;// This class must be overloaded
 
   // Hit data
   // moved in "public" to allow it to compile with Root6/CentOS7
+  /*
   struct DetHitData_t {
     UInt_t    fDetID;          // Hit detector ID
     UInt_t    fPMTID;          // Hit PMT
@@ -80,12 +84,16 @@ class TSBSDetData
     TVector3  fVtx_MCtrack;    // vertex of the MC particle which produced the hit (*)
     UInt_t    fOriginVolFlag;  // origin volume of the photon
   };//  (*) valid if identified
+  */
+  
+ protected:
+  //std::vector<> fHitData;
+  TClonesArray* fHitData;
   
  private:
 
   UInt_t fRunID, fEvtID;
   Int_t  fSource; // MC source file ID (0 = signal, >0 background)
-  std::vector<DetHitData_t> fHitData;
 
 };
 #endif

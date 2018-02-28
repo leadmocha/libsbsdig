@@ -6,7 +6,7 @@ using namespace std;
 
 TSBSDetData::TSBSDetData (UInt_t h)
 {
-  fHitData.reserve(h);
+  fHitData->Expand(h);
 }
 
 TSBSDetData::~TSBSDetData()
@@ -16,7 +16,7 @@ TSBSDetData::~TSBSDetData()
 void
 TSBSDetData::ClearEvent() 
 {
-  fHitData.clear();
+  fHitData->Clear();
 };
 
 void
@@ -25,7 +25,7 @@ TSBSDetData::InitEvent (UInt_t h)
   if (h <= 0)
     return;
 
-  fHitData.resize(h);
+  fHitData->Expand(h);
 }
 
 void 
@@ -37,6 +37,7 @@ TSBSDetData::Print() const
 void 
 TSBSDetData::PrintHit (UInt_t k) const
 {
+/*
   cout << "  Event " << GetEvent() << ":" << endl;
   cout << "    Hit time: " << GetHitTime(k) << " ns, RMS " 
        <<  GetHitTimeRMS(k) << " ns " << endl;
@@ -63,8 +64,8 @@ TSBSDetData::PrintHit (UInt_t k) const
 	 << " m" << endl;
   }
    cout << "    Photon volume origin flag (1: aerogel, 2: gas, 3: vessel, 4: PMT window):  " << GetOriginVolFlag(k) << endl;
+*/
 }
-
 
 /*
 // Add to the current set of GEM data another GEM data set 

@@ -10,7 +10,7 @@
 
 class TSBSCherData 
 {
- public:
+ public: 
 
   TSBSCherData (UInt_t h = 0);
   virtual ~TSBSCherData();
