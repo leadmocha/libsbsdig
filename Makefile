@@ -58,10 +58,8 @@ SRC   = src/g4sbs_tree.cxx \
         src/TSBSCher.cxx \
         src/TSBSDet.cxx \
         src/TSBSCherData.cxx \
-        src/TSBSDetData.cxx \
         src/TSBSDBManager.cxx \
         src/TSBSGeant4File.cxx \
-        src/TSBSSimDetDigitization.cxx \
         src/TSBSSimCherDigitization.cxx \
         src/TSBSSimDecoder.cxx \
         src/TSBSSimEvent.cxx \
