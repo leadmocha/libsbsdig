@@ -9,6 +9,8 @@
 #include <TVector3.h>
 //#include <vector>
 
+//class TClonesArray;
+
 class TSBSDetData 
 {
  public:
