@@ -1,19 +1,16 @@
 // manage the input data (output of the GEANT4 simulation)
-// for the Cherenkov (Cer) detectors
+// for the Cherenkov (Cher) detectors
 
 #ifndef __TSBSCherData__
 #define __TSBSCherData__
 
 #include <TRandom.h>
 #include <TVector3.h>
-//#include <vector>
 #include "TSBSDetData.h"
 
-/**/
 class CherHitData : public TObject {
  public:
   
-  //CherHitData() : fDetID(0), fPMTID(0), fXPMT(0.), fYPMT(0.), fNpe(0.), fTime(0.), fTimeRMS(0.), fType(0), fPos_det(0., 0., 0.), fPID_MCtrack(0), fMom_MCtrack(0., 0., 0.), fVtx_MCtrack(0., 0., 0.), fOriginVolFlag(0) {};
   CherHitData(){
     fDetID = 0; fPMTID = 0; fXPMT = 0.; fYPMT = 0.; fNpe = 0.; fTime = 0.; fTimeRMS = 0.; fType = 0; fPos_det = TVector3(0., 0., 0.); fPID_MCtrack = 0; fMom_MCtrack = TVector3(0., 0., 0.); fVtx_MCtrack = TVector3(0., 0., 0.); fOriginVolFlag = 0;
   }
@@ -74,13 +71,7 @@ class TSBSCherData : public TSBSDetData {
   TSBSCherData (UInt_t h = 0);
   virtual ~TSBSCherData();
 
-  /* void ClearEvent(); */
   void InitEvent (UInt_t h);
-  
-  /* void SetNHit (UInt_t h)   { fHitData.resize(h); } */
-  /* void SetEvent (UInt_t id) { fEvtID = id; } */
-  /* void SetRun (UInt_t r)    { fRunID = r; } */
-  /* void SetSource (Int_t s)  { fSource = s; } */
   
   // Positions are in mm
   // Time is in ns
@@ -100,11 +91,6 @@ class TSBSCherData : public TSBSDetData {
   void SetMCtrackVertex (UInt_t k, const TVector3& X)   { ((CherHitData*)fHitData->At(k))->SetMCtrackVertex(X); }
   void SetOriginVolFlag (UInt_t k, UInt_t volflag)      { ((CherHitData*)fHitData->At(k))->SetOriginVolFlag(volflag); }
   
-  /* UInt_t GetNHit()   const { return fHitData.size(); } */
-  /* UInt_t GetEvent()  const { return fEvtID; } */
-  /* UInt_t GetRun()    const { return fRunID; } */
-  /* Int_t  GetSource() const { return fSource; } */
-  
   UInt_t          GetHitDetID (UInt_t k)        const { return ((CherHitData*)fHitData->At(k))->GetDetID(); }
   UInt_t          GetHitPMTID (UInt_t k)        const { return ((CherHitData*)fHitData->At(k))->GetPMTID(); }
   Double_t        GetHitXPMT (UInt_t k)         const { return ((CherHitData*)fHitData->At(k))->GetXPMT(); }
@@ -119,35 +105,7 @@ class TSBSCherData : public TSBSDetData {
   const TVector3& GetMCtrackVertex (UInt_t k)   const { return ((CherHitData*)fHitData->At(k))->GetMCtrackVertex(); }
   UInt_t          GetOriginVolFlag (UInt_t k)   const { return ((CherHitData*)fHitData->At(k))->GetOriginVolFlag(); }
   
-  /* void Print() const; */
   void PrintHit (UInt_t k) const;
-
-  // Hit data
-  // moved in "public" to allow it to compile with Root6/CentOS7
-
-  /*
-  struct CherHitData_t {
-    UInt_t    fDetID;          // Hit detector ID
-    UInt_t    fPMTID;          // Hit PMT
-    Double_t  fXPMT;           // X coordinate of the PMT in transport coordinates
-    Double_t  fYPMT;           // Y coordinate of the PMT in transport coordinates
-    Double_t  fNpe;            // Number of photoelectrons
-    Double_t  fTime;           // hit time
-    Double_t  fTimeRMS;        // hit time RMS: should be small (<0.1 ns)
-    UInt_t    fType;           // particle type: 1 = primary, >1 secondaries
-    TVector3  fPos_det;        // position of the optical photon at detection
-    Int_t     fPID_MCtrack;    // Particle ID of the MC particle which produced the hit (*)
-    TVector3  fMom_MCtrack;    // momentum of the MC particle which produced the hit (*)
-    TVector3  fVtx_MCtrack;    // vertex of the MC particle which produced the hit (*)
-    UInt_t    fOriginVolFlag;  // origin volume of the photon
-  };//  (*) valid if identified
-  */
-  
-  //private:
-
-  /* UInt_t fRunID, fEvtID; */
-  /* Int_t  fSource; // MC source file ID (0 = signal, >0 background) */
-  //std::vector<CherHitData_t> fHitData;
 
 };
 #endif
