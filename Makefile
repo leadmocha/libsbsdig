@@ -55,7 +55,7 @@ CXXFLAGS += $(SOLINCLUDE)
 
 DICT	= $(NAME)_dict
 SRC   = src/g4sbs_tree.cxx \
-        src/TSBSCher.cxx \
+        src/TSBSCer.cxx \
         src/TSBSDet.cxx \
         src/TSBSCherData.cxx \
         src/TSBSDetData.cxx \

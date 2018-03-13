@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "TSBSCher.h"
+#include "TSBSCer.h"
 #include "THaEvData.h"
 #include "THaApparatus.h"
 #include "TMath.h"
@@ -9,7 +9,7 @@
 using namespace std;
 
 //Recommanded constructor
-TSBSCher::TSBSCher( const char *name, const char *desc )
+TSBSCer::TSBSCer( const char *name, const char *desc )
   : TSBSDet (name, desc)
 {
   fNPMTrows = 0;
@@ -18,12 +18,12 @@ TSBSCher::TSBSCher( const char *name, const char *desc )
   return;
 }
 
-TSBSCher::~TSBSCher()
+TSBSCer::~TSBSCer()
 {
 }
 
 
-const char* TSBSCher::GetDBFileName() const {
+const char* TSBSCer::GetDBFileName() const {
     THaApparatus *app = GetApparatus();
     if( app )
       return Form ("%s.", app->GetName());
@@ -32,7 +32,7 @@ const char* TSBSCher::GetDBFileName() const {
 }
 
 Int_t
-TSBSCher::ReadGeometry (FILE* file, const TDatime& date,
+TSBSCer::ReadGeometry (FILE* file, const TDatime& date,
 			      Bool_t required)
 {
 
@@ -69,16 +69,16 @@ TSBSCher::ReadGeometry (FILE* file, const TDatime& date,
 
 //
 Int_t
-TSBSCher::Decode (const THaEvData& ed )
+TSBSCer::Decode (const THaEvData& ed )
 {
   return 0;
 }
 
 void
-TSBSCher::Print ()
+TSBSCer::Print ()
 {
-  //Print TSBSCher info
-  cout << "I'm a Cherenkov detector named " << GetName() << ", located " << fZPos << " m away from the spectrometer bending point." << endl;
+  //Print TSBSCer info
+  cout << "I'm a Cerenkov detector named " << GetName() << ", located " << fZPos << " m away from the spectrometer bending point." << endl;
   cout << " Total number of PMTs = " << fNChannels << ", set in " << fNPMTrows << " rows of " 
        << fNPMTcolsMax << " or " << fNPMTcolsMax-1 << " PMTs each." << endl;
   cout << " Distance between 2 PMTs rows : " << fPMTdistX << " m" << endl

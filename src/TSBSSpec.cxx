@@ -1,5 +1,5 @@
 #include "TSBSSpec.h"
-#include "TSBSCher.h"
+#include "TSBSCer.h"
 #include <iostream>
 
 using namespace std;
@@ -23,13 +23,13 @@ TSBSSpec::~TSBSSpec()
 }
 
 Int_t 
-TSBSSpec::AddCher (TSBSCher* pcdet)
+TSBSSpec::AddCer (TSBSCer* pcdet)
 {
   // Add a detector to the internal lists of spectrometer detectors.
   // The detector object must be allocated and deleted by the caller.
   // Duplicate detector names are not allowed.
 
-  fCherDets.push_back(pcdet);
+  fCerDets.push_back(pcdet);
   return 0;
 }
 
@@ -80,8 +80,8 @@ TSBSSpec::Print() const
 {
   cout << "Hello, I'm a spectrometer named " << GetName() << endl;
   
-  for( vector<TSBSCher*>::const_iterator it = fCherDets.begin();
-       it != fCherDets.end(); ++it ) {
+  for( vector<TSBSCer*>::const_iterator it = fCerDets.begin();
+       it != fCerDets.end(); ++it ) {
     (*it)->Print();
   }
 }
