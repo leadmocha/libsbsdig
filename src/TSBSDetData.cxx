@@ -1,60 +1,48 @@
 #include <iostream>
 
-#include "TSBSCherData.h"
+#include "TSBSDetData.h"
 
 using namespace std;
 
-class CherHitData;
-
-TSBSCherData::TSBSCherData (UInt_t h)
+TSBSDetData::TSBSDetData (UInt_t h)
 {
-  if (h <= 0)
-    return;
-  
-  fHitData = new TClonesArray("CherHitData", h);
-  // fHitData.reserve(h);
+  fHitData->Expand(h);
 }
 
-/*
-TSBSCherData::~TSBSCherData()
+TSBSDetData::~TSBSDetData()
 {
 }
 
 void
-TSBSCherData::ClearEvent() 
+TSBSDetData::ClearEvent() 
 {
-  fHitData.clear();
+  fHitData->Clear();
 };
-*/
 
 void
-TSBSCherData::InitEvent (UInt_t h)
+TSBSDetData::InitEvent (UInt_t h)
 {
   if (h <= 0)
     return;
 
-  fHitData = new TClonesArray("CherHitData", h);
-  //fHitData
-  //fHitData.resize(h);
+  fHitData->Expand(h);
 }
 
-/*
 void 
-TSBSCherData::Print() const
+TSBSDetData::Print() const
 {
   cout << "Run " << GetRun() << " Event " << GetEvent() << " " << GetNHit() << " hits" << endl;
 }
-*/
 
 void 
-TSBSCherData::PrintHit (UInt_t k) const
+TSBSDetData::PrintHit (UInt_t k) const
 {
-  /*
+/*
   cout << "  Event " << GetEvent() << ":" << endl;
   cout << "    Hit time: " << GetHitTime(k) << " ns, RMS " 
        <<  GetHitTimeRMS(k) << " ns " << endl;
   cout << "    Hit PE yield: " << GetHitPEyield(k) << endl;
- cout << "    Hit PMT: " << GetHitPMTID(k) << endl;
+  cout << "    Hit PMT: " << GetHitPMTID(k) << endl;
   cout << "    PMT X_transport: " << GetHitXPMT(k) << endl;
   cout << "    PMT Y_transport: " << GetHitYPMT(k) << endl;
   cout << "    Particle type: " << GetParticleType(k) << endl;
@@ -76,14 +64,13 @@ TSBSCherData::PrintHit (UInt_t k) const
 	 << " m" << endl;
   }
    cout << "    Photon volume origin flag (1: aerogel, 2: gas, 3: vessel, 4: PMT window):  " << GetOriginVolFlag(k) << endl;
-  */
+*/
 }
-
 
 /*
 // Add to the current set of GEM data another GEM data set 
 // Necessary ??? probably redundant with TSol(SBS)SimGEMDigitization::AdditiveDigitize()
-void TSBSCherData::AddGEMData(TSBSCherData* gd)
+void TSBSDetData::AddGEMData(TSBSDetData* gd)
 {
   if( !gd ) return;
   
