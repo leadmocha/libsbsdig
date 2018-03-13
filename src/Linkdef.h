@@ -5,7 +5,7 @@
 #pragma link C++ nestedclasses;
 
 #pragma link C++ defined_in "src/g4sbs_tree.h";
-#pragma link C++ defined_in "src/TSBSCer.h";
+#pragma link C++ defined_in "src/TSBSCher.h";
 #pragma link C++ defined_in "src/TSBSCherData.h";
 #pragma link C++ defined_in "src/TSBSDet.h";
 #pragma link C++ defined_in "src/TSBSDetData.h";

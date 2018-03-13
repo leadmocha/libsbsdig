@@ -1,21 +1,21 @@
-#ifndef __TSBSCER_H
-#define __TSBSCER_H
+#ifndef __TSBSCHER_H
+#define __TSBSCHER_H
 
 //#include "THaDetector.h"
-//#include "THaCerenkov.h"
+//#include "THaCherenkov.h"
 #include "TSBSDet.h"
 
 class THaEvData;
 
-// TSBSCer inherits form TSBSDet, which grants it all the functions from its class
+// TSBSCher inherits form TSBSDet, which grants it all the functions from its class
 
-class TSBSCer : public TSBSDet {
+class TSBSCher : public TSBSDet {
  public:
   //Constructors and destructor
-  TSBSCer(const char *name, const char *desc);//It is recommended to use this constructor
-  TSBSCer() : fNPMTrows(0), fNPMTcolsMax(0) {} // for ROOT RTTI
+  TSBSCher(const char *name, const char *desc);//It is recommended to use this constructor
+  TSBSCher() : fNPMTrows(0), fNPMTcolsMax(0) {} // for ROOT RTTI
 
-  virtual ~TSBSCer();
+  virtual ~TSBSCher();
   
   //Read the geometry for the TSBSBox in the data base
   Int_t ReadGeometry (FILE* file, const TDatime& date, Bool_t required);
@@ -40,7 +40,7 @@ class TSBSCer : public TSBSDet {
   double fX_TCPMT;       // X position of the top close PMT center in the PMT matrix (transport coord)
   double fY_TCPMT;       // Y position of the top close PMT center in the PMT matrix (transport coord)
 
-  ClassDef(TSBSCer,0)
+  ClassDef(TSBSCher,0)
 
 };
 

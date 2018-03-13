@@ -6,7 +6,7 @@
 #include "types.h"
 #include <vector>
 
-class TSBSCer;
+class TSBSCher;
 
 // Class TSBSSpec is more or less a "container" to store the information of all GEM chambers.
 // Ultimately, it will also contain information on reconstrcuted tracks, 
@@ -21,7 +21,7 @@ class TSBSSpec : public THaSpectrometer {
 	TSBSSpec( const char *name, const char *desc );
         virtual ~TSBSSpec();
 
-	Int_t AddCer (TSBSCer* pdet);
+	Int_t AddCher (TSBSCher* pdet);
 
 	// Useless: the actual job is done by TreeSearch.
 	// However, those methods seem to have to be declared, 
@@ -44,7 +44,7 @@ class TSBSSpec : public THaSpectrometer {
 	void Print() const;
 
     private:
-        std::vector<TSBSCer*>  fCerDets;
+        std::vector<TSBSCher*>  fCherDets;
 
     public:
 	ClassDef(TSBSSpec,0)
