@@ -58,7 +58,6 @@ SRC   = src/g4sbs_tree.cxx \
         src/TSBSCer.cxx \
         src/TSBSDet.cxx \
         src/TSBSCherData.cxx \
-        src/TSBSDetData.cxx \
         src/TSBSDBManager.cxx \
         src/TSBSGeant4File.cxx \
         src/TSBSSimCherDigitization.cxx \
@@ -66,7 +65,6 @@ SRC   = src/g4sbs_tree.cxx \
         src/TSBSSimEvent.cxx \
         src/TSBSSimFile.cxx \
         src/TSBSSpec.cxx
-#        src/TSBSSimDetDigitization.cxx \
 
 
 OBJS	= $(SRC:.cxx=.$(ObjSuf)) $(DICT).o
