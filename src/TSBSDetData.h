@@ -12,27 +12,27 @@ class TSBSDetData
 {
  public:
 
-  TSBSDetData (UInt_t h = 0);
+  TSBSDetData ();
   virtual ~TSBSDetData();
 
   void ClearEvent();
-  void InitEvent (UInt_t h);
   
-  void SetNHit (UInt_t h)   { fHitData->Expand(h); }
+  //void SetNHit (UInt_t h)   { fHitData->Expand(h); }
   void SetEvent (UInt_t id) { fEvtID = id; }
   void SetRun (UInt_t r)    { fRunID = r; }
   void SetSource (Int_t s)  { fSource = s; }
   
-  UInt_t GetNHit()   const { return fHitData->GetSize(); }
+  //UInt_t GetNHit()   const { return fHitData->GetSize(); }
   UInt_t GetEvent()  const { return fEvtID; }
   UInt_t GetRun()    const { return fRunID; }
   Int_t  GetSource() const { return fSource; }
   
   void Print() const;
-  void PrintHit (UInt_t k) const;// This class must be overloaded
 
  protected:
-  TClonesArray* fHitData;
+  //TClonesArray* fHitData;
+  void InitEvent (UInt_t h);
+  void PrintHit (UInt_t k) const;// This class must be overloaded
   
  private:
 

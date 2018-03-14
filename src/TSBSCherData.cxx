@@ -4,14 +4,21 @@
 
 using namespace std;
 
-class CherHitData;
-
+/*
 TSBSCherData::TSBSCherData (UInt_t h)
 {
-  if (h <= 0)
-    return;
-  
   fHitData = new TClonesArray("CherHitData", h);
+}
+
+TSBSCherData::~TSBSCherData()
+{
+  fHitData->Delete();
+}
+
+void
+TSBSCherData::ClearEvent ()
+{
+  fHitData->Clear();
 }
 
 void
@@ -21,6 +28,31 @@ TSBSCherData::InitEvent (UInt_t h)
     return;
 
   fHitData = new TClonesArray("CherHitData", h);
+}
+*/
+
+TSBSCherData::TSBSCherData (UInt_t h)
+{
+  fHitData.reserve(h);
+}
+
+TSBSCherData::~TSBSCherData()
+{
+}
+
+void
+TSBSCherData::ClearEvent() 
+{
+  fHitData.clear();
+};
+
+void
+TSBSCherData::InitEvent (UInt_t h)
+{
+  if (h <= 0)
+    return;
+
+  fHitData.resize(h);
 }
 
 void 

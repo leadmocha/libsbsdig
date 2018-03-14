@@ -4,34 +4,42 @@
 
 using namespace std;
 
-TSBSDetData::TSBSDetData (UInt_t h)
+TSBSDetData::TSBSDetData ()
 {
-  fHitData->Expand(h);
+  fRunID = 0; 
+  fEvtID = 0; 
+  fSource = 0;
+  //fHitData->Expand(h);
 }
 
 TSBSDetData::~TSBSDetData()
 {
+  //fHitData->Delete();
 }
 
 void
 TSBSDetData::ClearEvent() 
 {
-  fHitData->Clear();
+  //fHitData->Clear();
 };
 
 void
 TSBSDetData::InitEvent (UInt_t h)
 {
+  /*
   if (h <= 0)
     return;
 
   fHitData->Expand(h);
+  */
 }
 
 void 
 TSBSDetData::Print() const
 {
-  cout << "Run " << GetRun() << " Event " << GetEvent() << " " << GetNHit() << " hits" << endl;
+  cout << "Run " << GetRun() << " Event " << GetEvent() 
+    //<< " " << GetNHit() << " hits" 
+       << endl;
 }
 
 void 
