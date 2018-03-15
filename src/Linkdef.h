@@ -12,7 +12,7 @@
 #pragma link C++ defined_in "src/TSBSDBManager.h";
 #pragma link C++ defined_in "src/TSBSGeant4File.h";
 #pragma link C++ defined_in "src/TSBSSimCherDigitization.h";
-//#pragma link C++ defined_in "src/TSBSSimDetDigitization.h";
+#pragma link C++ defined_in "src/TSBSSimDetDigitization.h";
 #pragma link C++ defined_in "src/TSBSSimDecoder.h";
 #pragma link C++ defined_in "src/TSBSSimEvent.h";
 #pragma link C++ defined_in "src/TSBSSimFile.h";
