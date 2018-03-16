@@ -29,7 +29,7 @@ static TSBSDBManager* manager = TSBSDBManager::GetInstance();
 
 TSBSSimDetDigitization::TSBSSimDetDigitization( const TSBSSpec& spect,
 						const char* name)
-  : THaAnalysisObject(name, "GEM simulation digitizer"),
+  : THaAnalysisObject(name, "Generic simulation digitizer"),
     // fDoMapSector(false), fSignalSector(0), fDP(0), fdh(0), fNChambers(0), fNPlanes(0),
     fOFile(0), fOTree(0), fEvent(0)
 {

@@ -33,11 +33,6 @@ class TSBSSimDetDigitization: public THaAnalysisObject
   
   //full initialization of all parameters with database
   void Initialize(const TSBSSpec& spect);
-  //void ReadPMTtimesDataFiles();
-  
-  //const TSBSDigitizedPlane& GetDigitizedPlane (UInt_t ich, UInt_t ip) const {return *(fDP[ich][ip]);}; 
-  // void PrintCharges() const;
-  // void PrintSamples() const; 
   
   Double_t GetGateWidth(){ return fGateWidth; }
   Double_t GetTriggerOffset(){ return fTriggerOffset; }
@@ -54,15 +49,13 @@ class TSBSSimDetDigitization: public THaAnalysisObject
   // Call WriteTree and CloseTree after main loop
 
   void InitTree (const TSBSSpec& spect, const TString& ofile);
-  //dpulication of the SetTreeEvent routine with G4SBS file input instead of EVIO file
-  //void CleanClusterList();//remove the "clusters" with 1 hit size...
+  
   void FillTree ();
   void WriteTree () const;
   void CloseTree () const;
 
   TSBSSimEvent* GetEvent() const { return fEvent; }
-  
-  
+
  protected:
   //Everything which goes here MUST be overloaded
   void Print() const;// print info
@@ -86,55 +79,19 @@ class TSBSSimDetDigitization: public THaAnalysisObject
   TFile* fOFile;          // Output ROOT file
   TTree* fOTree;          // Output tree
   TSBSSimEvent* fEvent;   // Output event structure, written to tree
-  
- private:
+
+  void MakePrefix() { THaAnalysisObject::MakePrefix(0); }
+  void DeleteObjects();
 
   Double_t fGateWidth;
   Double_t fTriggerOffset;
   Double_t fTriggerJitter;
   Double_t fPulseNoiseSigma;
   
-  /*
-  // NINO cross talk parameters
-  static Int_t    fDoCrossTalk;  //whether we want to do cross talk simulation
-  static Int_t    fNCStripApart; // # of strips the induced signal is away from the mean signal
-  static Double_t fCrossFactor;  //reduction factor for the induced signal
-  static Double_t fCrossSigma;   //uncertainty of the reduction factor
-  
-  // Database parameters:
-  Double_t fTDCthreshold;
-  Double_t fTDCresolution;
-  Double_t fPMTGain;
-  // Double_t fPMTPulseShapeTau;
-  Double_t fPMTTransitTime;
-  // Double_t fPMTRiseTime;
-  // Double_t fPMTJitter;
-  // Double_t fPMTFWHM;
-  Double_t fTDCTimeConversion;
-  Short_t  fTDCbits;
-  Double_t fPulseNoiseConst;
-  Bool_t   fDoCrossTalk;
-  Double_t fCrossTalkMean;
-  Double_t fCrossTalkSigma;
-  Double_t fCrossTalkChanApart;
-  Double_t fReadOutImpedance;
-  
-  UInt_t fNDetectors;  // # N detectors
-  std::vector<UInt_t> fNPMTs;  // # N PMTs for each detector
-  std::vector< std::pair<TArrayI, TArrayI> > fTDCArrays;
-  // TDC digital value output arrays (1st array: rise time, 2nd array: fall time)
-  std::vector< std::pair<TArrayD, TArrayD> > fTDCtimeArrays;
-  // TDC "input" time values (evaluated with the PMT pulse shape)
-  TString fPMTtimesDataFileNames;
-  
-  std::vector<Double_t> fPulseHeight;
-  std::vector< std::map< Double_t, std::pair<Double_t, Double_t> > > fPulseTimes;
-  */
-  
   TRandom3 fTrnd;     // time randomizer
+  
+ private:
 
-  void MakePrefix() { THaAnalysisObject::MakePrefix(0); }
-  void DeleteObjects();
 
   ClassDef (TSBSSimDetDigitization, 0)
 };

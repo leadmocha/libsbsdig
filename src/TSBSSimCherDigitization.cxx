@@ -220,9 +220,7 @@ TSBSDigitizedPlane::Threshold( Int_t thr )
 
 TSBSSimCherDigitization::TSBSSimCherDigitization( const TSBSSpec& spect,
 						const char* name)
-  : THaAnalysisObject(name, "GEM simulation digitizer"),
-    // fDoMapSector(false), fSignalSector(0), fDP(0), fdh(0), fNChambers(0), fNPlanes(0),
-    fOFile(0), fOTree(0), fEvent(0)
+  : TSBSSimDetDigitization(spect, name)
 {
   Init();
   Initialize (spect);
@@ -233,18 +231,6 @@ TSBSSimCherDigitization::TSBSSimCherDigitization( const TSBSSpec& spect,
 TSBSSimCherDigitization::~TSBSSimCherDigitization()
 {
   DeleteObjects();
-}
-
-void TSBSSimCherDigitization::DeleteObjects()
-{
-  delete fOFile;      fOFile = 0;
-  delete fOTree;      fOTree = 0;
-  delete fEvent;      fEvent = 0;
-  
-  fTDCArrays.clear();
-  fTDCtimeArrays.clear();
-  fPulseHeight.clear();
-  fPulseTimes.clear();
 }
 
 void

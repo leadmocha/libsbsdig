@@ -9,7 +9,7 @@
 #include "TArrayI.h"
 #include "TArrayD.h"
 
-#include "THaAnalysisObject.h"
+#include "TSBSSimDetDigitization.h"
 
 #include <vector>
 #include <map>
@@ -23,7 +23,7 @@ class TSBSSimEvent;
 class TSBSGeant4File;
 
 
-class TSBSSimCherDigitization: public THaAnalysisObject
+class TSBSSimCherDigitization: public TSBSSimDetDigitization
 {
  public:
   //Constructor and destructor
@@ -42,10 +42,10 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   void NoDigitize (const TSBSCherData& gdata, const TSBSSpec& spect); // do not digitize event, just fill tree
   //const TSBSDigitizedPlane& GetDigitizedPlane (UInt_t ich, UInt_t ip) const {return *(fDP[ich][ip]);}; 
   void Print() const;// print info
-  /* void PrintCharges() const; */
-  /* void PrintSamples() const; */
+  //void PrintCharges() const;
+  //void PrintSamples() const;
   
-  Double_t GetGateWidth(){ return fGateWidth; }
+  //Double_t GetGateWidth(){ return fGateWidth; }
   
   bool GetTDCtimes(int detnum, double C, double t0, double& t1, double& t2);
   
@@ -88,18 +88,18 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   Double_t fTDCthreshold;
   Double_t fTDCresolution;
   Double_t fPMTGain;
-  /* Double_t fPMTPulseShapeTau; */
+  //Double_t fPMTPulseShapeTau;
   Double_t fPMTTransitTime;
-  /* Double_t fPMTRiseTime; */
-  /* Double_t fPMTJitter; */
-  /* Double_t fPMTFWHM; */
-  Double_t fTriggerOffset;
-  Double_t fTriggerJitter;
-  Double_t fGateWidth;
+  //Double_t fPMTRiseTime;
+  //Double_t fPMTJitter;
+  //Double_t fPMTFWHM;
+  // Double_t fTriggerOffset;
+  // Double_t fTriggerJitter;
+  // Double_t fGateWidth;
   Double_t fTDCTimeConversion;
   Short_t  fTDCbits;
   Double_t fPulseNoiseConst;
-  Double_t fPulseNoiseSigma;
+  // Double_t fPulseNoiseSigma;
   Bool_t   fDoCrossTalk;
   Double_t fCrossTalkMean;
   Double_t fCrossTalkSigma;
@@ -118,15 +118,16 @@ class TSBSSimCherDigitization: public THaAnalysisObject
   std::vector<Double_t> fPulseHeight;
   std::vector< std::map< Double_t, std::pair<Double_t, Double_t> > > fPulseTimes;
   
+  /*
   // Tree
-
+  
   TFile* fOFile;          // Output ROOT file
   TTree* fOTree;          // Output tree
   TSBSSimEvent* fEvent;   // Output event structure, written to tree
   
   void MakePrefix() { THaAnalysisObject::MakePrefix(0); }
   void DeleteObjects();
-
+  */
   ClassDef (TSBSSimCherDigitization, 0)
 };
 
