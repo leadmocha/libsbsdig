@@ -1,7 +1,8 @@
 libsbsdig library:
 
 The purpose of this library is to digitize the detectors output from G4SBS.
-To make a local copy, type: git clone https://github.com/efuchey/libsbsdig
+To make a local copy, type: 
+git clone git@github.com/efuchey/libsbsdig
 
 NB: so far, only Cherenkov digitization has been coded;
 GEM digitization exists in another repository, which will have to be merged (TODO_1);
@@ -18,11 +19,16 @@ Unfolds the G4SBS file data tree; used by class TSBSGeant4File.
 
 TSBSGeant4File: 
 Reads the G4SBS output to extract the useful data for the digitization of the selected Cherenkov detector.
-This data will be stored by an instance of class TSBSCherData, 
+This data will be stored by an instance of classes TSBSDetData, 
 and will be used by class TSBSSimCherDigitization.cxx.
 
-TSBSGEM/Cher/Scint/ECal/Data: 
-Constitutes the internal data container for the library;
+TSBSDetData: 
+Generic library for the library internal data container;
+
+TSBS{GEM/Cher/Scint/ECal/HCal}Data inherits or will inherit from TSBSDetData.
+They each use a specific data structure.
+They should use a standard container however, which is not the case yet (TODO).
+
 The structure of the data stored is the following:
 
 GEM:
@@ -53,9 +59,12 @@ ECal:
 to be written (see TODO_3);
 
 
-TSBSSimGEM/Cher/Scint/ECalDigitization:
-This is the core class of the library: it performs the digitization of the subsystem data. 
-Ideally, one shall write a generic class, TSBSSimDigitization, from which all other classes will inherit (TODO)
+TSBSSimDetDigitization:
+Generic class to perform the digitization of the subsystem data. 
+
+TSBSSim{GEM/Cher/Scint/ECal/HCal}Digitization inherit or will inherit from TSBSSimDetDigitization.
+They each use specific digitization database parameters and produce a specific output.
+
 It produces the following output:
 
 GEM:
@@ -79,7 +88,7 @@ which holds the data structure to fill the output file.
 
 TSBSSimEvent:
 Holds the data structure to fill the output file. 
-The data structure is the following (to be completed as the library progresses)
+The data structure is the following (to be completed as the library progresses).
 
   // Event identification
   Int_t     fRunID;               // Run number
@@ -171,7 +180,11 @@ TSBSSpec:
 Spectrometer class which "carry" the detectors classes. 
 
 
-Detector classes; contain the detector geometries. They use their own database.
+TSBSDet:
+Generic detector class; contain the detector geometries. 
+
+TSBS{GEM/Cher/Scint/ECal/HCal} inherit or will inherit from TSBSDet.
+They will each have different geometry parameters.
 
 
 TSBSGEMChamber/Plane:
