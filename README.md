@@ -1,4 +1,4 @@
-libsbsdig library:
+1libsbsdig library:
 
 The purpose of this library is to digitize the detectors output from G4SBS.
 To make a local copy, type: 
@@ -20,17 +20,17 @@ EM calorimeters (TODO_3);
 
 The list of classes and their functions are the following: 
 
-**g4sbs_tree: **
+**g4sbs_tree**
 
 Unfolds the G4SBS file data tree; used by class TSBSGeant4File.
 
-**TSBSGeant4File: **
+**TSBSGeant4File**
 
 Reads the G4SBS output to extract the useful data for the digitization of the selected Cherenkov detector.
 This data will be stored by an instance of classes TSBSDetData, 
 and will be used by class TSBSSimCherDigitization.cxx.
 
-**TSBSDetData: **
+**TSBSDetData**
 
 Generic library for the library internal data container;
 
@@ -75,7 +75,7 @@ ECal:
 to be written (see TODO_3);
 ```
 
-**TSBSSimDetDigitization: **
+**TSBSSimDetDigitization**
 
 Generic class to perform the digitization of the subsystem data. 
 
@@ -110,7 +110,7 @@ to be written (see TODO_3);
 These values are then fed to an instance of class TSBSSimEvent, 
 which holds the data structure to fill the output file.
 
-**TSBSSimEvent: **
+**TSBSSimEvent**
 
 Holds the data structure to fill the output file. 
 The data structure is the following (to be completed as the library progresses).
@@ -155,7 +155,7 @@ The data structure is the following (to be completed as the library progresses).
 
 
 
-**TSBSDBManager: ** (auxilliary class)
+**TSBSDBManager** (auxilliary class)
  
 Useful class to unfold the databases and manage the parameters stored in them:
 General parameters for DB (To be completed):
@@ -198,17 +198,17 @@ struct GeoInfo{
 };
 
 
-**TSBSSimDecoder: **
+**TSBSSimDecoder** (auxilliary class)
 
 Interprets event buffer from input as TSBSSimEvent objects
 (containing digitized simulation data) and unpacks them into
 crateslot arrays for low-level decoding by detectors.
 
-**TSBSSpec: **
+**TSBSSpec** (auxilliary class)
 
 Spectrometer class which "carry" the detectors classes. 
 
-**TSBSDet: **
+**TSBSDet** (auxilliary classes)
 
 Generic detector class; contain the detector geometries. 
 
