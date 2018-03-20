@@ -1,12 +1,15 @@
 libsbsdig library:
 
-The purpose of this library is to digitize the detectors output from G4SBS 
-(with the exception of the HCal, for the time being).
+The purpose of this library is to digitize the detectors output from G4SBS.
+To make a local copy, type: git clone https://github.com/efuchey/libsbsdig
+
 NB: so far, only Cherenkov digitization has been coded;
 GEM digitization exists in another repository, which will have to be merged (TODO_1);
 other subsystems have to be written:
 Scintillators (TODO_2);
 EM calorimeters (TODO_3);
+
+NB2: To be able to use the scripts in directory example, you need to link the databases you want to use there.
 
 The list of classes and their functions are the following: 
 
