@@ -68,7 +68,12 @@ void TSBSDBManager::LoadGeneralInfo(const string& fileName)
 //______________________________________________________________
 void TSBSDBManager::LoadGeoInfo(const string& prefix)
 {
-  const string& fileName = "db_"+prefix+".dat";
+  // Include DB_DIR (standard Hall A analyzer DB path in the search)
+  std::string path = "";
+  if(std::getenv("DB_DIR")) {
+    path = std::string(std::getenv("DB_DIR")) + "/";
+  }
+  const string& fileName = path+"db_"+prefix+".dat";
     
   ifstream input(fileName.c_str());
   if (!input.is_open()){
