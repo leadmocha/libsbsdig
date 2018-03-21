@@ -5,6 +5,7 @@
 #pragma link C++ nestedclasses;
 
 #pragma link C++ defined_in "src/g4sbs_tree.h";
+#pragma link C++ defined_in "src/g4sbs_data.h";
 #pragma link C++ defined_in "src/TSBSCher.h";
 #pragma link C++ defined_in "src/TSBSCherData.h";
 #pragma link C++ defined_in "src/TSBSDet.h";
@@ -17,6 +18,9 @@
 #pragma link C++ defined_in "src/TSBSSimEvent.h";
 #pragma link C++ defined_in "src/TSBSSimFile.h";
 #pragma link C++ defined_in "src/TSBSSpec.h";
+#pragma link C++ defined_in "src/TSBSSimDigitizer.h";
+#pragma link C++ defined_in "src/TSBSSimDetector.h";
+#pragma link C++ defined_in "src/TSBSSimHCal.h";
 
 // Limited stuff in EVIO file.  We don't want to be
 // able to call the evio functions in the interpreter

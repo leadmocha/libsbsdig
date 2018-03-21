@@ -1,4 +1,5 @@
 #include "TSBSGeant4File.h"
+#include "TSBSSimData.h"
 #include "g4sbs_types.h"
 #include "fstream"
 
@@ -8,6 +9,9 @@
 #ifndef D_FLAG
 #define D_FLAG 1 //0: nothing; 1: warning; 2: debug;
 #endif
+
+#define CHER_HIT_ID 0
+#define HCAL_DET_ID 2
 
 TSBSGeant4File::TSBSGeant4File() : fFile(0), fSource(0) {
   fFilename[0] = '\0';
@@ -547,7 +551,31 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
     break;
     
   }//end switch(fManager->Getg4sbsDetType)
-    
+
+  // Now process HCAL data
+  if(fTree->hcalpart.E) {
+    for(size_t k = 0; k < fTree->hcalpart.E->size(); k++) {
+      if(fTree->hcalpart.detected->at(k)) {
+        g4sbshitdata *hcalpmthit = new g4sbshitdata(HCAL_DET_ID,3);
+        hcalpmthit->SetData(0,fTree->hcalpart.part_PMT->at(k));
+        hcalpmthit->SetData(1,0); // data type 0 == optical photon
+        hcalpmthit->SetData(2,fTree->hcalpart.t->at(k));
+        fg4sbsHitData.push_back(hcalpmthit);
+      }
+    }
+  }
+  // For now, get the adc signal from the total energy deposited on the
+  // scintillators. This can be changed later, I suppose...
+  if(fTree->hcalscint.sumedep) {
+    for(size_t k = 0; k < fTree->hcalscint.sumedep->size(); k++) {
+      g4sbshitdata *hcalscinthit = new g4sbshitdata(HCAL_DET_ID,3);
+      hcalscinthit->SetData(0,fTree->hcalscint.cell->at(k));
+      hcalscinthit->SetData(1,1); // data type 1 == sumedep
+      hcalscinthit->SetData(2,fTree->hcalscint.sumedep->at(k));
+      fg4sbsHitData.push_back(hcalscinthit);
+    }
+  }
+
   return 1;
 }
 
@@ -611,6 +639,8 @@ void TSBSGeant4File::GetCherData(TSBSCherData* chd)
   unsigned int i, nchdata = 0;
   for(i=0; i<GetNData(); i++){
     h = GetHitData(i);
+    if( h->GetDetID() != CHER_HIT_ID)
+      continue;
 
     if( h->GetData(3)>0.0 ){//we want to save hits with a non zero photoelectron yield
 
@@ -642,75 +672,5 @@ void TSBSGeant4File::GetCherData(TSBSCherData* chd)
 }
 
 
-///////////////////////////////////////////////////////////////
-// hitdata classes 
-
-g4sbshitdata::g4sbshitdata(int detid, unsigned int size ){
-  fDetID = detid;
-  fData  = new double[size];
-  fSize  = size;
-  fFillbits = 0;
-  
-  if( size > sizeof( long long int )*8 ){
-    fprintf(stderr, "%s %s line %d:  Error:  Event size too long for bit pattern storage (requested %d, have %ld)\n",
-	    __FILE__, __PRETTY_FUNCTION__, __LINE__, size, 
-	    sizeof(long long int)*8);
-    exit(1);
-  }
-  
-  // There is no value indexed at 0, so we'll just set it to 0 for
-  // sanity's sake and not deal with crazy offsets all over
-  
-  fFillbits |= 1;
-  fData[0] = 3.1415927;
-}
-
-void g4sbshitdata::SetData(unsigned int idx, double data ){
-  if( idx >= fSize ){
-    fprintf(stderr, "%s %s line %d:  Error:  index out of range (%d oor of size %d)\n",__FILE__, __PRETTY_FUNCTION__, __LINE__, idx, fSize);
-    return;
-
-  }
-
-  fFillbits |= (1<<idx);
-
-  fData[idx] = data;
-  return;
-}
-
-double g4sbshitdata::GetData(unsigned int idx) const {
-  if( idx >= fSize ){
-    fprintf(stderr, "%s %s line %d:  Error:  index out of range (%d oor of size %d)\n",__FILE__, __PRETTY_FUNCTION__, __LINE__, idx, fSize);
-    return 1e9;
-  }
-
-  if( !(fFillbits & (1<<idx)) ){
-    fprintf(stderr, "%s %s line %d:  Error:  Accessing unset data (idx %d) val: %f\n",__FILE__, __PRETTY_FUNCTION__, __LINE__, idx, fData[idx] );
-    return 1e9;
-  }
-
-  return fData[idx];
-}
-
-bool g4sbshitdata::IsFilled() const {
-  if( fFillbits == ((1<<fSize) - 1) ){
-	return true;
-    }
-
-    return false;
-}
-
-g4sbshitdata::~g4sbshitdata(){
-    delete fData;
-}
-
-///////////////////////////////////////////////////////////////
-// gendata classes
-
-// Size is 1 bigger because we are also including the weight
-// Set that default to 1
-g4sbsgendata::g4sbsgendata():g4sbshitdata(-1, __GENERATED_SIZE+2){
-    SetData(8,1.0);
-}
 
 #endif//__CINT__

@@ -9,6 +9,7 @@ namespace TSBSGeant4 {
   // Purely virtual data structure for detector data in a G4SBS ROOT tree.
   struct VDetData_t {
     VDetData_t() {};
+    virtual ~VDetData_t(){};
     // All sub-classes *must* implement a concrete instance of this
     virtual bool SetupBranches(TTree *t, const char* prefix) = 0;
   };
@@ -38,6 +39,7 @@ namespace TSBSGeant4 {
       nhits(0), row(0), col(0), cell(0), plane(0), xcell(0), ycell(0), zcell(0),
       xcellg(0), ycellg(0), zcellg(0), xhit(0), yhit(0), zhit(0), sumedep(0),
       tavg(0), trms(0), tmin(0), tmax(0) {}
+    virtual ~CalData_t(){};
     virtual bool SetupBranches(TTree *t, const char* prefix);
   };
 
@@ -63,6 +65,7 @@ namespace TSBSGeant4 {
       nhits(0), PMT(0), row(0), col(0), plane(0), xcell(0),
       ycell(0), zcell(0), xgcell(0), ygcell(0), zgcell(0), NumPhotoelectrons(0),
       Time_avg(0), Time_rms(0), Time_min(0), Time_max(0) {}
+    virtual ~ECalData_t(){};
     virtual bool SetupBranches(TTree *t, const char* prefix);
   };
 
@@ -75,6 +78,7 @@ namespace TSBSGeant4 {
     std::vector<Bool_t> *detected;
     // Quick default constructor sets all pointers to zero for safety
     ECalPartData_t() : E(0), t(0), part_PMT(0), detected(0) {};
+    virtual ~ECalPartData_t(){};
     virtual bool SetupBranches(TTree *t, const char *prefix);
   };
 }

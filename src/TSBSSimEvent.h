@@ -103,7 +103,14 @@ public:
   };
   std::vector<PMTHit> fPMTHits;  // All MC-generated clusters in the GEMs
 
-  ClassDef(TSBSSimEvent, 5) // Simulated data for one event
+  struct DetectorData {
+    Short_t fDetID;  // Source detector number
+    Short_t fChannel; // Channel number for this hit
+    std::vector<uint32_t> fData;
+  };
+  std::vector<DetectorData> fDetectorData;
+
+  ClassDef(TSBSSimEvent, 6) // Simulated data for one event
 };
 
 #endif

@@ -17,12 +17,16 @@
 #include "THaBenchmark.h"
 #include "VarDef.h"
 #include "TSBSDBManager.h"
+#include "THaSlotData.h"
 
 #include "TError.h"
 #include "TSystem.h"
 #include "TMath.h"
 #include "TDatabasePDG.h"
 #include "TRandom.h"
+#include "THaVarList.h"
+
+#include <SBSSimFadc250Module.h>
 
 #include <cstdlib>
 #include <iostream>
@@ -366,6 +370,7 @@ Int_t TSBSSimDecoder::DoLoadEvent(const Int_t* evbuffer )
   
   Int_t ret = HED_OK;
   if (first_decode || fNeedInit) {
+    fMap->print();
     if( (ret = init_cmap()) != HED_OK )
       return ret;
 #if ANALYZER_VERSION_CODE < ANALYZER_VERSION(1,6,0)
@@ -400,9 +405,65 @@ Int_t TSBSSimDecoder::DoLoadEvent(const Int_t* evbuffer )
   
   Bool_t newclus;
   Int_t crate, slot, chan;
+
+  std::map<Decoder::THaSlotData*, std::vector<UInt_t> > hcalmap;
+  std::cerr << "\n\n\n\n\nStart Processing event: " << event_num << std::endl;
+  for(std::vector<TSBSSimEvent::DetectorData>::const_iterator it =
+      simEvent->fDetectorData.begin(); it != simEvent->fDetectorData.end();
+      ++it )
+  {
+    if((*it).fDetID == 2 && (*it).fData.size() > 0) { // HCal
+      //crate = (*it).fCrate;
+      //slot  = (*it).fSlot;
+      //chan  = (*it).fChannel;
+      int mod =  (*it).fChannel;
+      if(mod < 192) {
+        crate = 10;
+        slot = 4+(mod/16);
+      } else {
+        crate = 11;
+        slot = 4+(mod-192)/16;
+      }
+      chan = mod%16;
+      Decoder::THaSlotData *sldat = crateslot[idx(crate,slot)];
+      if(sldat) { // meaning the module is available
+        std::vector<UInt_t> *myev = &(hcalmap[sldat]);
+        myev->push_back(chan);
+        for(size_t k = 0; k < (*it).fData.size(); k++) {
+          myev->push_back((*it).fData[k]);
+        }
+      }
+      if((*it).fData[0] == 1) {
+        std::cerr << "M: " << mod << ", C: " << crate << ", S: " << slot
+          << ", C: " << chan << ", I: " << (*it).fData[2] << std::endl;
+      }
+    }
+  }
+
+  // Now that all data is prepared, loop through the hcal map and load
+  // the appropriate slots
+  std::cerr << "HCal hits: " << hcalmap.size() << std::endl;
+  for( std::map<Decoder::THaSlotData*, std::vector<UInt_t> >::iterator it =
+      hcalmap.begin(); it != hcalmap.end(); ++it) {
+    it->first->GetModule()->LoadSlot(it->first,
+        it->second.data(),0,it->second.size() );
+        //myevbuff.resize((*it).fData.size());
+        //myevbuff[0] = chan; // Only value that needs to be changed
+        //for(size_t k = 1; k < myevbuff.size(); k++) {
+        //  myevbuff[k] = (*it).fData[k];
+        //}
+        //if(myevbuff.size() > 1) { // i.e. have actual data
+        //  std::cerr << "Det data, mod: " << mod << ", Crate: " << crate
+        //    << ", slot=" << slot << ", chan=" << chan
+        //    << ", detID: " << (*it).fDetID
+        //    << ", size: " << myevbuff.size() << std::endl;
+        //  sldat->GetModule()->LoadSlot(sldat,myevbuff.data(),0,myevbuff.size());
+        //}
+  }
+
   // Decode the digitized PMT data.  Populate crateslot array.
   for( vector<TSBSSimEvent::PMTHit>::size_type i = 0;
-       i < simEvent->fPMTHits.size(); ++i ) {
+       i < simEvent->fPMTHits.size() && false; ++i ) {
     const TSBSSimEvent::PMTHit& h = simEvent->fPMTHits[i];
     
     PMTtoROC(h.fChannel, crate, slot, chan);
@@ -764,6 +825,7 @@ Int_t TSBSSimDecoder::DoLoadEvent(const Int_t* evbuffer )
   //fMCTracks.Print();
   */
 
+  std::cerr << "End Processing event:   " << event_num << std::endl;
   return HED_OK;
 }
 

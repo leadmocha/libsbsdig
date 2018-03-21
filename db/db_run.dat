@@ -12,3 +12,5 @@ sbs_bb.pcentral = 2.0
 g4sbs_rich.theta    = 33.0
 g4sbs_rich.pcentral = 2.0
 
+sbs.theta = 32.0
+sbs.pcentral = 11.0
