@@ -118,26 +118,7 @@ void g4sbs_tree::Init(TTree *tree)
    Earm_BBGEM_Track_Yfit = 0;
    Earm_BBGEM_Track_Xpfit = 0;
    Earm_BBGEM_Track_Ypfit = 0;
- 
-   Earm_BBHodoScint_hit_row = 0;
-   Earm_BBHodoScint_hit_col = 0;
-   Earm_BBHodoScint_hit_cell = 0;
-   Earm_BBHodoScint_hit_plane = 0;
-   Earm_BBHodoScint_hit_xcell = 0;
-   Earm_BBHodoScint_hit_ycell = 0;
-   Earm_BBHodoScint_hit_zcell = 0;
-   Earm_BBHodoScint_hit_xcellg = 0;
-   Earm_BBHodoScint_hit_ycellg = 0;
-   Earm_BBHodoScint_hit_zcellg = 0;
-   Earm_BBHodoScint_hit_xhit = 0;
-   Earm_BBHodoScint_hit_yhit = 0;
-   Earm_BBHodoScint_hit_zhit = 0;
-   Earm_BBHodoScint_hit_sumedep = 0;
-   Earm_BBHodoScint_hit_tavg = 0;
-   Earm_BBHodoScint_hit_trms = 0;
-   Earm_BBHodoScint_hit_tmin = 0;
-   Earm_BBHodoScint_hit_tmax = 0;
-   
+
    Earm_GRINCH_hit_PMT = 0;
    Earm_GRINCH_hit_row = 0;
    Earm_GRINCH_hit_col = 0;
@@ -166,201 +147,7 @@ void g4sbs_tree::Init(TTree *tree)
    Earm_GRINCH_hit_ppy = 0;
    Earm_GRINCH_hit_ppz = 0;
    Earm_GRINCH_hit_volume_flag = 0;
-   
-   Earm_BBPS_hit_PMT = 0;
-   Earm_BBPS_hit_row = 0;
-   Earm_BBPS_hit_col = 0;
-   Earm_BBPS_hit_plane = 0;
-   Earm_BBPS_hit_xcell = 0;
-   Earm_BBPS_hit_ycell = 0;
-   Earm_BBPS_hit_zcell = 0;
-   Earm_BBPS_hit_xgcell = 0;
-   Earm_BBPS_hit_ygcell = 0;
-   Earm_BBPS_hit_zgcell = 0;
-   Earm_BBPS_hit_NumPhotoelectrons = 0;
-   Earm_BBPS_hit_Time_avg = 0;
-   Earm_BBPS_hit_Time_rms = 0;
-   Earm_BBPS_hit_Time_min = 0;
-   Earm_BBPS_hit_Time_max = 0;
-   
-   Earm_BBPSTF1_hit_row = 0;
-   Earm_BBPSTF1_hit_col = 0;
-   Earm_BBPSTF1_hit_cell = 0;
-   Earm_BBPSTF1_hit_plane = 0;
-   Earm_BBPSTF1_hit_xcell = 0;
-   Earm_BBPSTF1_hit_ycell = 0;
-   Earm_BBPSTF1_hit_zcell = 0;
-   Earm_BBPSTF1_hit_xcellg = 0;
-   Earm_BBPSTF1_hit_ycellg = 0;
-   Earm_BBPSTF1_hit_zcellg = 0;
-   Earm_BBPSTF1_hit_xhit = 0;
-   Earm_BBPSTF1_hit_yhit = 0;
-   Earm_BBPSTF1_hit_zhit = 0;
-   Earm_BBPSTF1_hit_sumedep = 0;
-   Earm_BBPSTF1_hit_tavg = 0;
-   Earm_BBPSTF1_hit_trms = 0;
-   Earm_BBPSTF1_hit_tmin = 0;
-   Earm_BBPSTF1_hit_tmax = 0;
-   
-   Earm_BBSH_hit_PMT = 0;
-   Earm_BBSH_hit_row = 0;
-   Earm_BBSH_hit_col = 0;
-   Earm_BBSH_hit_plane = 0;
-   Earm_BBSH_hit_xcell = 0;
-   Earm_BBSH_hit_ycell = 0;
-   Earm_BBSH_hit_zcell = 0;
-   Earm_BBSH_hit_xgcell = 0;
-   Earm_BBSH_hit_ygcell = 0;
-   Earm_BBSH_hit_zgcell = 0;
-   Earm_BBSH_hit_NumPhotoelectrons = 0;
-   Earm_BBSH_hit_Time_avg = 0;
-   Earm_BBSH_hit_Time_rms = 0;
-   Earm_BBSH_hit_Time_min = 0;
-   Earm_BBSH_hit_Time_max = 0;
-   
-   Earm_BBSHTF1_hit_row = 0;
-   Earm_BBSHTF1_hit_col = 0;
-   Earm_BBSHTF1_hit_cell = 0;
-   Earm_BBSHTF1_hit_plane = 0;
-   Earm_BBSHTF1_hit_xcell = 0;
-   Earm_BBSHTF1_hit_ycell = 0;
-   Earm_BBSHTF1_hit_zcell = 0;
-   Earm_BBSHTF1_hit_xcellg = 0;
-   Earm_BBSHTF1_hit_ycellg = 0;
-   Earm_BBSHTF1_hit_zcellg = 0;
-   Earm_BBSHTF1_hit_xhit = 0;
-   Earm_BBSHTF1_hit_yhit = 0;
-   Earm_BBSHTF1_hit_zhit = 0;
-   Earm_BBSHTF1_hit_sumedep = 0;
-   Earm_BBSHTF1_hit_tavg = 0;
-   Earm_BBSHTF1_hit_trms = 0;
-   Earm_BBSHTF1_hit_tmin = 0;
-   Earm_BBSHTF1_hit_tmax = 0;
 
-   Earm_CDET_hit_PMT = 0;
-   Earm_CDET_hit_row = 0;
-   Earm_CDET_hit_col = 0;
-   Earm_CDET_hit_plane = 0;
-   Earm_CDET_hit_xcell = 0;
-   Earm_CDET_hit_ycell = 0;
-   Earm_CDET_hit_zcell = 0;
-   Earm_CDET_hit_xgcell = 0;
-   Earm_CDET_hit_ygcell = 0;
-   Earm_CDET_hit_zgcell = 0;
-   Earm_CDET_hit_NumPhotoelectrons = 0;
-   Earm_CDET_hit_Time_avg = 0;
-   Earm_CDET_hit_Time_rms = 0;
-   Earm_CDET_hit_Time_min = 0;
-   Earm_CDET_hit_Time_max = 0;
-   
-   Earm_CDET_Scint_hit_row = 0;
-   Earm_CDET_Scint_hit_col = 0;
-   Earm_CDET_Scint_hit_cell = 0;
-   Earm_CDET_Scint_hit_plane = 0;
-   Earm_CDET_Scint_hit_xcell = 0;
-   Earm_CDET_Scint_hit_ycell = 0;
-   Earm_CDET_Scint_hit_zcell = 0;
-   Earm_CDET_Scint_hit_xcellg = 0;
-   Earm_CDET_Scint_hit_ycellg = 0;
-   Earm_CDET_Scint_hit_zcellg = 0;
-   Earm_CDET_Scint_hit_xhit = 0;
-   Earm_CDET_Scint_hit_yhit = 0;
-   Earm_CDET_Scint_hit_zhit = 0;
-   Earm_CDET_Scint_hit_sumedep = 0;
-   Earm_CDET_Scint_hit_tavg = 0;
-   Earm_CDET_Scint_hit_trms = 0;
-   Earm_CDET_Scint_hit_tmin = 0;
-   Earm_CDET_Scint_hit_tmax = 0;
-   
-   Harm_CDET_hit_PMT = 0;
-   Harm_CDET_hit_row = 0;
-   Harm_CDET_hit_col = 0;
-   Harm_CDET_hit_plane = 0;
-   Harm_CDET_hit_xcell = 0;
-   Harm_CDET_hit_ycell = 0;
-   Harm_CDET_hit_zcell = 0;
-   Harm_CDET_hit_xgcell = 0;
-   Harm_CDET_hit_ygcell = 0;
-   Harm_CDET_hit_zgcell = 0;
-   Harm_CDET_hit_NumPhotoelectrons = 0;
-   Harm_CDET_hit_Time_avg = 0;
-   Harm_CDET_hit_Time_rms = 0;
-   Harm_CDET_hit_Time_min = 0;
-   Harm_CDET_hit_Time_max = 0;
-   
-   Harm_CDET_Scint_hit_row = 0;
-   Harm_CDET_Scint_hit_col = 0;
-   Harm_CDET_Scint_hit_cell = 0;
-   Harm_CDET_Scint_hit_plane = 0;
-   Harm_CDET_Scint_hit_xcell = 0;
-   Harm_CDET_Scint_hit_ycell = 0;
-   Harm_CDET_Scint_hit_zcell = 0;
-   Harm_CDET_Scint_hit_xcellg = 0;
-   Harm_CDET_Scint_hit_ycellg = 0;
-   Harm_CDET_Scint_hit_zcellg = 0;
-   Harm_CDET_Scint_hit_xhit = 0;
-   Harm_CDET_Scint_hit_yhit = 0;
-   Harm_CDET_Scint_hit_zhit = 0;
-   Harm_CDET_Scint_hit_sumedep = 0;
-   Harm_CDET_Scint_hit_tavg = 0;
-   Harm_CDET_Scint_hit_trms = 0;
-   Harm_CDET_Scint_hit_tmin = 0;
-   Harm_CDET_Scint_hit_tmax = 0;
-   
-   Earm_ECAL_box_hit_row = 0;
-   Earm_ECAL_box_hit_col = 0;
-   Earm_ECAL_box_hit_cell = 0;
-   Earm_ECAL_box_hit_plane = 0;
-   Earm_ECAL_box_hit_xcell = 0;
-   Earm_ECAL_box_hit_ycell = 0;
-   Earm_ECAL_box_hit_zcell = 0;
-   Earm_ECAL_box_hit_xcellg = 0;
-   Earm_ECAL_box_hit_ycellg = 0;
-   Earm_ECAL_box_hit_zcellg = 0;
-   Earm_ECAL_box_hit_xhit = 0;
-   Earm_ECAL_box_hit_yhit = 0;
-   Earm_ECAL_box_hit_zhit = 0;
-   Earm_ECAL_box_hit_sumedep = 0;
-   Earm_ECAL_box_hit_tavg = 0;
-   Earm_ECAL_box_hit_trms = 0;
-   Earm_ECAL_box_hit_tmin = 0;
-   Earm_ECAL_box_hit_tmax = 0;
-   
-   Earm_ECAL_hit_PMT = 0;
-   Earm_ECAL_hit_row = 0;
-   Earm_ECAL_hit_col = 0;
-   Earm_ECAL_hit_plane = 0;
-   Earm_ECAL_hit_xcell = 0;
-   Earm_ECAL_hit_ycell = 0;
-   Earm_ECAL_hit_zcell = 0;
-   Earm_ECAL_hit_xgcell = 0;
-   Earm_ECAL_hit_ygcell = 0;
-   Earm_ECAL_hit_zgcell = 0;
-   Earm_ECAL_hit_NumPhotoelectrons = 0;
-   Earm_ECAL_hit_Time_avg = 0;
-   Earm_ECAL_hit_Time_rms = 0;
-   Earm_ECAL_hit_Time_min = 0;
-   Earm_ECAL_hit_Time_max = 0;
-   
-   Earm_ECalTF1_hit_row = 0;
-   Earm_ECalTF1_hit_col = 0;
-   Earm_ECalTF1_hit_cell = 0;
-   Earm_ECalTF1_hit_plane = 0;
-   Earm_ECalTF1_hit_xcell = 0;
-   Earm_ECalTF1_hit_ycell = 0;
-   Earm_ECalTF1_hit_zcell = 0;
-   Earm_ECalTF1_hit_xcellg = 0;
-   Earm_ECalTF1_hit_ycellg = 0;
-   Earm_ECalTF1_hit_zcellg = 0;
-   Earm_ECalTF1_hit_xhit = 0;
-   Earm_ECalTF1_hit_yhit = 0;
-   Earm_ECalTF1_hit_zhit = 0;
-   Earm_ECalTF1_hit_sumedep = 0;
-   Earm_ECalTF1_hit_tavg = 0;
-   Earm_ECalTF1_hit_trms = 0;
-   Earm_ECalTF1_hit_tmin = 0;
-   Earm_ECalTF1_hit_tmax = 0;
-   
    Harm_FPP1_hit_plane = 0;
    Harm_FPP1_hit_strip = 0;
    Harm_FPP1_hit_x = 0;
@@ -611,7 +398,10 @@ void g4sbs_tree::Init(TTree *tree)
    if (!tree) return;
    fChain = tree;
    fCurrent = -1;
-   fChain->SetMakeClass(1);
+   // (jc2): Why do we want to make a class again??
+   // I disabled this so that we can force the tree to check each
+   // SetBranchStatus for matches.
+   //fChain->SetMakeClass(1);
 
    fChain->SetBranchAddress("ev", &ev_count, &b_ev);
    fChain->SetBranchAddress("gen", &gen_thbb, &b_gen);
@@ -698,28 +488,10 @@ void g4sbs_tree::Init(TTree *tree)
      fChain->SetBranchAddress("Earm.GRINCH.hit.ppy", &Earm_GRINCH_hit_ppy, &b_Earm_GRINCH_hit_ppy);
      fChain->SetBranchAddress("Earm.GRINCH.hit.ppz", &Earm_GRINCH_hit_ppz, &b_Earm_GRINCH_hit_ppz);
      fChain->SetBranchAddress("Earm.GRINCH.hit.volume_flag", &Earm_GRINCH_hit_volume_flag, &b_Earm_GRINCH_hit_volume_flag);
-    
+
      if(fEcalBox){
-       fChain->SetBranchAddress("Earm.BBCal.hit.nhits", &Earm_ECAL_box_hit_nhits, &b_Earm_ECAL_box_hit_nhits);
-       fChain->SetBranchAddress("Earm.BBCal.hit.row", &Earm_ECAL_box_hit_row, &b_Earm_ECAL_box_hit_row);
-       fChain->SetBranchAddress("Earm.BBCal.hit.col", &Earm_ECAL_box_hit_col, &b_Earm_ECAL_box_hit_col);
-       fChain->SetBranchAddress("Earm.BBCal.hit.cell", &Earm_ECAL_box_hit_cell, &b_Earm_ECAL_box_hit_cell);
-       fChain->SetBranchAddress("Earm.BBCal.hit.plane", &Earm_ECAL_box_hit_plane, &b_Earm_ECAL_box_hit_plane);
-       fChain->SetBranchAddress("Earm.BBCal.hit.xcell", &Earm_ECAL_box_hit_xcell, &b_Earm_ECAL_box_hit_xcell);
-       fChain->SetBranchAddress("Earm.BBCal.hit.ycell", &Earm_ECAL_box_hit_ycell, &b_Earm_ECAL_box_hit_ycell);
-       fChain->SetBranchAddress("Earm.BBCal.hit.zcell", &Earm_ECAL_box_hit_zcell, &b_Earm_ECAL_box_hit_zcell);
-       fChain->SetBranchAddress("Earm.BBCal.hit.xcellg", &Earm_ECAL_box_hit_xcellg, &b_Earm_ECAL_box_hit_xcellg);
-       fChain->SetBranchAddress("Earm.BBCal.hit.ycellg", &Earm_ECAL_box_hit_ycellg, &b_Earm_ECAL_box_hit_ycellg);
-       fChain->SetBranchAddress("Earm.BBCal.hit.zcellg", &Earm_ECAL_box_hit_zcellg, &b_Earm_ECAL_box_hit_zcellg);
-       fChain->SetBranchAddress("Earm.BBCal.hit.xhit", &Earm_ECAL_box_hit_xhit, &b_Earm_ECAL_box_hit_xhit);
-       fChain->SetBranchAddress("Earm.BBCal.hit.yhit", &Earm_ECAL_box_hit_yhit, &b_Earm_ECAL_box_hit_yhit);
-       fChain->SetBranchAddress("Earm.BBCal.hit.zhit", &Earm_ECAL_box_hit_zhit, &b_Earm_ECAL_box_hit_zhit);
-       fChain->SetBranchAddress("Earm.BBCal.hit.sumedep", &Earm_ECAL_box_hit_sumedep, &b_Earm_ECAL_box_hit_sumedep);
-       fChain->SetBranchAddress("Earm.BBCal.hit.tavg", &Earm_ECAL_box_hit_tavg, &b_Earm_ECAL_box_hit_tavg);
-       fChain->SetBranchAddress("Earm.BBCal.hit.trms", &Earm_ECAL_box_hit_trms, &b_Earm_ECAL_box_hit_trms);
-       fChain->SetBranchAddress("Earm.BBCal.hit.tmin", &Earm_ECAL_box_hit_tmin, &b_Earm_ECAL_box_hit_tmin);
-       fChain->SetBranchAddress("Earm.BBCal.hit.tmax", &Earm_ECAL_box_hit_tmax, &b_Earm_ECAL_box_hit_tmax);
-       
+       SetupDetBranch(Earm_ECAL_box, "Earm.BBCal.hit.nhits");
+
        /*
 	 fChain->SetBranchAddress("Earm.BBCal.part.npart", &Earm_ECAL_box_part_npart, &b_Earm_ECAL_box_part_npart);
 	 fChain->SetBranchAddress("Earm.BBCal.part.PID", &Earm_ECAL_box_part_PID, &b_Earm_ECAL_box_part_PID);
@@ -735,198 +507,24 @@ void g4sbs_tree::Init(TTree *tree)
 	 fChain->SetBranchAddress("Earm.BBCal.part.pz", &Earm_ECAL_box_part_pz, &b_Earm_ECAL_box_part_pz);
        */
      }else{
-       fChain->SetBranchAddress("Earm.BBPS.hit.nhits", &Earm_BBPS_hit_nhits, &b_Earm_BBPS_hit_nhits);
-       fChain->SetBranchAddress("Earm.BBPS.hit.PMT", &Earm_BBPS_hit_PMT, &b_Earm_BBPS_hit_PMT);
-       fChain->SetBranchAddress("Earm.BBPS.hit.row", &Earm_BBPS_hit_row, &b_Earm_BBPS_hit_row);
-       fChain->SetBranchAddress("Earm.BBPS.hit.col", &Earm_BBPS_hit_col, &b_Earm_BBPS_hit_col);
-       fChain->SetBranchAddress("Earm.BBPS.hit.plane", &Earm_BBPS_hit_plane, &b_Earm_BBPS_hit_plane);
-       fChain->SetBranchAddress("Earm.BBPS.hit.xcell", &Earm_BBPS_hit_xcell, &b_Earm_BBPS_hit_xcell);
-       fChain->SetBranchAddress("Earm.BBPS.hit.ycell", &Earm_BBPS_hit_ycell, &b_Earm_BBPS_hit_ycell);
-       fChain->SetBranchAddress("Earm.BBPS.hit.zcell", &Earm_BBPS_hit_zcell, &b_Earm_BBPS_hit_zcell);
-       fChain->SetBranchAddress("Earm.BBPS.hit.xgcell", &Earm_BBPS_hit_xgcell, &b_Earm_BBPS_hit_xgcell);
-       fChain->SetBranchAddress("Earm.BBPS.hit.ygcell", &Earm_BBPS_hit_ygcell, &b_Earm_BBPS_hit_ygcell);
-       fChain->SetBranchAddress("Earm.BBPS.hit.zgcell", &Earm_BBPS_hit_zgcell, &b_Earm_BBPS_hit_zgcell);
-       fChain->SetBranchAddress("Earm.BBPS.hit.NumPhotoelectrons", &Earm_BBPS_hit_NumPhotoelectrons, &b_Earm_BBPS_hit_NumPhotoelectrons);
-       fChain->SetBranchAddress("Earm.BBPS.hit.Time_avg", &Earm_BBPS_hit_Time_avg, &b_Earm_BBPS_hit_Time_avg);
-       fChain->SetBranchAddress("Earm.BBPS.hit.Time_rms", &Earm_BBPS_hit_Time_rms, &b_Earm_BBPS_hit_Time_rms);
-       fChain->SetBranchAddress("Earm.BBPS.hit.Time_min", &Earm_BBPS_hit_Time_min, &b_Earm_BBPS_hit_Time_min);
-       fChain->SetBranchAddress("Earm.BBPS.hit.Time_max", &Earm_BBPS_hit_Time_max, &b_Earm_BBPS_hit_Time_max);
-   
-       fChain->SetBranchAddress("Earm.BBPSTF1.hit.nhits", &Earm_BBPSTF1_hit_nhits, &b_Earm_BBPSTF1_hit_nhits);
-       fChain->SetBranchAddress("Earm.BBPSTF1.hit.row", &Earm_BBPSTF1_hit_row, &b_Earm_BBPSTF1_hit_row);
-       fChain->SetBranchAddress("Earm.BBPSTF1.hit.col", &Earm_BBPSTF1_hit_col, &b_Earm_BBPSTF1_hit_col);
-       fChain->SetBranchAddress("Earm.BBPSTF1.hit.cell", &Earm_BBPSTF1_hit_cell, &b_Earm_BBPSTF1_hit_cell);
-       fChain->SetBranchAddress("Earm.BBPSTF1.hit.plane", &Earm_BBPSTF1_hit_plane, &b_Earm_BBPSTF1_hit_plane);
-       fChain->SetBranchAddress("Earm.BBPSTF1.hit.xcell", &Earm_BBPSTF1_hit_xcell, &b_Earm_BBPSTF1_hit_xcell);
-       fChain->SetBranchAddress("Earm.BBPSTF1.hit.ycell", &Earm_BBPSTF1_hit_ycell, &b_Earm_BBPSTF1_hit_ycell);
-       fChain->SetBranchAddress("Earm.BBPSTF1.hit.zcell", &Earm_BBPSTF1_hit_zcell, &b_Earm_BBPSTF1_hit_zcell);
-       fChain->SetBranchAddress("Earm.BBPSTF1.hit.xcellg", &Earm_BBPSTF1_hit_xcellg, &b_Earm_BBPSTF1_hit_xcellg);
-       fChain->SetBranchAddress("Earm.BBPSTF1.hit.ycellg", &Earm_BBPSTF1_hit_ycellg, &b_Earm_BBPSTF1_hit_ycellg);
-       fChain->SetBranchAddress("Earm.BBPSTF1.hit.zcellg", &Earm_BBPSTF1_hit_zcellg, &b_Earm_BBPSTF1_hit_zcellg);
-       fChain->SetBranchAddress("Earm.BBPSTF1.hit.xhit", &Earm_BBPSTF1_hit_xhit, &b_Earm_BBPSTF1_hit_xhit);
-       fChain->SetBranchAddress("Earm.BBPSTF1.hit.yhit", &Earm_BBPSTF1_hit_yhit, &b_Earm_BBPSTF1_hit_yhit);
-       fChain->SetBranchAddress("Earm.BBPSTF1.hit.zhit", &Earm_BBPSTF1_hit_zhit, &b_Earm_BBPSTF1_hit_zhit);
-       fChain->SetBranchAddress("Earm.BBPSTF1.hit.sumedep", &Earm_BBPSTF1_hit_sumedep, &b_Earm_BBPSTF1_hit_sumedep);
-       fChain->SetBranchAddress("Earm.BBPSTF1.hit.tavg", &Earm_BBPSTF1_hit_tavg, &b_Earm_BBPSTF1_hit_tavg);
-       fChain->SetBranchAddress("Earm.BBPSTF1.hit.trms", &Earm_BBPSTF1_hit_trms, &b_Earm_BBPSTF1_hit_trms);
-       fChain->SetBranchAddress("Earm.BBPSTF1.hit.tmin", &Earm_BBPSTF1_hit_tmin, &b_Earm_BBPSTF1_hit_tmin);
-       fChain->SetBranchAddress("Earm.BBPSTF1.hit.tmax", &Earm_BBPSTF1_hit_tmax, &b_Earm_BBPSTF1_hit_tmax);
-       
-       fChain->SetBranchAddress("Earm.BBHodoScint.hit.nhits", &Earm_BBHodoScint_hit_nhits, &b_Earm_BBHodoScint_hit_nhits);
-       fChain->SetBranchAddress("Earm.BBHodoScint.hit.row", &Earm_BBHodoScint_hit_row, &b_Earm_BBHodoScint_hit_row);
-       fChain->SetBranchAddress("Earm.BBHodoScint.hit.col", &Earm_BBHodoScint_hit_col, &b_Earm_BBHodoScint_hit_col);
-       fChain->SetBranchAddress("Earm.BBHodoScint.hit.cell", &Earm_BBHodoScint_hit_cell, &b_Earm_BBHodoScint_hit_cell);
-       fChain->SetBranchAddress("Earm.BBHodoScint.hit.plane", &Earm_BBHodoScint_hit_plane, &b_Earm_BBHodoScint_hit_plane);
-       fChain->SetBranchAddress("Earm.BBHodoScint.hit.xcell", &Earm_BBHodoScint_hit_xcell, &b_Earm_BBHodoScint_hit_xcell);
-       fChain->SetBranchAddress("Earm.BBHodoScint.hit.ycell", &Earm_BBHodoScint_hit_ycell, &b_Earm_BBHodoScint_hit_ycell);
-       fChain->SetBranchAddress("Earm.BBHodoScint.hit.zcell", &Earm_BBHodoScint_hit_zcell, &b_Earm_BBHodoScint_hit_zcell);
-       fChain->SetBranchAddress("Earm.BBHodoScint.hit.xcellg", &Earm_BBHodoScint_hit_xcellg, &b_Earm_BBHodoScint_hit_xcellg);
-       fChain->SetBranchAddress("Earm.BBHodoScint.hit.ycellg", &Earm_BBHodoScint_hit_ycellg, &b_Earm_BBHodoScint_hit_ycellg);
-       fChain->SetBranchAddress("Earm.BBHodoScint.hit.zcellg", &Earm_BBHodoScint_hit_zcellg, &b_Earm_BBHodoScint_hit_zcellg);
-       fChain->SetBranchAddress("Earm.BBHodoScint.hit.xhit", &Earm_BBHodoScint_hit_xhit, &b_Earm_BBHodoScint_hit_xhit);
-       fChain->SetBranchAddress("Earm.BBHodoScint.hit.yhit", &Earm_BBHodoScint_hit_yhit, &b_Earm_BBHodoScint_hit_yhit);
-       fChain->SetBranchAddress("Earm.BBHodoScint.hit.zhit", &Earm_BBHodoScint_hit_zhit, &b_Earm_BBHodoScint_hit_zhit);
-       fChain->SetBranchAddress("Earm.BBHodoScint.hit.sumedep", &Earm_BBHodoScint_hit_sumedep, &b_Earm_BBHodoScint_hit_sumedep);
-       fChain->SetBranchAddress("Earm.BBHodoScint.hit.tavg", &Earm_BBHodoScint_hit_tavg, &b_Earm_BBHodoScint_hit_tavg);
-       fChain->SetBranchAddress("Earm.BBHodoScint.hit.trms", &Earm_BBHodoScint_hit_trms, &b_Earm_BBHodoScint_hit_trms);
-       fChain->SetBranchAddress("Earm.BBHodoScint.hit.tmin", &Earm_BBHodoScint_hit_tmin, &b_Earm_BBHodoScint_hit_tmin);
-       fChain->SetBranchAddress("Earm.BBHodoScint.hit.tmax", &Earm_BBHodoScint_hit_tmax, &b_Earm_BBHodoScint_hit_tmax);
-       
-       fChain->SetBranchAddress("Earm.BBSH.hit.nhits", &Earm_BBSH_hit_nhits, &b_Earm_BBSH_hit_nhits);
-       fChain->SetBranchAddress("Earm.BBSH.hit.PMT", &Earm_BBSH_hit_PMT, &b_Earm_BBSH_hit_PMT);
-       fChain->SetBranchAddress("Earm.BBSH.hit.row", &Earm_BBSH_hit_row, &b_Earm_BBSH_hit_row);
-       fChain->SetBranchAddress("Earm.BBSH.hit.col", &Earm_BBSH_hit_col, &b_Earm_BBSH_hit_col);
-       fChain->SetBranchAddress("Earm.BBSH.hit.plane", &Earm_BBSH_hit_plane, &b_Earm_BBSH_hit_plane);
-       fChain->SetBranchAddress("Earm.BBSH.hit.xcell", &Earm_BBSH_hit_xcell, &b_Earm_BBSH_hit_xcell);
-       fChain->SetBranchAddress("Earm.BBSH.hit.ycell", &Earm_BBSH_hit_ycell, &b_Earm_BBSH_hit_ycell);
-       fChain->SetBranchAddress("Earm.BBSH.hit.zcell", &Earm_BBSH_hit_zcell, &b_Earm_BBSH_hit_zcell);
-       fChain->SetBranchAddress("Earm.BBSH.hit.xgcell", &Earm_BBSH_hit_xgcell, &b_Earm_BBSH_hit_xgcell);
-       fChain->SetBranchAddress("Earm.BBSH.hit.ygcell", &Earm_BBSH_hit_ygcell, &b_Earm_BBSH_hit_ygcell);
-       fChain->SetBranchAddress("Earm.BBSH.hit.zgcell", &Earm_BBSH_hit_zgcell, &b_Earm_BBSH_hit_zgcell);
-       fChain->SetBranchAddress("Earm.BBSH.hit.NumPhotoelectrons", &Earm_BBSH_hit_NumPhotoelectrons, &b_Earm_BBSH_hit_NumPhotoelectrons);
-       fChain->SetBranchAddress("Earm.BBSH.hit.Time_avg", &Earm_BBSH_hit_Time_avg, &b_Earm_BBSH_hit_Time_avg);
-       fChain->SetBranchAddress("Earm.BBSH.hit.Time_rms", &Earm_BBSH_hit_Time_rms, &b_Earm_BBSH_hit_Time_rms);
-       fChain->SetBranchAddress("Earm.BBSH.hit.Time_min", &Earm_BBSH_hit_Time_min, &b_Earm_BBSH_hit_Time_min);
-       fChain->SetBranchAddress("Earm.BBSH.hit.Time_max", &Earm_BBSH_hit_Time_max, &b_Earm_BBSH_hit_Time_max);
-   
-       fChain->SetBranchAddress("Earm.BBSHTF1.hit.nhits", &Earm_BBSHTF1_hit_nhits, &b_Earm_BBSHTF1_hit_nhits);
-       fChain->SetBranchAddress("Earm.BBSHTF1.hit.row", &Earm_BBSHTF1_hit_row, &b_Earm_BBSHTF1_hit_row);
-       fChain->SetBranchAddress("Earm.BBSHTF1.hit.col", &Earm_BBSHTF1_hit_col, &b_Earm_BBSHTF1_hit_col);
-       fChain->SetBranchAddress("Earm.BBSHTF1.hit.cell", &Earm_BBSHTF1_hit_cell, &b_Earm_BBSHTF1_hit_cell);
-       fChain->SetBranchAddress("Earm.BBSHTF1.hit.plane", &Earm_BBSHTF1_hit_plane, &b_Earm_BBSHTF1_hit_plane);
-       fChain->SetBranchAddress("Earm.BBSHTF1.hit.xcell", &Earm_BBSHTF1_hit_xcell, &b_Earm_BBSHTF1_hit_xcell);
-       fChain->SetBranchAddress("Earm.BBSHTF1.hit.ycell", &Earm_BBSHTF1_hit_ycell, &b_Earm_BBSHTF1_hit_ycell);
-       fChain->SetBranchAddress("Earm.BBSHTF1.hit.zcell", &Earm_BBSHTF1_hit_zcell, &b_Earm_BBSHTF1_hit_zcell);
-       fChain->SetBranchAddress("Earm.BBSHTF1.hit.xcellg", &Earm_BBSHTF1_hit_xcellg, &b_Earm_BBSHTF1_hit_xcellg);
-       fChain->SetBranchAddress("Earm.BBSHTF1.hit.ycellg", &Earm_BBSHTF1_hit_ycellg, &b_Earm_BBSHTF1_hit_ycellg);
-       fChain->SetBranchAddress("Earm.BBSHTF1.hit.zcellg", &Earm_BBSHTF1_hit_zcellg, &b_Earm_BBSHTF1_hit_zcellg);
-       fChain->SetBranchAddress("Earm.BBSHTF1.hit.xhit", &Earm_BBSHTF1_hit_xhit, &b_Earm_BBSHTF1_hit_xhit);
-       fChain->SetBranchAddress("Earm.BBSHTF1.hit.yhit", &Earm_BBSHTF1_hit_yhit, &b_Earm_BBSHTF1_hit_yhit);
-       fChain->SetBranchAddress("Earm.BBSHTF1.hit.zhit", &Earm_BBSHTF1_hit_zhit, &b_Earm_BBSHTF1_hit_zhit);
-       fChain->SetBranchAddress("Earm.BBSHTF1.hit.sumedep", &Earm_BBSHTF1_hit_sumedep, &b_Earm_BBSHTF1_hit_sumedep);
-       fChain->SetBranchAddress("Earm.BBSHTF1.hit.tavg", &Earm_BBSHTF1_hit_tavg, &b_Earm_BBSHTF1_hit_tavg);
-       fChain->SetBranchAddress("Earm.BBSHTF1.hit.trms", &Earm_BBSHTF1_hit_trms, &b_Earm_BBSHTF1_hit_trms);
-       fChain->SetBranchAddress("Earm.BBSHTF1.hit.tmin", &Earm_BBSHTF1_hit_tmin, &b_Earm_BBSHTF1_hit_tmin);
-       fChain->SetBranchAddress("Earm.BBSHTF1.hit.tmax", &Earm_BBSHTF1_hit_tmax, &b_Earm_BBSHTF1_hit_tmax);
+       SetupDetBranch(Earm_BBPS,    "Earm.BBPS.hit");
+       SetupDetBranch(Earm_BBPSTF1, "Earm.BBPSTF1.hit");
+       SetupDetBranch(Earm_BBHodoScint, "Earm.BBHodoScint.hit");
+       SetupDetBranch(Earm_BBPS,    "Earm.BBSH.hit");
+       SetupDetBranch(Earm_BBPSTF1, "Earm.BBSHTF1.hit");
      }
    }else{
      //if(fExpOption==3){
-     fChain->SetBranchAddress("Earm.CDET.hit.nhits", &Earm_CDET_hit_nhits, &b_Earm_CDET_hit_nhits);
-     fChain->SetBranchAddress("Earm.CDET.hit.PMT", &Earm_CDET_hit_PMT, &b_Earm_CDET_hit_PMT);
-     fChain->SetBranchAddress("Earm.CDET.hit.row", &Earm_CDET_hit_row, &b_Earm_CDET_hit_row);
-     fChain->SetBranchAddress("Earm.CDET.hit.col", &Earm_CDET_hit_col, &b_Earm_CDET_hit_col);
-     fChain->SetBranchAddress("Earm.CDET.hit.plane", &Earm_CDET_hit_plane, &b_Earm_CDET_hit_plane);
-     fChain->SetBranchAddress("Earm.CDET.hit.xcell", &Earm_CDET_hit_xcell, &b_Earm_CDET_hit_xcell);
-     fChain->SetBranchAddress("Earm.CDET.hit.ycell", &Earm_CDET_hit_ycell, &b_Earm_CDET_hit_ycell);
-     fChain->SetBranchAddress("Earm.CDET.hit.zcell", &Earm_CDET_hit_zcell, &b_Earm_CDET_hit_zcell);
-     fChain->SetBranchAddress("Earm.CDET.hit.xgcell", &Earm_CDET_hit_xgcell, &b_Earm_CDET_hit_xgcell);
-     fChain->SetBranchAddress("Earm.CDET.hit.ygcell", &Earm_CDET_hit_ygcell, &b_Earm_CDET_hit_ygcell);
-     fChain->SetBranchAddress("Earm.CDET.hit.zgcell", &Earm_CDET_hit_zgcell, &b_Earm_CDET_hit_zgcell);
-     fChain->SetBranchAddress("Earm.CDET.hit.NumPhotoelectrons", &Earm_CDET_hit_NumPhotoelectrons, &b_Earm_CDET_hit_NumPhotoelectrons);
-     fChain->SetBranchAddress("Earm.CDET.hit.Time_avg", &Earm_CDET_hit_Time_avg, &b_Earm_CDET_hit_Time_avg);
-     fChain->SetBranchAddress("Earm.CDET.hit.Time_rms", &Earm_CDET_hit_Time_rms, &b_Earm_CDET_hit_Time_rms);
-     fChain->SetBranchAddress("Earm.CDET.hit.Time_min", &Earm_CDET_hit_Time_min, &b_Earm_CDET_hit_Time_min);
-     fChain->SetBranchAddress("Earm.CDET.hit.Time_max", &Earm_CDET_hit_Time_max, &b_Earm_CDET_hit_Time_max);
-   
-     fChain->SetBranchAddress("Earm.CDET_Scint.hit.nhits", &Earm_CDET_Scint_hit_nhits, &b_Earm_CDET_Scint_hit_nhits);
-     fChain->SetBranchAddress("Earm.CDET_Scint.hit.row", &Earm_CDET_Scint_hit_row, &b_Earm_CDET_Scint_hit_row);
-     fChain->SetBranchAddress("Earm.CDET_Scint.hit.col", &Earm_CDET_Scint_hit_col, &b_Earm_CDET_Scint_hit_col);
-     fChain->SetBranchAddress("Earm.CDET_Scint.hit.cell", &Earm_CDET_Scint_hit_cell, &b_Earm_CDET_Scint_hit_cell);
-     fChain->SetBranchAddress("Earm.CDET_Scint.hit.plane", &Earm_CDET_Scint_hit_plane, &b_Earm_CDET_Scint_hit_plane);
-     fChain->SetBranchAddress("Earm.CDET_Scint.hit.xcell", &Earm_CDET_Scint_hit_xcell, &b_Earm_CDET_Scint_hit_xcell);
-     fChain->SetBranchAddress("Earm.CDET_Scint.hit.ycell", &Earm_CDET_Scint_hit_ycell, &b_Earm_CDET_Scint_hit_ycell);
-     fChain->SetBranchAddress("Earm.CDET_Scint.hit.zcell", &Earm_CDET_Scint_hit_zcell, &b_Earm_CDET_Scint_hit_zcell);
-     fChain->SetBranchAddress("Earm.CDET_Scint.hit.xcellg", &Earm_CDET_Scint_hit_xcellg, &b_Earm_CDET_Scint_hit_xcellg);
-     fChain->SetBranchAddress("Earm.CDET_Scint.hit.ycellg", &Earm_CDET_Scint_hit_ycellg, &b_Earm_CDET_Scint_hit_ycellg);
-     fChain->SetBranchAddress("Earm.CDET_Scint.hit.zcellg", &Earm_CDET_Scint_hit_zcellg, &b_Earm_CDET_Scint_hit_zcellg);
-     fChain->SetBranchAddress("Earm.CDET_Scint.hit.xhit", &Earm_CDET_Scint_hit_xhit, &b_Earm_CDET_Scint_hit_xhit);
-     fChain->SetBranchAddress("Earm.CDET_Scint.hit.yhit", &Earm_CDET_Scint_hit_yhit, &b_Earm_CDET_Scint_hit_yhit);
-     fChain->SetBranchAddress("Earm.CDET_Scint.hit.zhit", &Earm_CDET_Scint_hit_zhit, &b_Earm_CDET_Scint_hit_zhit);
-     fChain->SetBranchAddress("Earm.CDET_Scint.hit.sumedep", &Earm_CDET_Scint_hit_sumedep, &b_Earm_CDET_Scint_hit_sumedep);
-     fChain->SetBranchAddress("Earm.CDET_Scint.hit.tavg", &Earm_CDET_Scint_hit_tavg, &b_Earm_CDET_Scint_hit_tavg);
-     fChain->SetBranchAddress("Earm.CDET_Scint.hit.trms", &Earm_CDET_Scint_hit_trms, &b_Earm_CDET_Scint_hit_trms);
-     fChain->SetBranchAddress("Earm.CDET_Scint.hit.tmin", &Earm_CDET_Scint_hit_tmin, &b_Earm_CDET_Scint_hit_tmin);
-     fChain->SetBranchAddress("Earm.CDET_Scint.hit.tmax", &Earm_CDET_Scint_hit_tmax, &b_Earm_CDET_Scint_hit_tmax);
-     
+     SetupDetBranch(Earm_CDET,"Earm.CDET.hit");
+     SetupDetBranch(Earm_CDET_Scint,"Earm.CDET_Scint.hit");
+
      if(fEcalBox){
-       fChain->SetBranchAddress("Earm.ECAL_box.hit.nhits", &Earm_ECAL_box_hit_nhits, &b_Earm_ECAL_box_hit_nhits);
-       fChain->SetBranchAddress("Earm.ECAL_box.hit.row", &Earm_ECAL_box_hit_row, &b_Earm_ECAL_box_hit_row);
-       fChain->SetBranchAddress("Earm.ECAL_box.hit.col", &Earm_ECAL_box_hit_col, &b_Earm_ECAL_box_hit_col);
-       fChain->SetBranchAddress("Earm.ECAL_box.hit.cell", &Earm_ECAL_box_hit_cell, &b_Earm_ECAL_box_hit_cell);
-       fChain->SetBranchAddress("Earm.ECAL_box.hit.plane", &Earm_ECAL_box_hit_plane, &b_Earm_ECAL_box_hit_plane);
-       fChain->SetBranchAddress("Earm.ECAL_box.hit.xcell", &Earm_ECAL_box_hit_xcell, &b_Earm_ECAL_box_hit_xcell);
-       fChain->SetBranchAddress("Earm.ECAL_box.hit.ycell", &Earm_ECAL_box_hit_ycell, &b_Earm_ECAL_box_hit_ycell);
-       fChain->SetBranchAddress("Earm.ECAL_box.hit.zcell", &Earm_ECAL_box_hit_zcell, &b_Earm_ECAL_box_hit_zcell);
-       fChain->SetBranchAddress("Earm.ECAL_box.hit.xcellg", &Earm_ECAL_box_hit_xcellg, &b_Earm_ECAL_box_hit_xcellg);
-       fChain->SetBranchAddress("Earm.ECAL_box.hit.ycellg", &Earm_ECAL_box_hit_ycellg, &b_Earm_ECAL_box_hit_ycellg);
-       fChain->SetBranchAddress("Earm.ECAL_box.hit.zcellg", &Earm_ECAL_box_hit_zcellg, &b_Earm_ECAL_box_hit_zcellg);
-       fChain->SetBranchAddress("Earm.ECAL_box.hit.xhit", &Earm_ECAL_box_hit_xhit, &b_Earm_ECAL_box_hit_xhit);
-       fChain->SetBranchAddress("Earm.ECAL_box.hit.yhit", &Earm_ECAL_box_hit_yhit, &b_Earm_ECAL_box_hit_yhit);
-       fChain->SetBranchAddress("Earm.ECAL_box.hit.zhit", &Earm_ECAL_box_hit_zhit, &b_Earm_ECAL_box_hit_zhit);
-       fChain->SetBranchAddress("Earm.ECAL_box.hit.sumedep", &Earm_ECAL_box_hit_sumedep, &b_Earm_ECAL_box_hit_sumedep);
-       fChain->SetBranchAddress("Earm.ECAL_box.hit.tavg", &Earm_ECAL_box_hit_tavg, &b_Earm_ECAL_box_hit_tavg);
-       fChain->SetBranchAddress("Earm.ECAL_box.hit.trms", &Earm_ECAL_box_hit_trms, &b_Earm_ECAL_box_hit_trms);
-       fChain->SetBranchAddress("Earm.ECAL_box.hit.tmin", &Earm_ECAL_box_hit_tmin, &b_Earm_ECAL_box_hit_tmin);
-       fChain->SetBranchAddress("Earm.ECAL_box.hit.tmax", &Earm_ECAL_box_hit_tmax, &b_Earm_ECAL_box_hit_tmax);
+       SetupDetBranch(Earm_ECAL_box, "Earm.ECAL_box.hit.nhits");
      }else{
-       fChain->SetBranchAddress("Earm.ECAL.hit.nhits", &Earm_ECAL_hit_nhits, &b_Earm_ECAL_hit_nhits);
-       fChain->SetBranchAddress("Earm.ECAL.hit.PMT", &Earm_ECAL_hit_PMT, &b_Earm_ECAL_hit_PMT);
-       fChain->SetBranchAddress("Earm.ECAL.hit.row", &Earm_ECAL_hit_row, &b_Earm_ECAL_hit_row);
-       fChain->SetBranchAddress("Earm.ECAL.hit.col", &Earm_ECAL_hit_col, &b_Earm_ECAL_hit_col);
-       fChain->SetBranchAddress("Earm.ECAL.hit.plane", &Earm_ECAL_hit_plane, &b_Earm_ECAL_hit_plane);
-       fChain->SetBranchAddress("Earm.ECAL.hit.xcell", &Earm_ECAL_hit_xcell, &b_Earm_ECAL_hit_xcell);
-       fChain->SetBranchAddress("Earm.ECAL.hit.ycell", &Earm_ECAL_hit_ycell, &b_Earm_ECAL_hit_ycell);
-       fChain->SetBranchAddress("Earm.ECAL.hit.zcell", &Earm_ECAL_hit_zcell, &b_Earm_ECAL_hit_zcell);
-       fChain->SetBranchAddress("Earm.ECAL.hit.xgcell", &Earm_ECAL_hit_xgcell, &b_Earm_ECAL_hit_xgcell);
-       fChain->SetBranchAddress("Earm.ECAL.hit.ygcell", &Earm_ECAL_hit_ygcell, &b_Earm_ECAL_hit_ygcell);
-       fChain->SetBranchAddress("Earm.ECAL.hit.zgcell", &Earm_ECAL_hit_zgcell, &b_Earm_ECAL_hit_zgcell);
-       fChain->SetBranchAddress("Earm.ECAL.hit.NumPhotoelectrons", &Earm_ECAL_hit_NumPhotoelectrons, &b_Earm_ECAL_hit_NumPhotoelectrons);
-       fChain->SetBranchAddress("Earm.ECAL.hit.Time_avg", &Earm_ECAL_hit_Time_avg, &b_Earm_ECAL_hit_Time_avg);
-       fChain->SetBranchAddress("Earm.ECAL.hit.Time_rms", &Earm_ECAL_hit_Time_rms, &b_Earm_ECAL_hit_Time_rms);
-       fChain->SetBranchAddress("Earm.ECAL.hit.Time_min", &Earm_ECAL_hit_Time_min, &b_Earm_ECAL_hit_Time_min);
-       fChain->SetBranchAddress("Earm.ECAL.hit.Time_max", &Earm_ECAL_hit_Time_max, &b_Earm_ECAL_hit_Time_max);
+       SetupDetBranch(Earm_ECAL, "Earm.ECAL.hit");
      }
-     
-     fChain->SetBranchAddress("Earm.ECalTF1.hit.nhits", &Earm_ECalTF1_hit_nhits, &b_Earm_ECalTF1_hit_nhits);
-     fChain->SetBranchAddress("Earm.ECalTF1.hit.row", &Earm_ECalTF1_hit_row, &b_Earm_ECalTF1_hit_row);
-     fChain->SetBranchAddress("Earm.ECalTF1.hit.col", &Earm_ECalTF1_hit_col, &b_Earm_ECalTF1_hit_col);
-     fChain->SetBranchAddress("Earm.ECalTF1.hit.cell", &Earm_ECalTF1_hit_cell, &b_Earm_ECalTF1_hit_cell);
-     fChain->SetBranchAddress("Earm.ECalTF1.hit.plane", &Earm_ECalTF1_hit_plane, &b_Earm_ECalTF1_hit_plane);
-     fChain->SetBranchAddress("Earm.ECalTF1.hit.xcell", &Earm_ECalTF1_hit_xcell, &b_Earm_ECalTF1_hit_xcell);
-     fChain->SetBranchAddress("Earm.ECalTF1.hit.ycell", &Earm_ECalTF1_hit_ycell, &b_Earm_ECalTF1_hit_ycell);
-     fChain->SetBranchAddress("Earm.ECalTF1.hit.zcell", &Earm_ECalTF1_hit_zcell, &b_Earm_ECalTF1_hit_zcell);
-     fChain->SetBranchAddress("Earm.ECalTF1.hit.xcellg", &Earm_ECalTF1_hit_xcellg, &b_Earm_ECalTF1_hit_xcellg);
-     fChain->SetBranchAddress("Earm.ECalTF1.hit.ycellg", &Earm_ECalTF1_hit_ycellg, &b_Earm_ECalTF1_hit_ycellg);
-     fChain->SetBranchAddress("Earm.ECalTF1.hit.zcellg", &Earm_ECalTF1_hit_zcellg, &b_Earm_ECalTF1_hit_zcellg);
-     fChain->SetBranchAddress("Earm.ECalTF1.hit.xhit", &Earm_ECalTF1_hit_xhit, &b_Earm_ECalTF1_hit_xhit);
-     fChain->SetBranchAddress("Earm.ECalTF1.hit.yhit", &Earm_ECalTF1_hit_yhit, &b_Earm_ECalTF1_hit_yhit);
-     fChain->SetBranchAddress("Earm.ECalTF1.hit.zhit", &Earm_ECalTF1_hit_zhit, &b_Earm_ECalTF1_hit_zhit);
-     fChain->SetBranchAddress("Earm.ECalTF1.hit.sumedep", &Earm_ECalTF1_hit_sumedep, &b_Earm_ECalTF1_hit_sumedep);
-     fChain->SetBranchAddress("Earm.ECalTF1.hit.tavg", &Earm_ECalTF1_hit_tavg, &b_Earm_ECalTF1_hit_tavg);
-     fChain->SetBranchAddress("Earm.ECalTF1.hit.trms", &Earm_ECalTF1_hit_trms, &b_Earm_ECalTF1_hit_trms);
-     fChain->SetBranchAddress("Earm.ECalTF1.hit.tmin", &Earm_ECalTF1_hit_tmin, &b_Earm_ECalTF1_hit_tmin);
-     fChain->SetBranchAddress("Earm.ECalTF1.hit.tmax", &Earm_ECalTF1_hit_tmax, &b_Earm_ECalTF1_hit_tmax);
-   
+     SetupDetBranch(Earm_ECalTF1, "Earm.ECalTF1.hit");
+
      fChain->SetBranchAddress("Harm.FPP1.hit.nhits", &Harm_FPP1_hit_nhits, &b_Harm_FPP1_hit_nhits);
      fChain->SetBranchAddress("Harm.FPP1.hit.plane", &Harm_FPP1_hit_plane, &b_Harm_FPP1_hit_plane);
      fChain->SetBranchAddress("Harm.FPP1.hit.strip", &Harm_FPP1_hit_strip, &b_Harm_FPP1_hit_strip);
@@ -1089,42 +687,8 @@ void g4sbs_tree::Init(TTree *tree)
    }
    
    if(fExpOption==1){
-     fChain->SetBranchAddress("Harm.CDET.hit.nhits", &Harm_CDET_hit_nhits, &b_Harm_CDET_hit_nhits);
-     fChain->SetBranchAddress("Harm.CDET.hit.PMT", &Harm_CDET_hit_PMT, &b_Harm_CDET_hit_PMT);
-     fChain->SetBranchAddress("Harm.CDET.hit.row", &Harm_CDET_hit_row, &b_Harm_CDET_hit_row);
-     fChain->SetBranchAddress("Harm.CDET.hit.col", &Harm_CDET_hit_col, &b_Harm_CDET_hit_col);
-     fChain->SetBranchAddress("Harm.CDET.hit.plane", &Harm_CDET_hit_plane, &b_Harm_CDET_hit_plane);
-     fChain->SetBranchAddress("Harm.CDET.hit.xcell", &Harm_CDET_hit_xcell, &b_Harm_CDET_hit_xcell);
-     fChain->SetBranchAddress("Harm.CDET.hit.ycell", &Harm_CDET_hit_ycell, &b_Harm_CDET_hit_ycell);
-     fChain->SetBranchAddress("Harm.CDET.hit.zcell", &Harm_CDET_hit_zcell, &b_Harm_CDET_hit_zcell);
-     fChain->SetBranchAddress("Harm.CDET.hit.xgcell", &Harm_CDET_hit_xgcell, &b_Harm_CDET_hit_xgcell);
-     fChain->SetBranchAddress("Harm.CDET.hit.ygcell", &Harm_CDET_hit_ygcell, &b_Harm_CDET_hit_ygcell);
-     fChain->SetBranchAddress("Harm.CDET.hit.zgcell", &Harm_CDET_hit_zgcell, &b_Harm_CDET_hit_zgcell);
-     fChain->SetBranchAddress("Harm.CDET.hit.NumPhotoelectrons", &Harm_CDET_hit_NumPhotoelectrons, &b_Harm_CDET_hit_NumPhotoelectrons);
-     fChain->SetBranchAddress("Harm.CDET.hit.Time_avg", &Harm_CDET_hit_Time_avg, &b_Harm_CDET_hit_Time_avg);
-     fChain->SetBranchAddress("Harm.CDET.hit.Time_rms", &Harm_CDET_hit_Time_rms, &b_Harm_CDET_hit_Time_rms);
-     fChain->SetBranchAddress("Harm.CDET.hit.Time_min", &Harm_CDET_hit_Time_min, &b_Harm_CDET_hit_Time_min);
-     fChain->SetBranchAddress("Harm.CDET.hit.Time_max", &Harm_CDET_hit_Time_max, &b_Harm_CDET_hit_Time_max);
-     
-     fChain->SetBranchAddress("Harm.CDET_Scint.hit.nhits", &Harm_CDET_Scint_hit_nhits, &b_Harm_CDET_Scint_hit_nhits);
-     fChain->SetBranchAddress("Harm.CDET_Scint.hit.row", &Harm_CDET_Scint_hit_row, &b_Harm_CDET_Scint_hit_row);
-     fChain->SetBranchAddress("Harm.CDET_Scint.hit.col", &Harm_CDET_Scint_hit_col, &b_Harm_CDET_Scint_hit_col);
-     fChain->SetBranchAddress("Harm.CDET_Scint.hit.cell", &Harm_CDET_Scint_hit_cell, &b_Harm_CDET_Scint_hit_cell);
-     fChain->SetBranchAddress("Harm.CDET_Scint.hit.plane", &Harm_CDET_Scint_hit_plane, &b_Harm_CDET_Scint_hit_plane);
-     fChain->SetBranchAddress("Harm.CDET_Scint.hit.xcell", &Harm_CDET_Scint_hit_xcell, &b_Harm_CDET_Scint_hit_xcell);
-     fChain->SetBranchAddress("Harm.CDET_Scint.hit.ycell", &Harm_CDET_Scint_hit_ycell, &b_Harm_CDET_Scint_hit_ycell);
-     fChain->SetBranchAddress("Harm.CDET_Scint.hit.zcell", &Harm_CDET_Scint_hit_zcell, &b_Harm_CDET_Scint_hit_zcell);
-     fChain->SetBranchAddress("Harm.CDET_Scint.hit.xcellg", &Harm_CDET_Scint_hit_xcellg, &b_Harm_CDET_Scint_hit_xcellg);
-     fChain->SetBranchAddress("Harm.CDET_Scint.hit.ycellg", &Harm_CDET_Scint_hit_ycellg, &b_Harm_CDET_Scint_hit_ycellg);
-     fChain->SetBranchAddress("Harm.CDET_Scint.hit.zcellg", &Harm_CDET_Scint_hit_zcellg, &b_Harm_CDET_Scint_hit_zcellg);
-     fChain->SetBranchAddress("Harm.CDET_Scint.hit.xhit", &Harm_CDET_Scint_hit_xhit, &b_Harm_CDET_Scint_hit_xhit);
-     fChain->SetBranchAddress("Harm.CDET_Scint.hit.yhit", &Harm_CDET_Scint_hit_yhit, &b_Harm_CDET_Scint_hit_yhit);
-     fChain->SetBranchAddress("Harm.CDET_Scint.hit.zhit", &Harm_CDET_Scint_hit_zhit, &b_Harm_CDET_Scint_hit_zhit);
-     fChain->SetBranchAddress("Harm.CDET_Scint.hit.sumedep", &Harm_CDET_Scint_hit_sumedep, &b_Harm_CDET_Scint_hit_sumedep);
-     fChain->SetBranchAddress("Harm.CDET_Scint.hit.tavg", &Harm_CDET_Scint_hit_tavg, &b_Harm_CDET_Scint_hit_tavg);
-     fChain->SetBranchAddress("Harm.CDET_Scint.hit.trms", &Harm_CDET_Scint_hit_trms, &b_Harm_CDET_Scint_hit_trms);
-     fChain->SetBranchAddress("Harm.CDET_Scint.hit.tmin", &Harm_CDET_Scint_hit_tmin, &b_Harm_CDET_Scint_hit_tmin);
-     fChain->SetBranchAddress("Harm.CDET_Scint.hit.tmax", &Harm_CDET_Scint_hit_tmax, &b_Harm_CDET_Scint_hit_tmax);
+     SetupDetBranch(Harm_CDET,"Harm.CDET.hit");
+     SetupDetBranch(Harm_CDET_Scint,"Harm.CDET_Scint.hit");
    }
      
    if(fExpOption<5){
