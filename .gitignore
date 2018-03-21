@@ -18,3 +18,7 @@ lib*.so*
 *.png
 *.patch
 *.diff
+.*.swp
+*.pcm
+*.so
+*.o
