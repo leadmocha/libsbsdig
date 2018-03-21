@@ -17,6 +17,10 @@ ANAINCDIRS  := $(wildcard $(addprefix $(ANALYZER)/, include src hana_decode hana
 ifeq ($(strip $(ANAINCDIRS)),)
   $(error No Analyzer header files found. Check $$ANALYZER)
 endif
+SBSINCDIRS = $(SBS_ANALYSIS)
+ifeq ($(strip $(SBSINCDIRS)),)
+  $(error No Analyzer header files found. Check $$SBS_ANALYSIS)
+endif
 
 
 #------------------------------------------------------------------------------
@@ -26,10 +30,18 @@ PLATFORM = $(shell uname -s)-$(shell uname -i)
 # EVIO default locations as a last resort if $EVIO isn't set in build env
 EVIO ?= $(CODA)
 EVIO ?= ../libevio
-# Possible EVIO header directories, will be used in the order found
-EVIOINC := $(wildcard $(addprefix $(EVIO)/, include src/libsrc src/libsrc++))
-# Possible EVIO library locations, the first one found will be used
-EVIOLIB := $(firstword $(wildcard $(addprefix $(EVIO)/, $(PLATFORM)/lib lib)))
+ifdef EVIO_INCDIR
+	EVIOINC= $(EVIO_INCDIR)
+else
+	# Possible EVIO header directories, will be used in the order found
+	EVIOINC := $(wildcard $(addprefix $(EVIO)/, include src/libsrc src/libsrc++))
+endif
+ifdef EVIO_LIBDIR
+	EVIOLIB= $(EVIO_LIBDIR)
+else
+	# Possible EVIO library locations, the first one found will be used
+	EVIOLIB := $(firstword $(wildcard $(addprefix $(EVIO)/, $(PLATFORM)/lib lib)))
+endif
 ifeq ($(strip $(EVIOINC)),)
   $(error No EVIO header files found. Check $$EVIO)
 endif
@@ -40,7 +52,7 @@ ifeq (debug,$(findstring debug,$(ROOTBUILD)))
   DBGSFX = -dbg
   CXXFLAGS += -O0
 else
-  CXXFLAGS += -O2 #-DNDEBUG
+  CXXFLAGS += -O2 -g #-DNDEBUG
 endif
 SOLINCLUDE += $(addprefix -I, $(EVIOINC) )
 LDFLAGS  += -L$(EVIOLIB) -levioxx$(DBGSFX) -levio$(DBGSFX) -lz -lexpat
@@ -48,6 +60,7 @@ LDFLAGS  += -L$(EVIOLIB) -levioxx$(DBGSFX) -levio$(DBGSFX) -lz -lexpat
 # Some of the analyzer include dirs conflict with headers in
 # EVIO
 SOLINCLUDE += $(addprefix -I, $(ANAINCDIRS) )
+SOLINCLUDE += $(addprefix -I, $(SBSINCDIRS) )
 
 #------------------------------------------------------------------------------
 
@@ -55,18 +68,21 @@ CXXFLAGS += $(SOLINCLUDE)
 
 DICT	= $(NAME)_dict
 SRC   = src/g4sbs_tree.cxx \
+        src/g4sbs_data.cxx \
         src/TSBSCher.cxx \
-        src/TSBSCherData.cxx \
         src/TSBSDet.cxx \
-        src/TSBSDetData.cxx \
+        src/TSBSCherData.cxx \
         src/TSBSDBManager.cxx \
         src/TSBSGeant4File.cxx \
         src/TSBSSimCherDigitization.cxx \
-        src/TSBSSimDetDigitization.cxx \
         src/TSBSSimDecoder.cxx \
         src/TSBSSimEvent.cxx \
         src/TSBSSimFile.cxx \
-        src/TSBSSpec.cxx
+        src/TSBSSpec.cxx #\
+        #src/TSBSSimDigitizer.cxx \
+        #src/TSBSSimDetector.cxx \
+        #src/TSBSSimData.cxx \
+        #src/TSBSSimHCal.cxx
 
 
 OBJS	= $(SRC:.cxx=.$(ObjSuf)) $(DICT).o

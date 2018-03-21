@@ -3,10 +3,11 @@
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
+#include <iostream>
 
 // g4sbs_tree constructor: the tree will be the 
 // the boolean is a flag to consider(true) or ignore(false) the ECal_box and HCal_box data
-g4sbs_tree::g4sbs_tree(TTree *tree, int det_opt, bool pythia, bool ecalbox, bool hcalbox) : fChain(0) 
+g4sbs_tree::g4sbs_tree(TTree *tree, int det_opt, bool pythia, bool ecalbox, bool have_hcalbox) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
@@ -20,7 +21,7 @@ g4sbs_tree::g4sbs_tree(TTree *tree, int det_opt, bool pythia, bool ecalbox, bool
    fExpOption = det_opt;
    fPythia = pythia;
    fEcalBox = ecalbox;
-   fHcalBox = hcalbox;
+   fHcalBox = have_hcalbox;
    Init(tree);
 }
 
@@ -512,61 +513,7 @@ void g4sbs_tree::Init(TTree *tree)
    Harm_FT_Track_Yfit = 0;
    Harm_FT_Track_Xpfit = 0;
    Harm_FT_Track_Ypfit = 0;
-   
-   Harm_HCAL_box_hit_row = 0;
-   Harm_HCAL_box_hit_col = 0;
-   Harm_HCAL_box_hit_cell = 0;
-   Harm_HCAL_box_hit_plane = 0;
-   Harm_HCAL_box_hit_xcell = 0;
-   Harm_HCAL_box_hit_ycell = 0;
-   Harm_HCAL_box_hit_zcell = 0;
-   Harm_HCAL_box_hit_xcellg = 0;
-   Harm_HCAL_box_hit_ycellg = 0;
-   Harm_HCAL_box_hit_zcellg = 0;
-   Harm_HCAL_box_hit_xhit = 0;
-   Harm_HCAL_box_hit_yhit = 0;
-   Harm_HCAL_box_hit_zhit = 0;
-   Harm_HCAL_box_hit_sumedep = 0;
-   Harm_HCAL_box_hit_tavg = 0;
-   Harm_HCAL_box_hit_trms = 0;
-   Harm_HCAL_box_hit_tmin = 0;
-   Harm_HCAL_box_hit_tmax = 0;
-   
-   Harm_HCal_hit_PMT = 0;
-   Harm_HCal_hit_row = 0;
-   Harm_HCal_hit_col = 0;
-   Harm_HCal_hit_plane = 0;
-   Harm_HCal_hit_xcell = 0;
-   Harm_HCal_hit_ycell = 0;
-   Harm_HCal_hit_zcell = 0;
-   Harm_HCal_hit_xgcell = 0;
-   Harm_HCal_hit_ygcell = 0;
-   Harm_HCal_hit_zgcell = 0;
-   Harm_HCal_hit_NumPhotoelectrons = 0;
-   Harm_HCal_hit_Time_avg = 0;
-   Harm_HCal_hit_Time_rms = 0;
-   Harm_HCal_hit_Time_min = 0;
-   Harm_HCal_hit_Time_max = 0;
-   
-   Harm_HCalScint_hit_row = 0;
-   Harm_HCalScint_hit_col = 0;
-   Harm_HCalScint_hit_cell = 0;
-   Harm_HCalScint_hit_plane = 0;
-   Harm_HCalScint_hit_xcell = 0;
-   Harm_HCalScint_hit_ycell = 0;
-   Harm_HCalScint_hit_zcell = 0;
-   Harm_HCalScint_hit_xcellg = 0;
-   Harm_HCalScint_hit_ycellg = 0;
-   Harm_HCalScint_hit_zcellg = 0;
-   Harm_HCalScint_hit_xhit = 0;
-   Harm_HCalScint_hit_yhit = 0;
-   Harm_HCalScint_hit_zhit = 0;
-   Harm_HCalScint_hit_sumedep = 0;
-   Harm_HCalScint_hit_tavg = 0;
-   Harm_HCalScint_hit_trms = 0;
-   Harm_HCalScint_hit_tmin = 0;
-   Harm_HCalScint_hit_tmax = 0;
-   
+
    Harm_SBSGEM_hit_plane = 0;
    Harm_SBSGEM_hit_strip = 0;
    Harm_SBSGEM_hit_x = 0;
@@ -1181,63 +1128,13 @@ void g4sbs_tree::Init(TTree *tree)
    }
      
    if(fExpOption<5){
+     // Example of simplified HCAL branch setup
      if(fHcalBox){
-       fChain->SetBranchAddress("Harm.HCAL_box.hit.nhits", &Harm_HCAL_box_hit_nhits, &b_Harm_HCAL_box_hit_nhits);
-       fChain->SetBranchAddress("Harm.HCAL_box.hit.row", &Harm_HCAL_box_hit_row, &b_Harm_HCAL_box_hit_row);
-       fChain->SetBranchAddress("Harm.HCAL_box.hit.col", &Harm_HCAL_box_hit_col, &b_Harm_HCAL_box_hit_col);
-       fChain->SetBranchAddress("Harm.HCAL_box.hit.cell", &Harm_HCAL_box_hit_cell, &b_Harm_HCAL_box_hit_cell);
-       fChain->SetBranchAddress("Harm.HCAL_box.hit.plane", &Harm_HCAL_box_hit_plane, &b_Harm_HCAL_box_hit_plane);
-       fChain->SetBranchAddress("Harm.HCAL_box.hit.xcell", &Harm_HCAL_box_hit_xcell, &b_Harm_HCAL_box_hit_xcell);
-       fChain->SetBranchAddress("Harm.HCAL_box.hit.ycell", &Harm_HCAL_box_hit_ycell, &b_Harm_HCAL_box_hit_ycell);
-       fChain->SetBranchAddress("Harm.HCAL_box.hit.zcell", &Harm_HCAL_box_hit_zcell, &b_Harm_HCAL_box_hit_zcell);
-       fChain->SetBranchAddress("Harm.HCAL_box.hit.xcellg", &Harm_HCAL_box_hit_xcellg, &b_Harm_HCAL_box_hit_xcellg);
-       fChain->SetBranchAddress("Harm.HCAL_box.hit.ycellg", &Harm_HCAL_box_hit_ycellg, &b_Harm_HCAL_box_hit_ycellg);
-       fChain->SetBranchAddress("Harm.HCAL_box.hit.zcellg", &Harm_HCAL_box_hit_zcellg, &b_Harm_HCAL_box_hit_zcellg);
-       fChain->SetBranchAddress("Harm.HCAL_box.hit.xhit", &Harm_HCAL_box_hit_xhit, &b_Harm_HCAL_box_hit_xhit);
-       fChain->SetBranchAddress("Harm.HCAL_box.hit.yhit", &Harm_HCAL_box_hit_yhit, &b_Harm_HCAL_box_hit_yhit);
-       fChain->SetBranchAddress("Harm.HCAL_box.hit.zhit", &Harm_HCAL_box_hit_zhit, &b_Harm_HCAL_box_hit_zhit);
-       fChain->SetBranchAddress("Harm.HCAL_box.hit.sumedep", &Harm_HCAL_box_hit_sumedep, &b_Harm_HCAL_box_hit_sumedep);
-       fChain->SetBranchAddress("Harm.HCAL_box.hit.tavg", &Harm_HCAL_box_hit_tavg, &b_Harm_HCAL_box_hit_tavg);
-       fChain->SetBranchAddress("Harm.HCAL_box.hit.trms", &Harm_HCAL_box_hit_trms, &b_Harm_HCAL_box_hit_trms);
-       fChain->SetBranchAddress("Harm.HCAL_box.hit.tmin", &Harm_HCAL_box_hit_tmin, &b_Harm_HCAL_box_hit_tmin);
-       fChain->SetBranchAddress("Harm.HCAL_box.hit.tmax", &Harm_HCAL_box_hit_tmax, &b_Harm_HCAL_box_hit_tmax);
+       SetupDetBranch(hcalbox,"Harm.HCAL_box.hit");
      }else{
-       fChain->SetBranchAddress("Harm.HCal.hit.nhits", &Harm_HCal_hit_nhits, &b_Harm_HCal_hit_nhits);
-       fChain->SetBranchAddress("Harm.HCal.hit.PMT", &Harm_HCal_hit_PMT, &b_Harm_HCal_hit_PMT);
-       fChain->SetBranchAddress("Harm.HCal.hit.row", &Harm_HCal_hit_row, &b_Harm_HCal_hit_row);
-       fChain->SetBranchAddress("Harm.HCal.hit.col", &Harm_HCal_hit_col, &b_Harm_HCal_hit_col);
-       fChain->SetBranchAddress("Harm.HCal.hit.plane", &Harm_HCal_hit_plane, &b_Harm_HCal_hit_plane);
-       fChain->SetBranchAddress("Harm.HCal.hit.xcell", &Harm_HCal_hit_xcell, &b_Harm_HCal_hit_xcell);
-       fChain->SetBranchAddress("Harm.HCal.hit.ycell", &Harm_HCal_hit_ycell, &b_Harm_HCal_hit_ycell);
-       fChain->SetBranchAddress("Harm.HCal.hit.zcell", &Harm_HCal_hit_zcell, &b_Harm_HCal_hit_zcell);
-       fChain->SetBranchAddress("Harm.HCal.hit.xgcell", &Harm_HCal_hit_xgcell, &b_Harm_HCal_hit_xgcell);
-       fChain->SetBranchAddress("Harm.HCal.hit.ygcell", &Harm_HCal_hit_ygcell, &b_Harm_HCal_hit_ygcell);
-       fChain->SetBranchAddress("Harm.HCal.hit.zgcell", &Harm_HCal_hit_zgcell, &b_Harm_HCal_hit_zgcell);
-       fChain->SetBranchAddress("Harm.HCal.hit.NumPhotoelectrons", &Harm_HCal_hit_NumPhotoelectrons, &b_Harm_HCal_hit_NumPhotoelectrons);
-       fChain->SetBranchAddress("Harm.HCal.hit.Time_avg", &Harm_HCal_hit_Time_avg, &b_Harm_HCal_hit_Time_avg);
-       fChain->SetBranchAddress("Harm.HCal.hit.Time_rms", &Harm_HCal_hit_Time_rms, &b_Harm_HCal_hit_Time_rms);
-       fChain->SetBranchAddress("Harm.HCal.hit.Time_min", &Harm_HCal_hit_Time_min, &b_Harm_HCal_hit_Time_min);
-       fChain->SetBranchAddress("Harm.HCal.hit.Time_max", &Harm_HCal_hit_Time_max, &b_Harm_HCal_hit_Time_max);
-     
-       fChain->SetBranchAddress("Harm.HCalScint.hit.nhits", &Harm_HCalScint_hit_nhits, &b_Harm_HCalScint_hit_nhits);
-       fChain->SetBranchAddress("Harm.HCalScint.hit.row", &Harm_HCalScint_hit_row, &b_Harm_HCalScint_hit_row);
-       fChain->SetBranchAddress("Harm.HCalScint.hit.col", &Harm_HCalScint_hit_col, &b_Harm_HCalScint_hit_col);
-       fChain->SetBranchAddress("Harm.HCalScint.hit.cell", &Harm_HCalScint_hit_cell, &b_Harm_HCalScint_hit_cell);
-       fChain->SetBranchAddress("Harm.HCalScint.hit.plane", &Harm_HCalScint_hit_plane, &b_Harm_HCalScint_hit_plane);
-       fChain->SetBranchAddress("Harm.HCalScint.hit.xcell", &Harm_HCalScint_hit_xcell, &b_Harm_HCalScint_hit_xcell);
-       fChain->SetBranchAddress("Harm.HCalScint.hit.ycell", &Harm_HCalScint_hit_ycell, &b_Harm_HCalScint_hit_ycell);
-       fChain->SetBranchAddress("Harm.HCalScint.hit.zcell", &Harm_HCalScint_hit_zcell, &b_Harm_HCalScint_hit_zcell);
-       fChain->SetBranchAddress("Harm.HCalScint.hit.xcellg", &Harm_HCalScint_hit_xcellg, &b_Harm_HCalScint_hit_xcellg);
-       fChain->SetBranchAddress("Harm.HCalScint.hit.ycellg", &Harm_HCalScint_hit_ycellg, &b_Harm_HCalScint_hit_ycellg);
-       fChain->SetBranchAddress("Harm.HCalScint.hit.zcellg", &Harm_HCalScint_hit_zcellg, &b_Harm_HCalScint_hit_zcellg);
-       fChain->SetBranchAddress("Harm.HCalScint.hit.xhit", &Harm_HCalScint_hit_xhit, &b_Harm_HCalScint_hit_xhit);
-       fChain->SetBranchAddress("Harm.HCalScint.hit.yhit", &Harm_HCalScint_hit_yhit, &b_Harm_HCalScint_hit_yhit);
-       fChain->SetBranchAddress("Harm.HCalScint.hit.zhit", &Harm_HCalScint_hit_zhit, &b_Harm_HCalScint_hit_zhit);
-       fChain->SetBranchAddress("Harm.HCalScint.hit.sumedep", &Harm_HCalScint_hit_sumedep, &b_Harm_HCalScint_hit_sumedep);
-       fChain->SetBranchAddress("Harm.HCalScint.hit.tavg", &Harm_HCalScint_hit_tavg, &b_Harm_HCalScint_hit_tavg);
-       fChain->SetBranchAddress("Harm.HCalScint.hit.trms", &Harm_HCalScint_hit_trms, &b_Harm_HCalScint_hit_trms);
-       fChain->SetBranchAddress("Harm.HCalScint.hit.tmin", &Harm_HCalScint_hit_tmin, &b_Harm_HCalScint_hit_tmin);
-       fChain->SetBranchAddress("Harm.HCalScint.hit.tmax", &Harm_HCalScint_hit_tmax, &b_Harm_HCalScint_hit_tmax);
+       SetupDetBranch(hcal,"Harm.HCal.hit");
+       SetupDetBranch(hcalscint,"Harm.HCalScint.hit");
+       SetupDetBranch(hcalpart,"Harm.HCal");
      }
    }
    
@@ -1429,4 +1326,10 @@ void g4sbs_tree::Loop()
       nb = fChain->GetEntry(jentry);   nbytes += nb;
       // if (Cut(ientry) < 0) continue;
    }
+}
+
+
+void g4sbs_tree::SetupDetBranch(TSBSGeant4::VDetData_t &det, const char *prefix)
+{
+  det.SetupBranches(fChain,prefix);
 }

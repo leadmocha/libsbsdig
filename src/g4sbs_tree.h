@@ -26,6 +26,7 @@
 
 // Header file for the classes stored in the TTree if any.
 #include <vector>
+#include "g4sbs_data.h"
 // Fixed size dimensions of array or collections stored in the TTree if any.
 
 class g4sbs_tree {
@@ -564,63 +565,14 @@ public :
    std::vector<double>  *Harm_FT_Track_Ypfit;
    
    // Hadronic calorimeter hits
-   Int_t                 Harm_HCAL_box_hit_nhits;
-   std::vector<int>     *Harm_HCAL_box_hit_row;
-   std::vector<int>     *Harm_HCAL_box_hit_col;
-   std::vector<int>     *Harm_HCAL_box_hit_cell;
-   std::vector<int>     *Harm_HCAL_box_hit_plane;
-   std::vector<double>  *Harm_HCAL_box_hit_xcell;
-   std::vector<double>  *Harm_HCAL_box_hit_ycell;
-   std::vector<double>  *Harm_HCAL_box_hit_zcell;
-   std::vector<double>  *Harm_HCAL_box_hit_xcellg;
-   std::vector<double>  *Harm_HCAL_box_hit_ycellg;
-   std::vector<double>  *Harm_HCAL_box_hit_zcellg;
-   std::vector<double>  *Harm_HCAL_box_hit_xhit;
-   std::vector<double>  *Harm_HCAL_box_hit_yhit;
-   std::vector<double>  *Harm_HCAL_box_hit_zhit;
-   std::vector<double>  *Harm_HCAL_box_hit_sumedep;
-   std::vector<double>  *Harm_HCAL_box_hit_tavg;
-   std::vector<double>  *Harm_HCAL_box_hit_trms;
-   std::vector<double>  *Harm_HCAL_box_hit_tmin;
-   std::vector<double>  *Harm_HCAL_box_hit_tmax;
-   
-   Int_t                 Harm_HCal_hit_nhits;
-   std::vector<int>     *Harm_HCal_hit_PMT;
-   std::vector<int>     *Harm_HCal_hit_row;
-   std::vector<int>     *Harm_HCal_hit_col;
-   std::vector<int>     *Harm_HCal_hit_plane;
-   std::vector<double>  *Harm_HCal_hit_xcell;
-   std::vector<double>  *Harm_HCal_hit_ycell;
-   std::vector<double>  *Harm_HCal_hit_zcell;
-   std::vector<double>  *Harm_HCal_hit_xgcell;
-   std::vector<double>  *Harm_HCal_hit_ygcell;
-   std::vector<double>  *Harm_HCal_hit_zgcell;
-   std::vector<int>     *Harm_HCal_hit_NumPhotoelectrons;
-   std::vector<double>  *Harm_HCal_hit_Time_avg;
-   std::vector<double>  *Harm_HCal_hit_Time_rms;
-   std::vector<double>  *Harm_HCal_hit_Time_min;
-   std::vector<double>  *Harm_HCal_hit_Time_max;
-   
-   Int_t                 Harm_HCalScint_hit_nhits;
-   std::vector<int>     *Harm_HCalScint_hit_row;
-   std::vector<int>     *Harm_HCalScint_hit_col;
-   std::vector<int>     *Harm_HCalScint_hit_cell;
-   std::vector<int>     *Harm_HCalScint_hit_plane;
-   std::vector<double>  *Harm_HCalScint_hit_xcell;
-   std::vector<double>  *Harm_HCalScint_hit_ycell;
-   std::vector<double>  *Harm_HCalScint_hit_zcell;
-   std::vector<double>  *Harm_HCalScint_hit_xcellg;
-   std::vector<double>  *Harm_HCalScint_hit_ycellg;
-   std::vector<double>  *Harm_HCalScint_hit_zcellg;
-   std::vector<double>  *Harm_HCalScint_hit_xhit;
-   std::vector<double>  *Harm_HCalScint_hit_yhit;
-   std::vector<double>  *Harm_HCalScint_hit_zhit;
-   std::vector<double>  *Harm_HCalScint_hit_sumedep;
-   std::vector<double>  *Harm_HCalScint_hit_tavg;
-   std::vector<double>  *Harm_HCalScint_hit_trms;
-   std::vector<double>  *Harm_HCalScint_hit_tmin;
-   std::vector<double>  *Harm_HCalScint_hit_tmax;
-   
+   // An example for how to simplify tree objects
+   // TODO: Don't hard code detectors here, but rather read them in
+   // through a database if possible
+   TSBSGeant4::CalData_t      hcalbox;
+   TSBSGeant4::CalData_t      hcalscint;
+   TSBSGeant4::ECalData_t     hcal;
+   TSBSGeant4::ECalPartData_t hcalpart;
+
    //SBS GEMs variables
    Int_t                 Harm_SBSGEM_hit_nhits;
    std::vector<int>     *Harm_SBSGEM_hit_plane;
@@ -1208,63 +1160,6 @@ public :
    TBranch        *b_Harm_FT_Track_Yfit;   //!
    TBranch        *b_Harm_FT_Track_Xpfit;   //!
    TBranch        *b_Harm_FT_Track_Ypfit;   //!
-   
-   TBranch        *b_Harm_HCAL_box_hit_nhits;   //!
-   TBranch        *b_Harm_HCAL_box_hit_row;   //!
-   TBranch        *b_Harm_HCAL_box_hit_col;   //!
-   TBranch        *b_Harm_HCAL_box_hit_cell;   //!
-   TBranch        *b_Harm_HCAL_box_hit_plane;   //!
-   TBranch        *b_Harm_HCAL_box_hit_xcell;   //!
-   TBranch        *b_Harm_HCAL_box_hit_ycell;   //!
-   TBranch        *b_Harm_HCAL_box_hit_zcell;   //!
-   TBranch        *b_Harm_HCAL_box_hit_xcellg;   //!
-   TBranch        *b_Harm_HCAL_box_hit_ycellg;   //!
-   TBranch        *b_Harm_HCAL_box_hit_zcellg;   //!
-   TBranch        *b_Harm_HCAL_box_hit_xhit;   //!
-   TBranch        *b_Harm_HCAL_box_hit_yhit;   //!
-   TBranch        *b_Harm_HCAL_box_hit_zhit;   //!
-   TBranch        *b_Harm_HCAL_box_hit_sumedep;   //!
-   TBranch        *b_Harm_HCAL_box_hit_tavg;   //!
-   TBranch        *b_Harm_HCAL_box_hit_trms;   //!
-   TBranch        *b_Harm_HCAL_box_hit_tmin;   //!
-   TBranch        *b_Harm_HCAL_box_hit_tmax;   //!
-   
-   TBranch        *b_Harm_HCal_hit_nhits;   //!
-   TBranch        *b_Harm_HCal_hit_PMT;   //!
-   TBranch        *b_Harm_HCal_hit_row;   //!
-   TBranch        *b_Harm_HCal_hit_col;   //!
-   TBranch        *b_Harm_HCal_hit_plane;   //!
-   TBranch        *b_Harm_HCal_hit_xcell;   //!
-   TBranch        *b_Harm_HCal_hit_ycell;   //!
-   TBranch        *b_Harm_HCal_hit_zcell;   //!
-   TBranch        *b_Harm_HCal_hit_xgcell;   //!
-   TBranch        *b_Harm_HCal_hit_ygcell;   //!
-   TBranch        *b_Harm_HCal_hit_zgcell;   //!
-   TBranch        *b_Harm_HCal_hit_NumPhotoelectrons;   //!
-   TBranch        *b_Harm_HCal_hit_Time_avg;   //!
-   TBranch        *b_Harm_HCal_hit_Time_rms;   //!
-   TBranch        *b_Harm_HCal_hit_Time_min;   //!
-   TBranch        *b_Harm_HCal_hit_Time_max;   //!
-   
-   TBranch        *b_Harm_HCalScint_hit_nhits;   //!
-   TBranch        *b_Harm_HCalScint_hit_row;   //!
-   TBranch        *b_Harm_HCalScint_hit_col;   //!
-   TBranch        *b_Harm_HCalScint_hit_cell;   //!
-   TBranch        *b_Harm_HCalScint_hit_plane;   //!
-   TBranch        *b_Harm_HCalScint_hit_xcell;   //!
-   TBranch        *b_Harm_HCalScint_hit_ycell;   //!
-   TBranch        *b_Harm_HCalScint_hit_zcell;   //!
-   TBranch        *b_Harm_HCalScint_hit_xcellg;   //!
-   TBranch        *b_Harm_HCalScint_hit_ycellg;   //!
-   TBranch        *b_Harm_HCalScint_hit_zcellg;   //!
-   TBranch        *b_Harm_HCalScint_hit_xhit;   //!
-   TBranch        *b_Harm_HCalScint_hit_yhit;   //!
-   TBranch        *b_Harm_HCalScint_hit_zhit;   //!
-   TBranch        *b_Harm_HCalScint_hit_sumedep;   //!
-   TBranch        *b_Harm_HCalScint_hit_tavg;   //!
-   TBranch        *b_Harm_HCalScint_hit_trms;   //!
-   TBranch        *b_Harm_HCalScint_hit_tmin;   //!
-   TBranch        *b_Harm_HCalScint_hit_tmax;   //!
 
    TBranch        *b_Harm_SBSGEM_hit_nhits;   //!
    TBranch        *b_Harm_SBSGEM_hit_plane;   //!
@@ -1383,6 +1278,7 @@ public :
    TBranch        *b_Primaries_theta;   //!
    TBranch        *b_Primaries_phi;   //!
 
+
    g4sbs_tree(TTree *tree=0, int det_opt = 0, bool pythia = false, bool ecalbox = false, bool hcalbox = false);
    virtual ~g4sbs_tree();
    virtual Int_t    Cut(Long64_t entry);
@@ -1393,6 +1289,9 @@ public :
    virtual void     Loop();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
+
+private:
+   void SetupDetBranch(TSBSGeant4::VDetData_t &det, const char* prefix);
 };
 
 #endif
