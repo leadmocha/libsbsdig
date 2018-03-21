@@ -12,29 +12,31 @@ namespace TSBSGeant4 {
     virtual ~VDetData_t(){};
     // All sub-classes *must* implement a concrete instance of this
     virtual bool SetupBranches(TTree *t, const char* prefix) = 0;
+    template<typename T>
+    int SetupBranch(TTree* tree,const char* prefix,const char* varname,T &var);
   };
 
   struct CalData_t : public VDetData_t {
-    Int_t nhits;
-    std::vector<Int_t>    *row;
-    std::vector<Int_t>    *col;
-    std::vector<Int_t>    *cell;
-    std::vector<Int_t>    *plane;
-    //std::vector<Int_t>    *wire;
-    std::vector<Double_t> *xcell;
-    std::vector<Double_t> *ycell;
-    std::vector<Double_t> *zcell;
-    std::vector<Double_t> *xcellg;
-    std::vector<Double_t> *ycellg;
-    std::vector<Double_t> *zcellg;
-    std::vector<Double_t> *xhit;
-    std::vector<Double_t> *yhit;
-    std::vector<Double_t> *zhit;
-    std::vector<Double_t> *sumedep;
-    std::vector<Double_t> *tavg;
-    std::vector<Double_t> *trms;
-    std::vector<Double_t> *tmin;
-    std::vector<Double_t> *tmax;
+    int nhits;
+    std::vector<int>    *row;
+    std::vector<int>    *col;
+    std::vector<int>    *cell;
+    std::vector<int>    *plane;
+    //std::vector<int>    *wire;
+    std::vector<double> *xcell;
+    std::vector<double> *ycell;
+    std::vector<double> *zcell;
+    std::vector<double> *xcellg;
+    std::vector<double> *ycellg;
+    std::vector<double> *zcellg;
+    std::vector<double> *xhit;
+    std::vector<double> *yhit;
+    std::vector<double> *zhit;
+    std::vector<double> *sumedep;
+    std::vector<double> *tavg;
+    std::vector<double> *trms;
+    std::vector<double> *tmin;
+    std::vector<double> *tmax;
     CalData_t() :
       nhits(0), row(0), col(0), cell(0), plane(0), xcell(0), ycell(0), zcell(0),
       xcellg(0), ycellg(0), zcellg(0), xhit(0), yhit(0), zhit(0), sumedep(0),
@@ -45,22 +47,22 @@ namespace TSBSGeant4 {
 
   // Standard ECal data (on PMT)
   struct ECalData_t : public VDetData_t {
-    Int_t nhits;
-    std::vector<Int_t>    *PMT;
-    std::vector<Int_t>    *row;
-    std::vector<Int_t>    *col;
-    std::vector<Int_t>    *plane;
-    std::vector<Double_t> *xcell;
-    std::vector<Double_t> *ycell;
-    std::vector<Double_t> *zcell;
-    std::vector<Double_t> *xgcell;
-    std::vector<Double_t> *ygcell;
-    std::vector<Double_t> *zgcell;
-    std::vector<Int_t>    *NumPhotoelectrons;
-    std::vector<Double_t> *Time_avg;
-    std::vector<Double_t> *Time_rms;
-    std::vector<Double_t> *Time_min;
-    std::vector<Double_t> *Time_max;
+    int nhits;
+    std::vector<int>    *PMT;
+    std::vector<int>    *row;
+    std::vector<int>    *col;
+    std::vector<int>    *plane;
+    std::vector<double> *xcell;
+    std::vector<double> *ycell;
+    std::vector<double> *zcell;
+    std::vector<double> *xgcell;
+    std::vector<double> *ygcell;
+    std::vector<double> *zgcell;
+    std::vector<int>    *NumPhotoelectrons;
+    std::vector<double> *Time_avg;
+    std::vector<double> *Time_rms;
+    std::vector<double> *Time_min;
+    std::vector<double> *Time_max;
     ECalData_t() :
       nhits(0), PMT(0), row(0), col(0), plane(0), xcell(0),
       ycell(0), zcell(0), xgcell(0), ygcell(0), zgcell(0), NumPhotoelectrons(0),
@@ -72,12 +74,13 @@ namespace TSBSGeant4 {
   // If individual optical photons are included on the PMT
   //struct ECalPartData_t : public ECalData_t {
   struct ECalPartData_t : public VDetData_t {
-    std::vector<Double_t> *E;
-    std::vector<Double_t> *t;
-    std::vector<Int_t> *part_PMT;
-    std::vector<Bool_t> *detected;
+    int npart_ECAL;
+    std::vector<double> *E;
+    std::vector<double> *t;
+    std::vector<int>    *part_PMT;
+    std::vector<bool>   *detected;
     // Quick default constructor sets all pointers to zero for safety
-    ECalPartData_t() : E(0), t(0), part_PMT(0), detected(0) {};
+    ECalPartData_t() : npart_ECAL(0), E(0), t(0), part_PMT(0), detected(0) {};
     virtual ~ECalPartData_t(){};
     virtual bool SetupBranches(TTree *t, const char *prefix);
   };

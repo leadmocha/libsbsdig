@@ -4,69 +4,78 @@
 
 
 namespace TSBSGeant4 {
+  template<typename T>
+  int VDetData_t::SetupBranch(TTree *tree, const char* prefix,
+      const char* varname, T &var)
+  {
+    TString branchname = TString::Format("%s.%s",prefix,varname);
+    if(!tree)
+      return 1;
+    int ret = tree->SetBranchAddress(branchname.Data(),&var);
+    if( ret != 0 ) {
+      std::cerr << "Unable to set branch '" << branchname
+        << "' failed with error code: " << ret << std::endl;
+      return 1;
+    }
+
+    return 0;
+  }
+
   bool CalData_t::SetupBranches(TTree *tree, const char* prefix)
   {
-    if(!tree)
-      return false;
-
-    // Setup the branches now
-    tree->SetBranchAddress(TString::Format("%s.nhits",prefix), &nhits);
-    tree->SetBranchAddress(TString::Format("%s.row",prefix), &row);
-    tree->SetBranchAddress(TString::Format("%s.col",prefix), &col);
-    tree->SetBranchAddress(TString::Format("%s.cell",prefix), &cell);
-    tree->SetBranchAddress(TString::Format("%s.plane",prefix), &plane);
-    tree->SetBranchAddress(TString::Format("%s.xcell",prefix), &xcell);
-    tree->SetBranchAddress(TString::Format("%s.ycell",prefix), &ycell);
-    tree->SetBranchAddress(TString::Format("%s.zcell",prefix), &zcell);
-    tree->SetBranchAddress(TString::Format("%s.xcellg",prefix), &xcellg);
-    tree->SetBranchAddress(TString::Format("%s.ycellg",prefix), &ycellg);
-    tree->SetBranchAddress(TString::Format("%s.zcellg",prefix), &zcellg);
-    tree->SetBranchAddress(TString::Format("%s.xhit",prefix), &xhit);
-    tree->SetBranchAddress(TString::Format("%s.yhit",prefix), &yhit);
-    tree->SetBranchAddress(TString::Format("%s.zhit",prefix), &zhit);
-    tree->SetBranchAddress(TString::Format("%s.sumedep",prefix), &sumedep);
-    tree->SetBranchAddress(TString::Format("%s.tavg",prefix), &tavg);
-    tree->SetBranchAddress(TString::Format("%s.trms",prefix), &trms);
-    tree->SetBranchAddress(TString::Format("%s.tmin",prefix), &tmin);
-    tree->SetBranchAddress(TString::Format("%s.tmax",prefix), &tmax);
-    return true;
+    int ret = 0;
+    ret += SetupBranch(tree,prefix,"nhits", nhits);
+    ret += SetupBranch(tree,prefix,"row", row);
+    ret += SetupBranch(tree,prefix,"col", col);
+    ret += SetupBranch(tree,prefix,"cell", cell);
+    ret += SetupBranch(tree,prefix,"plane", plane);
+    ret += SetupBranch(tree,prefix,"xcell", xcell);
+    ret += SetupBranch(tree,prefix,"ycell", ycell);
+    ret += SetupBranch(tree,prefix,"zcell", zcell);
+    ret += SetupBranch(tree,prefix,"xcellg", xcellg);
+    ret += SetupBranch(tree,prefix,"ycellg", ycellg);
+    ret += SetupBranch(tree,prefix,"zcellg", zcellg);
+    ret += SetupBranch(tree,prefix,"xhit", xhit);
+    ret += SetupBranch(tree,prefix,"yhit", yhit);
+    ret += SetupBranch(tree,prefix,"zhit", zhit);
+    ret += SetupBranch(tree,prefix,"sumedep", sumedep);
+    ret += SetupBranch(tree,prefix,"tavg", tavg);
+    ret += SetupBranch(tree,prefix,"trms", trms);
+    ret += SetupBranch(tree,prefix,"tmin", tmin);
+    ret += SetupBranch(tree,prefix,"tmax", tmax);
+    return (ret ==0);
   }
   bool ECalData_t::SetupBranches(TTree *tree, const char* prefix)
   {
-    if(!tree)
-      return false;
-
-    tree->SetBranchAddress(TString::Format("%s.nhits",prefix), &nhits);
-    tree->SetBranchAddress(TString::Format("%s.PMT",prefix), &PMT);
-    tree->SetBranchAddress(TString::Format("%s.row",prefix), &row);
-    tree->SetBranchAddress(TString::Format("%s.col",prefix), &col);
-    tree->SetBranchAddress(TString::Format("%s.plane",prefix), &plane);
-    tree->SetBranchAddress(TString::Format("%s.xcell",prefix), &xcell);
-    tree->SetBranchAddress(TString::Format("%s.ycell",prefix), &ycell);
-    tree->SetBranchAddress(TString::Format("%s.zcell",prefix), &zcell);
-    tree->SetBranchAddress(TString::Format("%s.xgcell",prefix), &xgcell);
-    tree->SetBranchAddress(TString::Format("%s.ygcell",prefix), &ygcell);
-    tree->SetBranchAddress(TString::Format("%s.zgcell",prefix), &zgcell);
-    tree->SetBranchAddress(TString::Format("%s.NumPhotoelectrons",prefix),
-        &NumPhotoelectrons);
-    tree->SetBranchAddress(TString::Format("%s.Time_avg",prefix), &Time_avg);
-    tree->SetBranchAddress(TString::Format("%s.Time_rms",prefix), &Time_rms);
-    tree->SetBranchAddress(TString::Format("%s.Time_min",prefix), &Time_min);
-    tree->SetBranchAddress(TString::Format("%s.Time_max",prefix), &Time_max);
-    return true;
+    int ret = 0;
+    ret += SetupBranch(tree,prefix,"nhits", nhits);
+    ret += SetupBranch(tree,prefix,"PMT", PMT);
+    ret += SetupBranch(tree,prefix,"row", row);
+    ret += SetupBranch(tree,prefix,"col", col);
+    ret += SetupBranch(tree,prefix,"plane", plane);
+    ret += SetupBranch(tree,prefix,"xcell", xcell);
+    ret += SetupBranch(tree,prefix,"ycell", ycell);
+    ret += SetupBranch(tree,prefix,"zcell", zcell);
+    ret += SetupBranch(tree,prefix,"xgcell", xgcell);
+    ret += SetupBranch(tree,prefix,"ygcell", ygcell);
+    ret += SetupBranch(tree,prefix,"zgcell", zgcell);
+    ret += SetupBranch(tree,prefix,"NumPhotoelectrons", NumPhotoelectrons);
+    ret += SetupBranch(tree,prefix,"Time_avg", Time_avg);
+    ret += SetupBranch(tree,prefix,"Time_rms", Time_rms);
+    ret += SetupBranch(tree,prefix,"Time_min", Time_min);
+    ret += SetupBranch(tree,prefix,"Time_max", Time_max);
+    return (ret==0);
   }
 
   bool ECalPartData_t::SetupBranches(TTree* tree, const char* prefix)
   {
-    if(!tree)
-      return false;
-
-    tree->SetBranchAddress(TString::Format("%s.E",prefix), &E);
-    tree->SetBranchAddress(TString::Format("%s.t",prefix), &t);
-    tree->SetBranchAddress(TString::Format("%s.part_PMT",prefix), &part_PMT);
-    tree->SetBranchAddress(TString::Format("%s.detected",prefix), &detected);
-
-    return true;
+    int ret = 0;
+    ret += SetupBranch(tree,prefix,"npart_ECAL", npart_ECAL);
+    ret += SetupBranch(tree,prefix,"E", E);
+    ret += SetupBranch(tree,prefix,"t", t);
+    ret += SetupBranch(tree,prefix,"part_PMT", part_PMT);
+    ret += SetupBranch(tree,prefix,"detected", detected);
+    return (ret==0);
     //return ECalData_t::SetupBranches(tree,prefix);
   }
 }
