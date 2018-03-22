@@ -148,19 +148,19 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
       return -1;
     }
     if(d_flag>1){
-      cout << "Number of Hits: " << fTree->Earm_GRINCH_hit_nhits << endl;
+      cout << "Number of Hits: " << fTree->Earm_GRINCH.nhits << endl;
     } // DEBUG
-    for(int i = 0; i<fTree->Earm_GRINCH_hit_nhits; i++){
+    for(int i = 0; i<fTree->Earm_GRINCH.nhits; i++){
       det_id = 0;
       
-      type = fTree->Earm_GRINCH_hit_mTrackNo->at(i);//=1 if primary, >1 if secondary... 
+      type = fTree->Earm_GRINCH.mTrackNo->at(i);//=1 if primary, >1 if secondary... 
       // GRINCH is supposed to ID electrons only... so a primary will always be with TrackNo = 0
-      PMTID = fTree->Earm_GRINCH_hit_PMT->at(i)/5-1;//to have it numbered from 0 to 509...
-      XPMT = fTree->Earm_GRINCH_hit_ypmt->at(i);
-      YPMT = fTree->Earm_GRINCH_hit_zpmt->at(i);// we want the PMT matrix to be sorted by increasing y_T
-      Npe = fTree->Earm_GRINCH_hit_NumPhotoelectrons->at(i);
-      t = fTree->Earm_GRINCH_hit_Time_avg->at(i);
-      trms = fTree->Earm_GRINCH_hit_Time_rms->at(i);
+      PMTID = fTree->Earm_GRINCH.PMT->at(i)/5-1;//to have it numbered from 0 to 509...
+      XPMT = fTree->Earm_GRINCH.ypmt->at(i);
+      YPMT = fTree->Earm_GRINCH.zpmt->at(i);// we want the PMT matrix to be sorted by increasing y_T
+      Npe = fTree->Earm_GRINCH.NumPhotoelectrons->at(i);
+      t = fTree->Earm_GRINCH.Time_avg->at(i);
+      trms = fTree->Earm_GRINCH.Time_rms->at(i);
       //Print a warning if the hit RMS is above a few ns. This may be set in DB ?
       if(trms>2.5){
 	cout << " WARNING: tRMS = " << trms 
@@ -169,11 +169,11 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
       }
       
       // Position of detection. In case it matters...
-      Pos_det = TVector3(fTree->Earm_GRINCH_hit_xhit->at(i), // in mm
-       			 fTree->Earm_GRINCH_hit_yhit->at(i), // in mm
-       			 fTree->Earm_GRINCH_hit_zhit->at(i));// in mm
+      Pos_det = TVector3(fTree->Earm_GRINCH.xhit->at(i), // in mm
+       			 fTree->Earm_GRINCH.yhit->at(i), // in mm
+       			 fTree->Earm_GRINCH.zhit->at(i));// in mm
       
-      origvolflag = fTree->Earm_GRINCH_hit_volume_flag->at(i);//=2 if produced in gas, 4 if produced in 
+      origvolflag = fTree->Earm_GRINCH.volume_flag->at(i);//=2 if produced in gas, 4 if produced in 
       
       // Stupid values for PID_MCtrack, Vtz_MCtrack and Mom_MCtrack 
       // if the MC track cannot be retrieved in the GEMs.
@@ -186,17 +186,17 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
 			     1.0e9);// in MeV
       
       if(origvolflag<4){// it will likely not be found if the hit is produced in the PMT glass...
-	for(int j = 0; j<fTree->Earm_BBGEM_hit_nhits; j++){
-	  if(fTree->Earm_BBGEM_hit_trid->at(j)==fTree->Earm_GRINCH_hit_mTrackNo->at(i)){
-	    PID_MCtrack = fTree->Earm_BBGEM_hit_pid->at(j);
-	    Vtx_MCtrack = TVector3(fTree->Earm_BBGEM_hit_vx->at(j)*1.0e3, // in mm
-				   fTree->Earm_BBGEM_hit_vy->at(j)*1.0e3, // in mm
-				   fTree->Earm_BBGEM_hit_vz->at(j)*1.0e3);// in mm
-	    pz_MCtrack = sqrt( pow(fTree->Earm_BBGEM_hit_p->at(j), 2)/
-			       ( pow(fTree->Earm_BBGEM_hit_txp->at(j), 2) + 
-				 pow(fTree->Earm_BBGEM_hit_typ->at(j), 2) + 1.0) );
-	    Mom_MCtrack = TVector3(fTree->Earm_BBGEM_hit_txp->at(j)*pz_MCtrack*1.0e3, // in MeV
-				   fTree->Earm_BBGEM_hit_typ->at(j)*pz_MCtrack*1.0e3, // in MeV
+	for(int j = 0; j<fTree->Earm_BBGEM.nhits; j++){
+	  if(fTree->Earm_BBGEM.trid->at(j)==fTree->Earm_GRINCH.mTrackNo->at(i)){
+	    PID_MCtrack = fTree->Earm_BBGEM.pid->at(j);
+	    Vtx_MCtrack = TVector3(fTree->Earm_BBGEM.vx->at(j)*1.0e3, // in mm
+				   fTree->Earm_BBGEM.vy->at(j)*1.0e3, // in mm
+				   fTree->Earm_BBGEM.vz->at(j)*1.0e3);// in mm
+	    pz_MCtrack = sqrt( pow(fTree->Earm_BBGEM.p->at(j), 2)/
+			       ( pow(fTree->Earm_BBGEM.txp->at(j), 2) + 
+				 pow(fTree->Earm_BBGEM.typ->at(j), 2) + 1.0) );
+	    Mom_MCtrack = TVector3(fTree->Earm_BBGEM.txp->at(j)*pz_MCtrack*1.0e3, // in MeV
+				   fTree->Earm_BBGEM.typ->at(j)*pz_MCtrack*1.0e3, // in MeV
 				   pz_MCtrack*1.0e3);// in MeV
 	    break;
 	  }
@@ -241,8 +241,8 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
       
       /*
       //store information to rescue, if necessary, the generated info
-      if(fTree->Earm_BBGEM_hit_p->at(i)>pmax && pid==fManager->GetSigPID(0)){
-      	pmax = fTree->Earm_BBGEM_hit_p->at(i);
+      if(fTree->Earm_BBGEM.p->at(i)>pmax && pid==fManager->GetSigPID(0)){
+      	pmax = fTree->Earm_BBGEM.p->at(i);
       	for(int k = 0; k<9; k++){
       	  gen_data_temp_max[k] = gen_data_temp[k];
       	}
@@ -290,12 +290,12 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
       
     //   if(d_flag>1){
     // 	cout << "Hit number: " << i << " BBGEM: X_global : " 
-    // 	     << fTree->Earm_BBGEM_hit_xg->at(i) << ", " 
-    // 	     << fTree->Earm_BBGEM_hit_yg->at(i) << ", " 
-    // 	     << fTree->Earm_BBGEM_hit_zg->at(i) << endl;
-    // 	cout << "X_local (g4sbs): " << fTree->Earm_BBGEM_hit_tx->at(i) << ", " 
-    // 	     << fTree->Earm_BBGEM_hit_ty->at(i) << ", " 
-    // 	     << fTree->Earm_BBGEM_hit_z->at(i) << endl;
+    // 	     << fTree->Earm_BBGEM.xg->at(i) << ", " 
+    // 	     << fTree->Earm_BBGEM.yg->at(i) << ", " 
+    // 	     << fTree->Earm_BBGEM.zg->at(i) << endl;
+    // 	cout << "X_local (g4sbs): " << fTree->Earm_BBGEM.tx->at(i) << ", " 
+    // 	     << fTree->Earm_BBGEM.ty->at(i) << ", " 
+    // 	     << fTree->Earm_BBGEM.z->at(i) << endl;
     // 	cout << "detector ID: " << det_id << ", plane: " << plane << ", sector: " << sector << endl
     // 	     << "particle ID: " << pid << ", type (1, primary, >1 secondary): " << type << endl
     // 	     << "energy deposit (eV): " << edep << endl;
@@ -303,7 +303,7 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
     // 	for(int k = 0; k<3; k++){
     // 	  cout << Mom[k] << ", ";
     // 	}
-    // 	cout << " norm " << fTree->Earm_BBGEM_hit_p->at(i) << endl;
+    // 	cout << " norm " << fTree->Earm_BBGEM.p->at(i) << endl;
     // 	cout << "hit position at drift entrance (mm): ";
     // 	for(int k = 0; k<3; k++){
     // 	  cout << X_in[k] << ", ";
@@ -352,19 +352,19 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
       return -1;
     }
     if(d_flag>1){
-      cout << "Number of Hits: " << fTree->Harm_RICH_hit_nhits << endl;
+      cout << "Number of Hits: " << fTree->Harm_RICH.nhits << endl;
     } // DEBUG
-    for(int i = 0; i<fTree->Harm_RICH_hit_nhits; i++){
+    for(int i = 0; i<fTree->Harm_RICH.nhits; i++){
       det_id = 0;
       
-      type = fTree->Harm_RICH_hit_mTrackNo->at(i);//=1 if primary, >1 if secondary... 
+      type = fTree->Harm_RICH.mTrackNo->at(i);//=1 if primary, >1 if secondary... 
       // TODO: modify the particle type according to the particle PID...
-      PMTID = fTree->Harm_RICH_hit_PMT->at(i);
-      XPMT = fTree->Harm_RICH_hit_ypmt->at(i);
-      YPMT = -fTree->Harm_RICH_hit_xpmt->at(i);// we want the PMT matrix to be sorted by increasing y_T
-      Npe = fTree->Harm_RICH_hit_NumPhotoelectrons->at(i);
-      t = fTree->Harm_RICH_hit_Time_avg->at(i);
-      trms = fTree->Harm_RICH_hit_Time_rms->at(i);
+      PMTID = fTree->Harm_RICH.PMT->at(i);
+      XPMT = fTree->Harm_RICH.ypmt->at(i);
+      YPMT = -fTree->Harm_RICH.xpmt->at(i);// we want the PMT matrix to be sorted by increasing y_T
+      Npe = fTree->Harm_RICH.NumPhotoelectrons->at(i);
+      t = fTree->Harm_RICH.Time_avg->at(i);
+      trms = fTree->Harm_RICH.Time_rms->at(i);
       //Print a warning if the hit RMS is above a few ns. This may be set in DB ?
       if(trms>2.5){
 	cout << " WARNING: tRMS = " << trms 
@@ -373,11 +373,11 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
       }
       
       // Position of detection. In case it matters...
-      Pos_det = TVector3(fTree->Harm_RICH_hit_xhit->at(i)*1.0e3, // in mm
-       			 fTree->Harm_RICH_hit_yhit->at(i)*1.0e3, // in mm
-       			 fTree->Harm_RICH_hit_zhit->at(i)*1.0e3);// in mm
+      Pos_det = TVector3(fTree->Harm_RICH.xhit->at(i)*1.0e3, // in mm
+       			 fTree->Harm_RICH.yhit->at(i)*1.0e3, // in mm
+       			 fTree->Harm_RICH.zhit->at(i)*1.0e3);// in mm
       
-      origvolflag = fTree->Harm_RICH_hit_volume_flag->at(i);//=2 if produced in gas, 4 if produced in 
+      origvolflag = fTree->Harm_RICH.volume_flag->at(i);//=2 if produced in gas, 4 if produced in 
       
       // Stupid values for PID_MCtrack, Vtz_MCtrack and Mom_MCtrack 
       // if the MC track cannot be retrieved in the GEMs.
@@ -390,17 +390,17 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
 			     1.0e9);// in MeV
       
       if(origvolflag<4){// it will likely not be found if the hit is produced in the PMT glass...
-	for(int j = 0; j<fTree->Earm_BBGEM_hit_nhits; j++){
-	  if(fTree->Harm_SBSGEM_hit_trid->at(j)==fTree->Harm_RICH_hit_mTrackNo->at(i)){
-	    PID_MCtrack = fTree->Harm_SBSGEM_hit_pid->at(j);
-	    Vtx_MCtrack = TVector3(fTree->Harm_SBSGEM_hit_vx->at(j)*1.0e3, // in mm
-				   fTree->Harm_SBSGEM_hit_vy->at(j)*1.0e3, // in mm
-				   fTree->Harm_SBSGEM_hit_vz->at(j)*1.0e3);// in mm
-	    pz_MCtrack = sqrt( pow(fTree->Harm_SBSGEM_hit_p->at(j), 2)/
-			       ( pow(fTree->Harm_SBSGEM_hit_txp->at(j), 2) + 
-				 pow(fTree->Harm_SBSGEM_hit_typ->at(j), 2) + 1.0) );
-	    Mom_MCtrack = TVector3(fTree->Harm_SBSGEM_hit_txp->at(j)*pz_MCtrack*1.0e3, // in MeV
-				   fTree->Harm_SBSGEM_hit_typ->at(j)*pz_MCtrack*1.0e3, // in MeV
+	for(int j = 0; j<fTree->Earm_BBGEM.nhits; j++){
+	  if(fTree->Harm_SBSGEM.trid->at(j)==fTree->Harm_RICH.mTrackNo->at(i)){
+	    PID_MCtrack = fTree->Harm_SBSGEM.pid->at(j);
+	    Vtx_MCtrack = TVector3(fTree->Harm_SBSGEM.vx->at(j)*1.0e3, // in mm
+				   fTree->Harm_SBSGEM.vy->at(j)*1.0e3, // in mm
+				   fTree->Harm_SBSGEM.vz->at(j)*1.0e3);// in mm
+	    pz_MCtrack = sqrt( pow(fTree->Harm_SBSGEM.p->at(j), 2)/
+			       ( pow(fTree->Harm_SBSGEM.txp->at(j), 2) + 
+				 pow(fTree->Harm_SBSGEM.typ->at(j), 2) + 1.0) );
+	    Mom_MCtrack = TVector3(fTree->Harm_SBSGEM.txp->at(j)*pz_MCtrack*1.0e3, // in MeV
+				   fTree->Harm_SBSGEM.typ->at(j)*pz_MCtrack*1.0e3, // in MeV
 				   pz_MCtrack*1.0e3);// in MeV
 	    break;
 	  }
@@ -445,8 +445,8 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
       
       /*
       //store information to rescue, if necessary, the generated info
-      if(fTree->Earm_BBGEM_hit_p->at(i)>pmax && pid==fManager->GetSigPID(0)){
-      	pmax = fTree->Earm_BBGEM_hit_p->at(i);
+      if(fTree->Earm_BBGEM.p->at(i)>pmax && pid==fManager->GetSigPID(0)){
+      	pmax = fTree->Earm_BBGEM.p->at(i);
       	for(int k = 0; k<9; k++){
       	  gen_data_temp_max[k] = gen_data_temp[k];
       	}
@@ -493,12 +493,12 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
       
     //   if(d_flag>1){
     // 	cout << "Hit number: " << i << " BBGEM: X_global : " 
-    // 	     << fTree->Earm_BBGEM_hit_xg->at(i) << ", " 
-    // 	     << fTree->Earm_BBGEM_hit_yg->at(i) << ", " 
-    // 	     << fTree->Earm_BBGEM_hit_zg->at(i) << endl;
-    // 	cout << "X_local (g4sbs): " << fTree->Earm_BBGEM_hit_tx->at(i) << ", " 
-    // 	     << fTree->Earm_BBGEM_hit_ty->at(i) << ", " 
-    // 	     << fTree->Earm_BBGEM_hit_z->at(i) << endl;
+    // 	     << fTree->Earm_BBGEM.xg->at(i) << ", " 
+    // 	     << fTree->Earm_BBGEM.yg->at(i) << ", " 
+    // 	     << fTree->Earm_BBGEM.zg->at(i) << endl;
+    // 	cout << "X_local (g4sbs): " << fTree->Earm_BBGEM.tx->at(i) << ", " 
+    // 	     << fTree->Earm_BBGEM.ty->at(i) << ", " 
+    // 	     << fTree->Earm_BBGEM.z->at(i) << endl;
     // 	cout << "detector ID: " << det_id << ", plane: " << plane << ", sector: " << sector << endl
     // 	     << "particle ID: " << pid << ", type (1, primary, >1 secondary): " << type << endl
     // 	     << "energy deposit (eV): " << edep << endl;
@@ -506,7 +506,7 @@ Int_t TSBSGeant4File::ReadNextEvent(int d_flag){
     // 	for(int k = 0; k<3; k++){
     // 	  cout << Mom[k] << ", ";
     // 	}
-    // 	cout << " norm " << fTree->Earm_BBGEM_hit_p->at(i) << endl;
+    // 	cout << " norm " << fTree->Earm_BBGEM.p->at(i) << endl;
     // 	cout << "hit position at drift entrance (mm): ";
     // 	for(int k = 0; k<3; k++){
     // 	  cout << X_in[k] << ", ";
