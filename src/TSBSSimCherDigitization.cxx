@@ -7,6 +7,7 @@
 #include "TClonesArray.h"
 
 #include "TSBSGeant4File.h"  // needed for g4sbsgendata class def
+#include "TSBSSimData.h"
 #include "TSBSCherData.h"
 #include "TSBSSpec.h"
 #include "TSBSSimEvent.h"
